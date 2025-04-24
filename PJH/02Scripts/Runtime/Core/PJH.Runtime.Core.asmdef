@@ -1,0 +1,16 @@
+{
+    "name": "PJH.Runtime.Core",
+    "rootNamespace": "",
+    "references": [
+        "GUID:9fc11ab03a9187d45baf4f15474639fe"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

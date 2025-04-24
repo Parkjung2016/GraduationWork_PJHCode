@@ -1,0 +1,16 @@
+{
+    "name": "Main.Runtime.PlayerManager",
+    "rootNamespace": "",
+    "references": [
+        "GUID:308c623e4493ebb40a9d8177e9a2043b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

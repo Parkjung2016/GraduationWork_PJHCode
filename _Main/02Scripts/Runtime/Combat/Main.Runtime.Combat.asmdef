@@ -1,0 +1,21 @@
+{
+    "name": "Main.Runtime.Combat",
+    "rootNamespace": "",
+    "references": [
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a",
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:4c25c05f410a3a447a75c3b0909152ef",
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,19 @@
+{
+    "name": "PJH.Runtime.Player.CommandAction.Test",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:33bf5b3355013954b9c5a585ea26ef39",
+        "GUID:5ff5028d970048f469e1a9b38c2e5a45",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

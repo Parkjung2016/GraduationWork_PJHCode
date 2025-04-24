@@ -1,0 +1,17 @@
+{
+    "name": "Main.Runtime.Equipment.Weapons.Core",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c677688ef3042284595272795d5b252d",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

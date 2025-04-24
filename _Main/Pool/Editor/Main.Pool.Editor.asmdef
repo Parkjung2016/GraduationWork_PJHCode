@@ -1,0 +1,16 @@
+{
+    "name": "Main.Pool.Editor",
+    "rootNamespace": "",
+    "references": [
+        "Main.Pool"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

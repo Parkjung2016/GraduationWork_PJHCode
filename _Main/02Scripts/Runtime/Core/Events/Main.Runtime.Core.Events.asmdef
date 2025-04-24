@@ -1,0 +1,23 @@
+{
+    "name": "Main.Runtime.Core.Events",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "GUID:b8c676d5774719e428e0a530bb4b46ce",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:ca8b1cfe6042fee42ac9c0caa27b164e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,17 @@
+{
+    "name": "PJH.Runtime.Player.FinisherSequence",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c5e27b83dc86b2c4d8abae9dcbfd3975",
+        "GUID:f06555f75b070af458a003d92f9efb00"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

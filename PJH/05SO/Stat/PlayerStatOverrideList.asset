@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6fc17790a54a6ab98d062d7e380f14, type: 3}
+  m_Name: PlayerStatOverrideList
+  m_EditorClassIdentifier: 
+  StatOverrides:
+  - _stat: {fileID: 11400000, guid: f69746a3f78a59340902c440b5ff4ff1, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 4.116744
+  - _stat: {fileID: 11400000, guid: fdd4e1ba359898b4d87136f145068560, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 200.74689
+  - _stat: {fileID: 11400000, guid: 331ae21f9e62de44ea4faf9e7861a57d, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 60.047935
+  - _stat: {fileID: 11400000, guid: 5b03a8897c7231d41990c8cbc8365e31, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 12.020514
+  - _stat: {fileID: 11400000, guid: b336f6bc1f735334193775906a0f3cd8, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 0.99453557
+  - _stat: {fileID: 11400000, guid: 94c130df7955a544596f4f6488ddc1ab, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 9.953847
+  - _stat: {fileID: 11400000, guid: ecaa411f055a44245863d3dc471611d4, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 1.9616613

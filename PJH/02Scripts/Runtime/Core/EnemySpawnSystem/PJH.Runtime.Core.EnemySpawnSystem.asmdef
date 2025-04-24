@@ -1,0 +1,22 @@
+{
+    "name": "PJH.Runtime.Core.EnemySpawnSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "GUID:7a6e9789677761e4097bc1dcc134963f",
+        "GUID:9e76ffd1f3f77a246968f93aa898a174",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

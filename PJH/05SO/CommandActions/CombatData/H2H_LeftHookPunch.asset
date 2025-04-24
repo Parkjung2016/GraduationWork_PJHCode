@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f609594368e4664b5edb45468ff6a30, type: 3}
+  m_Name: H2H_LeftHookPunch
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  getDamagedAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 8993902097722301239, guid: 0693c03bd5e93694582cf05166b346fc, type: 3}
+    _NormalizedStartTime: NaN
+  attackAnimationClip:
+    _FadeDuration: 0.15
+    _Speed: 1.5
+    _Events:
+      _NormalizedTimes:
+      - 0.36240602
+      - 0.4075188
+      - 0.518797
+      - 0.5714969
+      - 0.9052632
+      _Callbacks:
+      - rid: 738560234674193304
+      _Names:
+      - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
+      - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+    _Clip: {fileID: 8993902097722301239, guid: 88cbea42945f314489b30c620ec11cb5, type: 3}
+    _NormalizedStartTime: NaN
+  damageMultiplier: 1.4
+  isKnockDown: 0
+  isForceAttack: 0
+  disableColliderOnHit: 1
+  knockDownTime: 1
+  getUpAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _NormalizedStartTime: NaN
+  combatFeedbackData:
+    impulsePower: 0.5
+    freezeFrameDuration: 0.1
+    impulseShape: 2
+  isManualMove: 0
+  manualMoveSpeed: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 738560234674193304
+      type: {class: ParameterSocketType, ns: YTH.Enemies, asm: YTH}
+      data:
+        _Value: 0

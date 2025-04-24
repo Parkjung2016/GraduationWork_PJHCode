@@ -1,0 +1,28 @@
+{
+    "name": "PJH.Runtime.UI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:a68c710bc0e4d114cae4f2804c7b9f34",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:7ca295ae879c0aa49b069324f66d5810",
+        "GUID:ca5b8601c5ebe64409c1d85140356a0c",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:5ff5028d970048f469e1a9b38c2e5a45",
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
+        "GUID:ee699b6d22b637f418f28698fdc309c9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

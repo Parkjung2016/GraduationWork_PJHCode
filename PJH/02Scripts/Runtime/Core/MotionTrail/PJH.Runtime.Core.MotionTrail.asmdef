@@ -1,0 +1,19 @@
+{
+    "name": "PJH.Runtime.Core.MotionTrail",
+    "rootNamespace": "",
+    "references": [
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:738a8a0f6a613af43977e228513c7953",
+        "GUID:48d86023aaf96fd4dae180d44f4946a5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

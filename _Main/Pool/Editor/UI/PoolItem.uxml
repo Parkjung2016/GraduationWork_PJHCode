@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Pool/Editor/UI/PoolItem.uss?fileID=7433441132597879392&amp;guid=f80cc13d3b92b6c4e9b0cb9f07e997d4&amp;type=3#PoolItem" />
+    <ui:VisualElement name="pool_item">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="item_name" class="name-label" style="background-color: rgb(152, 152, 152); border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; padding-right: 4px; padding-left: 4px;" />
+        <ui:Button text="X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="delete_btn" class="del-btn" />
+    </ui:VisualElement>
+</ui:UXML>

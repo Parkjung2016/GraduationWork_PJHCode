@@ -1,0 +1,98 @@
+.main-split-view {
+    flex-grow: 1;
+}
+
+#top_bar {
+    flex-basis: 40px;
+    background-color: rgb(60, 60, 60);
+    flex-direction: row;
+    align-items: center;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.btn {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 5px;
+    padding-right: 15px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    transition-duration: 0.3s;
+}
+
+.btn-gray {
+    background-color: rgb(79, 79, 79);
+    color: rgb(255, 255, 255);
+}
+
+.btn-gray:hover {
+    background-color: rgb(128, 128, 128);
+}
+
+#item_view {
+    background-color: rgb(106, 106, 106);
+    flex-grow: 1;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+#item_view .unity-scroll-view__content-container {
+    padding-right: 5px;
+}
+
+#name_section {
+    height: 40px;
+    background-color: rgb(84, 84, 84);
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+#btn_change {
+    flex-shrink: 0;
+    flex-basis: 60px;
+}
+
+#asset_name_field {
+    flex-shrink: 1;
+}
+
+.inspector {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.inspector > .title {
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.gui-container {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}

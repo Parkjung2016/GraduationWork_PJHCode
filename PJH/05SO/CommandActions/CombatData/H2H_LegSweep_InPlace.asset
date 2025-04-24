@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f609594368e4664b5edb45468ff6a30, type: 3}
+  m_Name: H2H_LegSweep_InPlace
+  m_EditorClassIdentifier: 
+  getDamagedAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 8993902097722301239, guid: 480960043862af548a46ace168a919a4, type: 3}
+    _NormalizedStartTime: NaN
+  attackAnimationClip:
+    _FadeDuration: 0.15333335
+    _Speed: 1
+    _Events:
+      _NormalizedTimes:
+      - 0.33945632
+      - 0.4324324
+      - 0.4778369
+      - 0.5416666
+      - 0.886134
+      _Callbacks:
+      - rid: 738560234674193314
+      _Names:
+      - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+      - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
+    _Clip: {fileID: 1827226128182048838, guid: fd88119912685f14f947c0bfa8510a53, type: 3}
+    _NormalizedStartTime: NaN
+  damageMultiplier: 1
+  isKnockDown: 1
+  isForceAttack: 0
+  disableColliderOnHit: 1
+  knockDownTime: 1
+  getUpAnimationClip:
+    _FadeDuration: 0.1
+    _Speed: 1
+    _Events:
+      _NormalizedTimes:
+      - 0.72878534
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 1827226128182048838, guid: 31bda30b8eb2db744b9a2ea8ae004602, type: 3}
+    _NormalizedStartTime: NaN
+  combatFeedbackData:
+    impulsePower: 0.6
+    freezeFrameDuration: 0.06
+    impulseShape: 2
+  manualMoveSpeed: 0
+  isManualMove: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 738560234674193314
+      type: {class: ParameterSocketType, ns: YTH.Enemies, asm: YTH}
+      data:
+        _Value: 7

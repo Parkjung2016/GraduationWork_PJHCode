@@ -1,0 +1,212 @@
+using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEditor;
+using UnityEngine;
+
+namespace Main.Runtime.Core.StatSystem
+{
+    [CreateAssetMenu(fileName = "StatSO", menuName = "SO/StatSystem/Stat")]
+    public class StatSO : ScriptableObject, ICloneable
+    {
+        public delegate void ValueChangeHandler(StatSO stat, float current, float prev);
+
+        public event ValueChangeHandler OnValueChange;
+
+
+        [InfoBox("Automatically changed according to SO name setting value")]
+        [Delayed, OnValueChanged("ChangeAssetName"), BoxGroup("Basic Info")]
+        public string statName;
+
+        [TextArea, BoxGroup("Basic Info", centerLabel: true)]
+        public string description;
+
+        [SerializeField, BoxGroup("Basic Info")]
+        private string _displayName;
+
+        public string DisplayName => _displayName;
+
+
+        [SerializeField, PreviewField(75), HorizontalGroup("Data", 75)]
+        private Sprite _icon;
+
+
+        [SerializeField, ProgressBar("_minValue", "_maxValue"), VerticalGroup("Data/Stats"),
+         GUIColor(0.0f, 0.8f, 1f)]
+        private float _baseValue;
+
+        [SerializeField, VerticalGroup("Data/Stats")]
+        private float _minValue, _maxValue;
+
+        private Dictionary<object, Stack<float>> _modifyValueByKeys = new Dictionary<object, Stack<float>>();
+        private Dictionary<object, float> _reductionValuePercentByKeys = new();
+        private Dictionary<object, float> _increaseValuePercentByKeys = new();
+
+        [field: SerializeField, VerticalGroup("Data/Stats")]
+        public bool IsPercent { get; private set; }
+
+        private float _modifiedValue = 0;
+        private float _reductionValuePercent = 0f;
+        private float _increaseValuePercent = 0f;
+        public Sprite Icon => _icon;
+
+        public float MaxValue
+        {
+            get => _maxValue;
+            set => _maxValue = value;
+        }
+
+        public float MinValue
+        {
+            get => _minValue;
+            set => _minValue = value;
+        }
+
+        public float Value
+        {
+            get
+            {
+                float value = Mathf.Clamp(_baseValue + _modifiedValue, MinValue, MaxValue);
+                if (_reductionValuePercent > 0)
+                    value *= (1 - _reductionValuePercent * .01f);
+                if (_increaseValuePercent > 0)
+                    value += (1 + _increaseValuePercent * .01f);
+                float roundedValue = (float)System.Math.Round(value, 1);
+                return roundedValue;
+            }
+        }
+
+        public bool IsMax => Mathf.Approximately(Value, MaxValue);
+        public bool IsMin => Mathf.Approximately(Value, MinValue);
+
+        public float BaseValue
+        {
+            get
+            {
+                float roundedValue = (float)System.Math.Round(_baseValue, 1);
+                return roundedValue;
+            }
+            set
+            {
+                float prevValue = Value;
+                _baseValue = Mathf.Clamp(value, MinValue, MaxValue);
+                TryInvokeValueChangeEvent(Value, prevValue);
+            }
+        }
+
+#if UNITY_EDITOR
+        private void ChangeAssetName()
+        {
+            string assetName = $"{statName}Stat";
+            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(this), assetName);
+        }
+#endif
+
+        public void AddModifyValue(object key, float value)
+        {
+            //이부분은  중첩을 고려할 꺼면 바꿔야 해.
+
+            float prevValue = Value;
+            _modifiedValue += value;
+
+            if (!_modifyValueByKeys.ContainsKey(key))
+                _modifyValueByKeys.Add(key, new Stack<float>(new[] { value }));
+            else
+                _modifyValueByKeys[key].Push(value);
+
+            TryInvokeValueChangeEvent(Value, prevValue);
+        }
+
+        public void RemoveModifyValue(object key)
+        {
+            if (_modifyValueByKeys.TryGetValue(key, out Stack<float> value))
+            {
+                if (value.Count <= 0) return;
+
+                float prevValue = Value;
+                _modifiedValue -= value.Pop();
+
+                TryInvokeValueChangeEvent(Value, prevValue);
+            }
+        }
+
+        public void AddReductionValuePercent(object key, float value)
+        {
+            if (_reductionValuePercentByKeys.ContainsKey(key)) return;
+            float prevValue = Value;
+            _reductionValuePercent += value;
+
+            _reductionValuePercentByKeys.Add(key, value);
+
+            TryInvokeValueChangeEvent(Value, prevValue);
+        }
+
+        public void RemoveReductionValuePercent(object key)
+        {
+            if (_reductionValuePercentByKeys.Remove(key, out float value))
+            {
+                float prevValue = Value;
+                _reductionValuePercent -= value;
+
+                TryInvokeValueChangeEvent(Value, prevValue);
+            }
+        }
+
+
+        public void AddIncreaseValuePercent(object key, float value)
+        {
+            if (_increaseValuePercentByKeys.ContainsKey(key)) return;
+            float prevValue = Value;
+            _increaseValuePercent += value;
+
+            _increaseValuePercentByKeys.Add(key, value);
+
+            TryInvokeValueChangeEvent(Value, prevValue);
+        }
+
+        public void RemoveIncreaseValuePercent(object key)
+        {
+            if (_increaseValuePercentByKeys.Remove(key, out float value))
+            {
+                float prevValue = Value;
+                _increaseValuePercent -= value;
+
+                TryInvokeValueChangeEvent(Value, prevValue);
+            }
+        }
+
+        public void ClearModifier()
+        {
+            float prevValue = Value;
+            _modifyValueByKeys.Clear();
+            _modifiedValue = 0;
+            TryInvokeValueChangeEvent(Value, prevValue);
+        }
+
+        public void ClearReductionValuePercent()
+        {
+            float prevValue = Value;
+            _reductionValuePercentByKeys.Clear();
+            _reductionValuePercent = 0;
+            TryInvokeValueChangeEvent(Value, prevValue);
+        }
+
+        public void ClearIncreaseValuePercent()
+        {
+            float prevValue = Value;
+            _increaseValuePercentByKeys.Clear();
+            _increaseValuePercent = 0;
+            TryInvokeValueChangeEvent(Value, prevValue);
+        }
+
+        private void TryInvokeValueChangeEvent(float value, float prevValue)
+        {
+            if (!Mathf.Approximately(value, prevValue))
+                OnValueChange?.Invoke(this, value, prevValue);
+        }
+
+        public object Clone()
+        {
+            return Instantiate(this);
+        }
+    }
+}

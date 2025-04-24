@@ -1,0 +1,30 @@
+{
+    "name": "Main.Runtime.Scenes",
+    "rootNamespace": "",
+    "references": [
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:4307f53044263cf4b835bd812fc161a4",
+        "GUID:ca5b8601c5ebe64409c1d85140356a0c",
+        "GUID:f06555f75b070af458a003d92f9efb00",
+        "GUID:8057891fc0ce59f429c76320e3f807a6",
+        "GUID:f214ab5458cf95b47b9e2fb7c1512e8a",
+        "GUID:9e76ffd1f3f77a246968f93aa898a174",
+        "GUID:bc2bccc7fdd309a4a9509427df1b7d94",
+        "GUID:6374a02135f2b7240980125fea8c745f",
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:df520f69b0881294b925a872bae7d661",
+        "GUID:0c752da273b17c547ae705acf0f2adf2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

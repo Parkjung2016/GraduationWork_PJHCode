@@ -1,0 +1,28 @@
+{
+    "name": "Main.Runtime.Agent",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:02690e917e4ac78469c6a548a0037ced",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a",
+        "GUID:c5e27b83dc86b2c4d8abae9dcbfd3975",
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:0c752da273b17c547ae705acf0f2adf2",
+        "GUID:b800f7e8fc014764391b995c4e6991ff",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:f6cd8915a8323e640bef362b6f5dd974",
+        "GUID:0e6b1f35d8416da46a5e09a445db4184",
+        "GUID:4c25c05f410a3a447a75c3b0909152ef",
+        "GUID:ee699b6d22b637f418f28698fdc309c9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

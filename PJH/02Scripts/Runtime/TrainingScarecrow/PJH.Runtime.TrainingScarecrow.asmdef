@@ -1,0 +1,18 @@
+{
+    "name": "PJH.Runtime.TrainingScarecrow",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:308c623e4493ebb40a9d8177e9a2043b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

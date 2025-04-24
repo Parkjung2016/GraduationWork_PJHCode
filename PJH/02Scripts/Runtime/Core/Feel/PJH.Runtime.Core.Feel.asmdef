@@ -1,0 +1,22 @@
+{
+    "name": "PJH.Runtime.Core.Feel",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:15fc0a57446b3144c949da3e2b9737a9",
+        "GUID:df380645f10b7bc4b97d4f5eb6303d95",
+        "GUID:b8c676d5774719e428e0a530bb4b46ce",
+        "GUID:f79a0ed971ac8c84083e7341d41d11ef"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

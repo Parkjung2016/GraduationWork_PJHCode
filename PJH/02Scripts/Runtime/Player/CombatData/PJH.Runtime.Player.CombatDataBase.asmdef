@@ -1,0 +1,18 @@
+{
+    "name": "PJH.Runtime.Player.CombatDataBase",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c5e27b83dc86b2c4d8abae9dcbfd3975",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:4c25c05f410a3a447a75c3b0909152ef"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

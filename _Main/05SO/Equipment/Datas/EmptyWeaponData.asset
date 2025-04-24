@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edafe07ba7038e64cab50e8929571968, type: 3}
+  m_Name: EmptyWeaponData
+  m_EditorClassIdentifier: 
+  equipmentPrefab: {fileID: 3440142453357514129, guid: 6375263bb3ff4674ca8242935bef531c, type: 3}
+  equipmentPosition: {x: 0, y: 0, z: 0}
+  equipmentRotation: {x: 0, y: 0, z: 0, w: 0}
+  attackBlockSound:
+    Guid:
+      Data1: 494605143
+      Data2: 1230648046
+      Data3: -1990889590
+      Data4: 608328054
+    Path: event:/SFX/Punch/Punch_Block
+  attackWhooshSound:
+    Guid:
+      Data1: -1215858644
+      Data2: 1169158807
+      Data3: 1781704580
+      Data4: 1470042274
+    Path: event:/SFX/Punch/Punch_Whoosh
+  hitImpactSound:
+    Guid:
+      Data1: -1256606246
+      Data2: 1226259776
+      Data3: -603438700
+      Data4: -132925969
+    Path: event:/SFX/Punch/Punch_Impact
+  damageMultiplier: 1
+  damageMultiplierWhenThrow: 1
+  increaseMomentumGauge: 8
+  maxDurability: 0
+  isDurable: 0
+  animationWhenGetHitByThrowingWeapon:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _NormalizedStartTime: NaN
+  canThrow: 0
+  references:
+    version: 2
+    RefIds: []

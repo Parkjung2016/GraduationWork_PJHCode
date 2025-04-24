@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd0cd96b94044098d1a5c34977fbaef, type: 3}
+  m_Name: Command Action Piece_Squad_Punch
+  m_EditorClassIdentifier: 
+  pieceSprite: {fileID: -123014715, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
+  actionName: Squad_Punch
+  actionDescription: 
+  combatData: {fileID: 11400000, guid: 9508590cc4851644aaa94745c43ad9a3, type: 2}
+  passive: {fileID: 0}
+  overlappingPassives: []

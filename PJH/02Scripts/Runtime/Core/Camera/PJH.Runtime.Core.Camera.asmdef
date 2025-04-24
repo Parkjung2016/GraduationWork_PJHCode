@@ -1,0 +1,23 @@
+{
+    "name": "PJH.Runtime.Core.Camera",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Cinemachine",
+        "Main.Runtime.Core.Events",
+        "Unity.InputSystem",
+        "Main.Shared",
+        "Main.Runtime.Agent",
+        "ControlInput",
+        "Main.Runtime.Managers",
+        "UniTask"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f609594368e4664b5edb45468ff6a30, type: 3}
+  m_Name: H2H_HookPunch_InPlace
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  getDamagedAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes:
+      - 0.91278195
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 1827226128182048838, guid: 3b988df654ac5934b8a76db86907da56, type: 3}
+    _NormalizedStartTime: NaN
+  attackAnimationClip:
+    _FadeDuration: 0.15
+    _Speed: 1.35
+    _Events:
+      _NormalizedTimes:
+      - 0.18809702
+      - 0.33050248
+      - 0.36968088
+      - 0.38689354
+      - 0.46160835
+      - 0.86466163
+      _Callbacks:
+      - rid: 6518945657722503346
+      _Names:
+      - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+      - {fileID: 11400000, guid: a77c97c66f91a71428d2b3dc08a8f38d, type: 2}
+      - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
+    _Clip: {fileID: 7400000, guid: b77713cec2aa7234bb0223b02c5aebfe, type: 2}
+    _NormalizedStartTime: NaN
+  damageMultiplier: 1
+  isKnockDown: 0
+  isForceAttack: 0
+  disableColliderOnHit: 1
+  knockDownTime: 1
+  getUpAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _NormalizedStartTime: NaN
+  combatFeedbackData:
+    impulsePower: 0.5
+    freezeFrameDuration: 0.03
+    impulseShape: 2
+  isManualMove: 0
+  manualMoveSpeed: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 6518945657722503346
+      type: {class: ParameterSocketType, ns: YTH.Enemies, asm: YTH}
+      data:
+        _Value: 0

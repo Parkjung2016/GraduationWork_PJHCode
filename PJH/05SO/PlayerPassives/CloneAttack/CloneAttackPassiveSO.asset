@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ead3f18eb641e09146fcd4118a574d, type: 3}
+  m_Name: CloneAttackPassiveSO
+  m_EditorClassIdentifier: 
+  poolManager: {fileID: 11400000, guid: 7ba9d63098020b64699d6f2375075fea, type: 2}
+  cloneAttackCombatDatabase: {fileID: 11400000, guid: d2b71269ae2e7f7488bc375ff4275a6e, type: 2}
+  playerClonePoolType: {fileID: 11400000, guid: 546bfb182cccd7c4c816ac353d706292, type: 2}

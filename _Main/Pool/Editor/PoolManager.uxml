@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="PoolItem" src="project://database/Assets/Pool/Editor/UI/PoolItem.uxml?fileID=9197481963319205126&amp;guid=44d37930a022fc8418a5fb15b99cd87c&amp;type=3#PoolItem" />
+    <Style src="project://database/Assets/Pool/Editor/PoolManager.uss?fileID=7433441132597879392&amp;guid=0192ea42cfa5a6a429002b18c6d46b4c&amp;type=3#PoolManager" />
+    <ui:VisualElement name="top_bar">
+        <ui:Button text="생성" parse-escape-sequences="true" display-tooltip-when-elided="true" name="create_btn" class="btn btn-gray" />
+    </ui:VisualElement>
+    <SplitView fixed-pane-initial-dimension="250" name="split_view" class="main-split-view">
+        <ui:VisualElement name="left_panel" style="flex-grow: 1;">
+            <ui:ScrollView name="item_view">
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+                <ui:Instance template="PoolItem" name="PoolItem" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="right_panel" style="flex-grow: 1;">
+            <ui:VisualElement name="inspector_view" style="flex-grow: 1;">
+                <ui:VisualElement name="name_section">
+                    <ui:TextField picking-mode="Ignore" value="filler text" name="asset_name_field" />
+                    <ui:Button text="이름교체" parse-escape-sequences="true" display-tooltip-when-elided="true" name="btn_change" />
+                </ui:VisualElement>
+                <ui:VisualElement name="type_inspector" class="inspector">
+                    <ui:Label tabindex="-1" text="Type Inspector" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title_label" class="title" />
+                    <ui:VisualElement name="gui_cotainer" class="gui-container" style="flex-grow: 1;">
+                        <ui:IMGUIContainer name="type_inspector_view" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="item_inspector" class="inspector">
+                    <ui:Label tabindex="-1" text="Item Inspector" parse-escape-sequences="true" display-tooltip-when-elided="true" name="title_label" class="title" />
+                    <ui:VisualElement name="gui_cotainer" class="gui-container" style="flex-grow: 1;">
+                        <ui:IMGUIContainer name="item_inspector_view" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </SplitView>
+</ui:UXML>
