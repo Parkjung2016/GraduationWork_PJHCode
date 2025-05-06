@@ -6,6 +6,7 @@ using PJH.Runtime.Core.InputKeyIcon;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.UI
 {
@@ -54,6 +55,7 @@ namespace PJH.Runtime.UI
             }
             catch (Exception e)
             {
+                Debug.Log(e.Message);
             }
         }
 

@@ -28,14 +28,14 @@ namespace Main.Runtime.Manager
 
         public void Init()
         {
-            _subVCA = RuntimeManager.GetVCA(GameSound_VCA_Path);
-            _timelineVCA = RuntimeManager.GetVCA(TimelineSound_VCA_Path);
-            _sfxBus = RuntimeManager.GetBus(SFX_Bus_Path);
-            _musicBus = RuntimeManager.GetBus(Music_Bus_Path);
-            _gameBus = RuntimeManager.GetBus(Game_Bus_Path);
-            _uiBus = RuntimeManager.GetBus(UI_Bus_Path);
-            _mainBus = RuntimeManager.GetBus(Main_Bus_Path);
-            _beforePlayerDeadSnapshot = RuntimeManager.CreateInstance("snapshot:/BeforePlayerDeadSnapshot");
+            //_subVCA = RuntimeManager.GetVCA(GameSound_VCA_Path);
+            //_timelineVCA = RuntimeManager.GetVCA(TimelineSound_VCA_Path);
+            //_sfxBus = RuntimeManager.GetBus(SFX_Bus_Path);
+            //_musicBus = RuntimeManager.GetBus(Music_Bus_Path);
+            //_gameBus = RuntimeManager.GetBus(Game_Bus_Path);
+            //_uiBus = RuntimeManager.GetBus(UI_Bus_Path);
+            //_mainBus = RuntimeManager.GetBus(Main_Bus_Path);
+            //_beforePlayerDeadSnapshot = RuntimeManager.CreateInstance("snapshot:/BeforePlayerDeadSnapshot");
         }
 
         public void SetGameSoundVolume(float volume, float duration)

@@ -48,6 +48,7 @@ namespace Main.Runtime.Agents
                     {
                         if (value != null)
                         {
+                            Debug.Log(eventAsset);
                             var parameterType = methodList[0].GetParameters().First().ParameterType;
                             object convertedValue = Convert.ChangeType(value, parameterType);
                             methodList[0].Invoke(this, new[] { convertedValue });

@@ -3,6 +3,8 @@ using DG.Tweening;
 using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
+using Main.Runtime.Manager.VolumeTypes;
+using PJH.Runtime.Players;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -21,7 +23,9 @@ namespace Main.Scenes
 
         private void Awake()
         {
-            _poolManager =AddressableManager.Load<PoolManagerSO>("PoolManager");
+            Application.targetFrameRate = 60;
+
+            _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
         }
@@ -65,16 +69,16 @@ namespace Main.Scenes
             if (evt.isStunned)
             {
                 float duration = .4f;
-                Managers.VolumeManager.SetSaturate(-2, duration);
-                Managers.VolumeManager.SetBrightness(.3f, duration);
-                Managers.VolumeManager.SetVignettingFade(.4f, duration);
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().SetValue(-2, duration);
+                Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(.3f, duration);
+                Managers.VolumeManager.GetVolumeType<VignettingFadeVolumeType>().SetValue(.4f, duration);
             }
             else
             {
                 float duration = .2f;
-                Managers.VolumeManager.ResetSaturate(duration);
-                Managers.VolumeManager.ResetBrightness(duration);
-                Managers.VolumeManager.ResetVignetteFade(duration);
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().ResetValue(duration);
+                Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().ResetValue(duration);
+                Managers.VolumeManager.GetVolumeType<VignettingFadeVolumeType>().ResetValue(duration);
             }
         }
 
@@ -83,39 +87,30 @@ namespace Main.Scenes
             if (evt.isEnabledEffect)
             {
                 float duration = .2f;
-                Managers.VolumeManager.SetSaturate(-2, 2f);
-                Managers.VolumeManager.SetSepia(1, .2f);
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().SetValue(-2, 2f);
+                Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().SetValue(-2, 2f);
             }
             else
             {
                 float duration = .2f;
-                Managers.VolumeManager.ResetSaturate(duration);
-                Managers.VolumeManager.ResetSepia(duration);
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().ResetValue(duration);
+                Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().ResetValue(duration);
             }
         }
 
         private void HandlePlayerDeath(PlayerDeath evt)
         {
-            DOVirtual.DelayedCall(4, () =>
+            Sequence seq = DOTween.Sequence();
+            seq.AppendCallback(() =>
             {
-                Sequence seq = DOTween.Sequence();
-                seq.Append(Managers.VolumeManager.SetBlink(1, 1));
-                seq.AppendInterval(.3f);
-                seq.Append(Managers.VolumeManager.SetBlink(.5f));
-                seq.AppendInterval(.1f);
-                seq.Append(Managers.VolumeManager.SetBlink(1, 1.5f));
-                seq.AppendInterval(1);
-                seq.AppendCallback(() =>
-                {
-                    var destroyDeadEnemyEvt = GameEvents.DestroyDeadEnemy;
-                    _gameEventChannel.RaiseEvent(destroyDeadEnemyEvt);
-                    var showDeathUIEvt = UIEvents.ShowDeathUI;
-                    showDeathUIEvt.isShowUI = true;
-                    _uiEventChannel.RaiseEvent(showDeathUIEvt);
-                });
-                seq.AppendInterval(3);
-                seq.AppendCallback(() => { SceneManagerEx.LoadScene("Lobby", true); });
+                var destroyDeadEnemyEvt = GameEvents.DestroyDeadEnemy;
+                _gameEventChannel.RaiseEvent(destroyDeadEnemyEvt);
+                var showDeathUIEvt = UIEvents.ShowDeathUI;
+                showDeathUIEvt.isShowUI = true;
+                _uiEventChannel.RaiseEvent(showDeathUIEvt);
             });
+            seq.AppendInterval(3);
+            seq.AppendCallback(() => { SceneManagerEx.LoadScene("Lobby", true); });
         }
 
         private void HandleEnemyFinisherSequence(EnemyFinisherSequence evt)
@@ -123,13 +118,17 @@ namespace Main.Scenes
             PlayableAsset playableAsset = evt.sequenceAsset;
             _playableDirector.playableAsset = playableAsset;
             var timeline = playableAsset as TimelineAsset;
-
-
             foreach (var track in timeline.GetOutputTracks())
             {
                 if (track.name == "Enemy Animation Track")
                 {
                     _playableDirector.SetGenericBinding(track, evt.enemyAnimator);
+                    break;
+                }
+
+                if (track.name == "Player Animation Track")
+                {
+                    _playableDirector.SetGenericBinding(track, evt.playerAnimator);
                     break;
                 }
             }

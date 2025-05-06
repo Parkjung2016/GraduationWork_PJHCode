@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Threading;
 using Animancer;
 using Cysharp.Threading.Tasks;
@@ -15,14 +14,12 @@ namespace Main.Runtime.Agents
         public event Action OnEndHitAnimation;
         public event Action OnKnockDown;
         [SerializeField] private ClipTransition _deathAnimationClip;
-        protected AgentAnimationTrigger _agentAnimationTriggerCompo;
         protected Agent _agent;
         CancellationTokenSource _knockDownToken;
 
         public virtual void Initialize(Agent agent)
         {
             _agent = agent;
-            _agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
         }
 
         public virtual void AfterInitialize()
@@ -33,6 +30,9 @@ namespace Main.Runtime.Agents
             {
                 fullMountableCompo.OnFullMounted += HandleFullMounted;
             }
+
+            AgentAnimationTrigger agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
+            agentAnimationTriggerCompo.OnTriggerRagdoll += HandleTriggerRagdoll;
         }
 
         protected virtual void OnDestroy()
@@ -49,6 +49,14 @@ namespace Main.Runtime.Agents
             {
                 fullMountableCompo.OnFullMounted -= HandleFullMounted;
             }
+
+            AgentAnimationTrigger agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
+            agentAnimationTriggerCompo.OnTriggerRagdoll -= HandleTriggerRagdoll;
+        }
+
+        private void HandleTriggerRagdoll()
+        {
+            Animator.enabled = false;
         }
 
         protected virtual void HandleFullMounted(ITransition animationClip)
@@ -69,11 +77,12 @@ namespace Main.Runtime.Agents
 
         protected virtual async void HandleDeath()
         {
-            if (_agent.TryGetCompo<AgentFullMountable>(out AgentFullMountable fullMountable))
+            if (_agent.TryGetCompo(out AgentFullMountable fullMountable))
             {
                 if (fullMountable.IsFullMounted)
                 {
-                    _agentAnimationTriggerCompo.OnTriggerRagdoll?.Invoke();
+                    AgentAnimationTrigger agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
+                    agentAnimationTriggerCompo.OnTriggerRagdoll?.Invoke();
                     return;
                 }
             }
@@ -130,13 +139,15 @@ namespace Main.Runtime.Agents
             PlayAnimationClip(getDamagedInfo.getUpAnimationClip, () =>
             {
                 if (_agent.HealthCompo.IsDead) return;
-                _agentAnimationTriggerCompo.OnGetUp?.Invoke();
+                AgentAnimationTrigger agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
+                agentAnimationTriggerCompo.OnGetUp?.Invoke();
             });
         }
 
         public void PlayAnimationClip(ITransition clip, Action EndCallBack = null,
             bool playControllerOnEnd = true)
         {
+            if (clip == null) return;
             AnimancerState state = _hybridAnimancer.Play(clip, clip.FadeDuration, mode: FadeMode.FromStart);
             state.Events(this).OnEnd ??= () =>
             {

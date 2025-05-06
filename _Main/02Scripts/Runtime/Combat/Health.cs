@@ -15,7 +15,7 @@ namespace Main.Runtime.Combat
         public event Action OnDeath; //죽었을때
         public event HealthChangeHandler OnChangedHealth;
 
-        private GetDamagedInfo _getDamagedInfo = new();
+        protected GetDamagedInfo _getDamagedInfo = new();
         public GetDamagedInfo GetDamagedInfo => _getDamagedInfo;
 
         public float CurrentHealth
@@ -36,6 +36,7 @@ namespace Main.Runtime.Combat
         public float MaxHealth { get; private set; }
         public bool IsDead { get; private set; }
         public bool IsInitialized { get; private set; }
+        public bool IsInvincibility { get; set; }
 
         private StatSO _maxHealthStat;
         [SerializeField, ReadOnly] private float _currentHealth;
@@ -58,7 +59,7 @@ namespace Main.Runtime.Combat
 
         public virtual bool ApplyDamage(GetDamagedInfo getDamagedInfo)
         {
-            if (IsDead) return false;
+            if (IsDead || IsInvincibility) return false;
             _getDamagedInfo = getDamagedInfo;
             OnApplyDamaged?.Invoke(_getDamagedInfo.damage);
             CurrentHealth -= _getDamagedInfo.damage;
@@ -67,7 +68,7 @@ namespace Main.Runtime.Combat
 
         public virtual bool ApplyOnlyDamage(float damage)
         {
-            if (IsDead) return false;
+            if (IsDead || IsInvincibility) return false;
             CurrentHealth -= damage;
             return true;
         }

@@ -16,12 +16,6 @@ namespace PJH.Runtime.Players
         {
             _cameraViewConfigEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _player = agent as Player;
-            _blockCompo = _player.GetCompo<PlayerBlock>();
-            _movementCompo = _player.GetCompo<PlayerMovement>();
-            _weaponManagerCompo = _player.GetCompo<AgentWeaponManager>();
-            _enemyDetectionCompo = _player.GetCompo<PlayerEnemyDetection>();
-            _playerAnimationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
-            _warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
             _isComboPossible = true;
         }
 
@@ -55,7 +49,9 @@ namespace PJH.Runtime.Players
                 _cameraViewConfigEventChannel.RaiseEvent(evt);
             }
 
-            if (_player.IsLockOn && _enemyDetectionCompo.TryGetTargetEnemy(out Agent target))
+            PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+            PlayerEnemyDetection enemyDetectionCompo = _player.GetCompo<PlayerEnemyDetection>();
+            if (_player.IsLockOn && enemyDetectionCompo.TryGetTargetEnemy(out Agent target))
             {
                 Vector3 dir = (target.transform.position - _player.transform.position).normalized;
                 dir.y = 0;
@@ -81,15 +77,21 @@ namespace PJH.Runtime.Players
             _isComboPossible = false;
             if (CurrentCombatData)
             {
-                _playerAnimationTriggerCompo.OnDisableDamageCollider?.Invoke();
+                animationTriggerCompo.OnDisableDamageCollider?.Invoke();
                 CommandActionPieceSO commandActionPiece =
                     _currentCommandActionData.ExecuteCommandActionPieces[_prevComboCount];
                 commandActionPiece.DeactivePassive();
             }
         }
 
-        private bool CanAttack() => _isComboPossible && !_player.IsStunned && !_player.IsHitting &&
-                                    _isComboPossible && !_movementCompo.IsEvading && !_blockCompo.IsBlocking &&
-                                    !_warpStrikeCompo.Activating;
+        private bool CanAttack()
+        {
+            PlayerBlock blockCompo = _player.GetCompo<PlayerBlock>();
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
+            return _isComboPossible && !_player.IsStunned && !_player.IsHitting &&
+                   _isComboPossible && !movementCompo.IsEvading && !blockCompo.IsBlocking &&
+                   !warpStrikeCompo.Activating;
+        }
     }
 }

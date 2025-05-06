@@ -1,8 +1,5 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using FIMSpace.FProceduralAnimation;
+﻿using FIMSpace.FProceduralAnimation;
 using Main.Runtime.Core;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Main.Runtime.Agents

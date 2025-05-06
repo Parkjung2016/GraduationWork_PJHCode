@@ -1,5 +1,6 @@
 ﻿using System;
 using BIS.Manager;
+using Main.Runtime.Manager.VolumeTypes;
 using Main.Shared;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -43,8 +44,9 @@ namespace Main.Runtime.Manager
             GetCurrentScene();
             if (_isActiveEyeEffect)
             {
-                Managers.VolumeManager.SetBlink(1, 0);
-                Managers.VolumeManager.SetBlink(0, 1);
+                BlinkVolumeType blinkVolumeType = Managers.VolumeManager.GetVolumeType<BlinkVolumeType>();
+                blinkVolumeType.SetValue(1);
+                blinkVolumeType.SetValue(0, 1);
                 _isActiveEyeEffect = false;
             }
         }

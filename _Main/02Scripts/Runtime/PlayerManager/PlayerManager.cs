@@ -30,9 +30,8 @@ namespace Main.Runtime.Manager
             get
             {
                 if (_player == null)
-                {
                     _player = GameObject.FindGameObjectWithTag("Player").GetComponent<IPlayer>();
-                }
+
 
                 return _player;
             }
@@ -74,8 +73,9 @@ namespace Main.Runtime.Manager
 
         private void HandleSceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
-            _player = GameObject.FindGameObjectWithTag("Player").GetComponent<IPlayer>();
-            _playerCamera = GameObject.FindGameObjectWithTag("MainPlayerCamera").GetComponent<ICamera>();
+            _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<IPlayer>();
+            if (_player != null)
+                _playerCamera = GameObject.FindGameObjectWithTag("MainPlayerCamera").GetComponent<ICamera>();
         }
     }
 }

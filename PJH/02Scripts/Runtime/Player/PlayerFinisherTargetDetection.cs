@@ -6,6 +6,7 @@ using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using UnityEngine;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -58,6 +59,7 @@ namespace PJH.Runtime.Players
                     {
                         AgentFinisherable finisherable = _checkTarget.GetCompo<AgentFinisherable>();
                         if (!finisherable) continue;
+
                         bool canFinisher = finisherable.CanFinisher();
                         evt.isShowUI = canFinisher;
                         if (canFinisher)

@@ -10,6 +10,8 @@ namespace PJH.Runtime.Players
     {
         public bool IsUsingCommandAction { get; private set; }
         public event Action<CommandActionData> OnUseCommandAction;
+
+        public List<CommandActionData> CommandActions => _commandActions;
         [SerializeField] private List<CommandActionData> _commandActions = new();
         [SerializeField] private DefaultCommandActionDataSO _defaultCommandAction;
 

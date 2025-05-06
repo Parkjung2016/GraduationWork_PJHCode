@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbed49f5f7984860b91f47b857c630b5, type: 3}
-  m_Name: KeyIcon_X
+  m_Name: KeyIcon_R
   m_EditorClassIdentifier: 
-  keyName: X
-  keyIcon: {fileID: 21300000, guid: d507bfb800bb301419eeb6bd6d3db07a, type: 3}
+  keyName: R
+  keyIcon: {fileID: 21300000, guid: 96d4ed422448a48428bedf46da4f5185, type: 3}

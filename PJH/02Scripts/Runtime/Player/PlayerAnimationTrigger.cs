@@ -7,6 +7,7 @@ namespace PJH.Runtime.Players
     public class PlayerAnimationTrigger : AgentAnimationTrigger
     {
         public Action OnEndCombo;
+        public Action OnEndCounterAttack;
         public Action OnEndEvasion;
         public Action OnEndFullMount;
         public Action OnEnableInputWhileRootMotion;
@@ -18,6 +19,7 @@ namespace PJH.Runtime.Players
         public event Action OnThrowWeapon;
         public event Action OnTriggerPassiveAfterAttack;
         public event Action OnWarpTargetAndAttack;
+        public event Action OnHitCounterAttack;
         private Player _player;
 
         public override void Initialize(Agent agent)
@@ -84,6 +86,11 @@ namespace PJH.Runtime.Players
         private void WarpTargetAndAttack()
         {
             OnWarpTargetAndAttack?.Invoke();
+        }
+
+        private void HitCounterTarget()
+        {
+            OnHitCounterAttack?.Invoke();
         }
     }
 }

@@ -40,11 +40,6 @@ namespace PJH.Runtime.Players
         }
 
         private Player _player;
-        private PlayerMovement _movementCompo;
-        private PlayerBlock _blockCompo;
-        private PlayerFullMount _fullMountCompo;
-        private AgentMomentumGauge _momentumGaugeCompo;
-
         private GameEventChannelSO _gameEventChannel;
 
         private void Awake()
@@ -56,14 +51,9 @@ namespace PJH.Runtime.Players
         {
             base.Init(maxHealthStat);
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
-            _momentumGaugeCompo = _player.GetCompo<AgentMomentumGauge>(true);
-            _movementCompo = _player.GetCompo<PlayerMovement>();
             PlayerStat statCompo = _player.GetCompo<PlayerStat>();
             _increaseHealthStatOnFinisher = statCompo.GetStat(_increaseHealthStatOnFinisher);
             _shieldStat = statCompo.GetStat(_shieldStat);
-            _fullMountCompo = _player.GetCompo<PlayerFullMount>();
-            _blockCompo = _player.GetCompo<PlayerBlock>();
-
             _gameEventChannel.AddListener<FinishTimeline>(HandleFinishTimeline);
 
             CurrentShield = _shieldStat.Value;
@@ -81,30 +71,29 @@ namespace PJH.Runtime.Players
 
         public override bool ApplyDamage(GetDamagedInfo getDamagedInfo)
         {
-            if (_movementCompo.IsEvading)
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            PlayerMomentumGauge momentumGaugeCompo = _player.GetCompo<PlayerMomentumGauge>();
+            PlayerBlock blockCompo = _player.GetCompo<PlayerBlock>();
+            if (movementCompo.IsEvading)
             {
                 OnAvoidingAttack?.Invoke();
-                _momentumGaugeCompo.DecreaseMomentumGauge(
-                    _movementCompo.DecreaseMomentumGaugeWhenEvading);
+                momentumGaugeCompo.DecreaseMomentumGauge(
+                    movementCompo.DecreaseMomentumGaugeWhenEvading);
                 return false;
             }
 
-            if (_blockCompo.IsBlocking && !getDamagedInfo.isForceAttack)
+            if (blockCompo.IsBlocking && !getDamagedInfo.isForceAttack)
             {
-                if (_blockCompo.CanParrying())
+                if (blockCompo.CanParrying())
                 {
+                    _getDamagedInfo = getDamagedInfo;
                     OnParrying?.Invoke();
-
-                    (getDamagedInfo.attacker as IParryingable).ParryingSuccess(
-                        _blockCompo.IncreaseTargetMomentumGaugeOnParrying, _blockedAttackByParryingAnimation);
-                    _momentumGaugeCompo.IncreaseMomentumGauge(
-                        _blockCompo.IncreaseMomentumGaugeOnParrying);
                 }
                 else
                 {
                     OnBlockAttack?.Invoke();
-                    _momentumGaugeCompo.IncreaseMomentumGauge(
-                        _blockCompo.IncreaseMomentumGaugeOnBlock);
+                    momentumGaugeCompo.IncreaseMomentumGauge(
+                        blockCompo.IncreaseMomentumGaugeOnBlock);
                     _player.KnockBack(getDamagedInfo.attacker.ModelTrm.forward, _blockAttackKnockBackPower,
                         _blockAttackKnockBackDuration);
                 }
@@ -112,8 +101,10 @@ namespace PJH.Runtime.Players
                 return false;
             }
 
-            if (_fullMountCompo.IsFullMounting) return false;
-            // _player.ModelTrm
+            PlayerFullMount fullMountCompo = _player.GetCompo<PlayerFullMount>();
+            PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
+
+            if (fullMountCompo.IsFullMounting || counterAttackCompo.IsCounterAttacking) return false;
 
             if (CurrentShield > 0)
             {

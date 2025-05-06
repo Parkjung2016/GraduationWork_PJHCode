@@ -38,8 +38,7 @@ namespace PJH.Runtime.UI
             {
                 _descriptionText.text = evt.interactDescription;
                 string inputKey = _interactKeyActionReference.action.GetBindingDisplayString();
-                InputKeyIcon inputKeyIcon =
-                    _inputKeyIconList.GetInputKeyIcon(inputKey);
+                InputKeyIcon inputKeyIcon = _inputKeyIconList.GetInputKeyIcon(inputKey);
                 _inputKeyImage.sprite = inputKeyIcon.keyIcon;
             }
 

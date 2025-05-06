@@ -49,7 +49,6 @@ namespace PJH.Runtime.Players
         private void HandleDeath()
         {
             var evt = GameEvents.PlayerDeath;
-            _deathCamera.Priority = 2;
             _gameEventChannel.RaiseEvent(evt);
             PlayerInput.EnablePlayerInput(false);
             _componentManager.EnableComponents(false);

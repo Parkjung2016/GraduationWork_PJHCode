@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8800829b3de645c28ac43d934a6314c4, type: 3}
-  m_Name: FinisherSequenceList
+  m_Script: {fileID: 11500000, guid: f1d25f738c6042baaddb5740a6e44f61, type: 3}
+  m_Name: HitCounterTargetEvent
   m_EditorClassIdentifier: 
-  _sequences:
-  - {fileID: 11400000, guid: 7e1fbaaa4431c334f83cefb210e7b313, type: 2}
-  - {fileID: 11400000, guid: 4639dfd0a4cb56d49bd05310bb3b1f68, type: 2}
+  eventAsset: {fileID: 0}
+  hasOverrideMethod: 0

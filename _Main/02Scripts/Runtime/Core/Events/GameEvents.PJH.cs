@@ -76,6 +76,7 @@ namespace Main.Runtime.Core.Events
     {
         public PlayableAsset sequenceAsset;
         public Animator enemyAnimator;
+        public Animator playerAnimator;
     }
 
     public class PlayerStunned : GameEvent

@@ -33,12 +33,6 @@ namespace PJH.Runtime.Players
 
 
         private Player _player;
-        private PlayerMovement _movementCompo;
-        private PlayerWarpStrike _warpStrikeCompo;
-        private PlayerAnimationTrigger _playerAnimationTriggerCompo;
-        private PlayerBlock _blockCompo;
-        private AgentWeaponManager _weaponManagerCompo;
-        private PlayerEnemyDetection _enemyDetectionCompo;
         private CancellationTokenSource _cameraViewConfigTokenSource;
         private CommandActionData _currentCommandActionData;
         private bool _isComboPossible;

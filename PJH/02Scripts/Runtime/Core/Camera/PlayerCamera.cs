@@ -53,7 +53,7 @@ namespace PJH.Runtime.Core.PlayerCamera
 
         private void Awake()
         {
-            _uiCamera = transform.Find("WorldCanvasCamera").GetComponent<Camera>();
+            _uiCamera = Camera.main.transform.Find("WorldCanvasCamera").GetComponent<Camera>();
             CameraTargetDetectionCompo = GetComponent<PlayerCameraTargetDetection>();
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
 

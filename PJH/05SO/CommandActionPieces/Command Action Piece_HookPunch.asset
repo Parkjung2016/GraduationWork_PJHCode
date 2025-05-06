@@ -25,5 +25,5 @@ MonoBehaviour:
   actionName: HookPunch
   actionDescription: 
   combatData: {fileID: 11400000, guid: a7b9f1fe3bc8244408adb0384e080ac7, type: 2}
-  passive: {fileID: 11400000, guid: a9df07215e86d9d47ad91194e1cb62f6, type: 2}
+  passive: {fileID: 11400000, guid: 05c0fd6d711464f42aac07371281f53b, type: 2}
   overlappingPassives: []

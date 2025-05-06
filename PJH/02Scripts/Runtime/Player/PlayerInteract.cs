@@ -11,12 +11,10 @@ namespace PJH.Runtime.Players
         public event Action<IInteractable> OnInteract;
 
         private Player _player;
-        private PlayerInteractableObjectDetection _interactableObjectDetectionCompo;
 
         public void Initialize(Agent agent)
         {
             _player = agent as Player;
-            _interactableObjectDetectionCompo = _player.GetCompo<PlayerInteractableObjectDetection>();
         }
 
         public void AfterInitialize()
@@ -31,7 +29,10 @@ namespace PJH.Runtime.Players
 
         private void HandleInteract()
         {
-            if (_player.IsHitting || !_interactableObjectDetectionCompo.GetNearTarget(out IInteractable target)) return;
+            PlayerInteractableObjectDetection interactableObjectDetectionCompo =
+                _player.GetCompo<PlayerInteractableObjectDetection>();
+
+            if (_player.IsHitting || !interactableObjectDetectionCompo.GetNearTarget(out IInteractable target)) return;
             target.Interact(_player.transform);
             OnInteract?.Invoke(target);
         }

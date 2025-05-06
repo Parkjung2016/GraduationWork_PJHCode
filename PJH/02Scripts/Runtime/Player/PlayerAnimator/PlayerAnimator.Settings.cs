@@ -26,6 +26,7 @@
             fullMountCompo.OnFullMount += HandleFullMount;
             _player.GetCompo<PlayerWarpStrike>().OnWarpStrikeAttack += HandleWarpStrikeAttack;
 
+            _player.GetCompo<PlayerCounterAttack>().OnCounterAttack += HandleCounterAttack;
         }
 
         private void UnSubscribeEvents()
@@ -52,6 +53,8 @@
             PlayerFullMount fullMountCompo = _player.GetCompo<PlayerFullMount>();
             fullMountCompo.OnFullMount -= HandleFullMount;
             _player.GetCompo<PlayerWarpStrike>().OnWarpStrikeAttack -= HandleWarpStrikeAttack;
+            
+            _player.GetCompo<PlayerCounterAttack>().OnCounterAttack -= HandleCounterAttack;
 
         }
     }

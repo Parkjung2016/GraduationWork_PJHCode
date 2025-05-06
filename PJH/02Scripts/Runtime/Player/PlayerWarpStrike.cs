@@ -32,6 +32,7 @@ namespace PJH.Runtime.Players
         private RaycastHit[] _warpStrikeTargets;
         private MMF_Player _hitFeedback;
         private ITransition _currentWarpStrikeAnimation;
+        private ClipTransition _getDamagedAnimationClip;
 
         private float _power;
 
@@ -101,7 +102,7 @@ namespace PJH.Runtime.Players
                             {
                                 attacker = _player,
                                 damage = _power,
-                                getDamagedAnimationClip = null,
+                                getDamagedAnimationClip = _getDamagedAnimationClip,
                                 hitPoint = warpPoint,
                                 increaseMomentumGauge = 0,
                                 isForceAttack = false,
@@ -155,9 +156,11 @@ namespace PJH.Runtime.Players
             }
         }
 
-        public void EnableWarpStrike(float power, Action triggeredWarpStrikeEvent)
+        public void EnableWarpStrike(float power, ClipTransition getDamagedAnimationClip,
+            Action triggeredWarpStrikeEvent)
         {
             _power = power;
+            _getDamagedAnimationClip = getDamagedAnimationClip;
             OnTriggeredWarpStrike = triggeredWarpStrikeEvent;
             enabled = true;
             _player.PlayerInput.AttackEvent += TriggerWarpStrike;

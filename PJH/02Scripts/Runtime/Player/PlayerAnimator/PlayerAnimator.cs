@@ -10,7 +10,6 @@ namespace PJH.Runtime.Players
         {
             base.Initialize(agent);
             _player = agent as Player;
-            _playerAnimationTriggerCompo = _agentAnimationTriggerCompo as PlayerAnimationTrigger;
             _attackCompo = _player.GetCompo<PlayerAttack>();
             _movementCompo = _player.GetCompo<PlayerMovement>();
             _blockCompo = _player.GetCompo<PlayerBlock>();

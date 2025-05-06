@@ -26,7 +26,6 @@ namespace PJH.Runtime.Players
             _isStunnedParam;
 
         [SerializeField] private StatSO _attackSpeedStat;
-        private PlayerAnimationTrigger _playerAnimationTriggerCompo;
         private PlayerAttack _attackCompo;
         private PlayerMovement _movementCompo;
         private PlayerBlock _blockCompo;

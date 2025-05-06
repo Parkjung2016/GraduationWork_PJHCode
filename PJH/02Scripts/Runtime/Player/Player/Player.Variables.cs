@@ -25,7 +25,6 @@ namespace PJH.Runtime.Players
         public Transform ModelTrm => base.ModelTrm;
         [field: SerializeField] public PlayerInputSO PlayerInput { get; private set; }
         [SerializeField] private StatSO _stunDurationStat;
-        [SerializeField] private CinemachineCamera _deathCamera;
         [SerializeField] private MMF_Player _avoidingAttackFeedback;
         private GameEventChannelSO _gameEventChannel;
         private PlayerAttack _attackCompo;

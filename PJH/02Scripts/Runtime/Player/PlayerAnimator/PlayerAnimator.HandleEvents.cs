@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using Main.Core;
 
 namespace PJH.Runtime.Players
 {
@@ -21,7 +22,9 @@ namespace PJH.Runtime.Players
                 () =>
                 {
                     EnableRootMotion(false);
-                    _playerAnimationTriggerCompo.OnEndFullMount?.Invoke();
+                    PlayerAnimationTrigger playerAnimationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+
+                    playerAnimationTriggerCompo.OnEndFullMount?.Invoke();
                 });
         }
 
@@ -41,7 +44,9 @@ namespace PJH.Runtime.Players
             PlayAnimationClip(evasionAnimation, () =>
             {
                 EnableRootMotion(false);
-                _playerAnimationTriggerCompo.OnEndEvasion?.Invoke();
+                PlayerAnimationTrigger playerAnimationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+
+                playerAnimationTriggerCompo.OnEndEvasion?.Invoke();
             });
         }
 
@@ -91,7 +96,9 @@ namespace PJH.Runtime.Players
             {
                 if (!_attackCompo.CurrentCombatData.isManualMove)
                     EnableRootMotion(false);
-                _playerAnimationTriggerCompo.OnEndCombo?.Invoke();
+                PlayerAnimationTrigger playerAnimationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+
+                playerAnimationTriggerCompo.OnEndCombo?.Invoke();
             });
         }
 
@@ -103,6 +110,19 @@ namespace PJH.Runtime.Players
         private void HandleWarpStrikeAttack(ITransition animationClip)
         {
             PlayAnimationClip(animationClip, () => { EnableRootMotion(false); });
+        }
+
+        private void HandleCounterAttack(ITransition animationClip)
+        {
+            EnableRootMotion(true);
+
+            PlayAnimationClip(animationClip, () =>
+            {
+                PlayerAnimationTrigger playerAnimationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+                playerAnimationTriggerCompo.OnEndCounterAttack?.Invoke();
+
+                EnableRootMotion(false);
+            });
         }
     }
 }

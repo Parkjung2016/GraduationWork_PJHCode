@@ -14,7 +14,8 @@ namespace PJH.Runtime.Players
             {
                 _isComboPossible = true;
                 IsAttacking = false;
-                _movementCompo.CanMove = true;
+                PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+                movementCompo.CanMove = true;
             }
             else if (ComboCount != 0)
             {
@@ -57,9 +58,11 @@ namespace PJH.Runtime.Players
 
         private void HandleEndCombo()
         {
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             _isComboPossible = true;
             IsAttacking = false;
-            _movementCompo.CanMove = true;
+            movementCompo.CanMove = true;
             ComboCount = 0;
             _cameraViewConfigTokenSource = _player.DelayCallBack(_timeToSwitchToIdleAfterCombat, () =>
             {
@@ -69,7 +72,7 @@ namespace PJH.Runtime.Players
                 _cameraViewConfigEventChannel.RaiseEvent(evt);
                 OnExitBattle?.Invoke();
             });
-            _playerAnimationTriggerCompo.OnDisableDamageCollider?.Invoke();
+            animationTriggerCompo.OnDisableDamageCollider?.Invoke();
             CommandActionPieceSO commandActionPiece =
                 _currentCommandActionData.ExecuteCommandActionPieces[_prevComboCount];
             commandActionPiece.DeactivePassive();
@@ -83,7 +86,8 @@ namespace PJH.Runtime.Players
             CommandActionPieceSO commandActionPiece = _currentCommandActionData.ExecuteCommandActionPieces[ComboCount];
             CurrentCombatData = commandActionPiece.combatData;
             commandActionPiece.ActivePassive();
-            _weaponManagerCompo.CurrentCombatData = CurrentCombatData;
+            AgentWeaponManager weaponManagerCompo = _player.GetCompo<AgentWeaponManager>();
+            weaponManagerCompo.CurrentCombatData = CurrentCombatData;
             OnAttack?.Invoke();
             _prevComboCount = ComboCount;
             ComboCount = (ComboCount + 1) % _maxComboCount;

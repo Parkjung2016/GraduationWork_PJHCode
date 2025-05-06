@@ -16,7 +16,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 {
     public class WaveSystem : MonoBehaviour
     {
-        public Action<byte> OnChangedCurrentWave;
+        public event Action<byte> OnChangedCurrentWaveAction;
 
         public byte CurrentWave
         {
@@ -26,7 +26,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
                 byte prevWave = _currentWave;
                 _currentWave = value;
                 if (prevWave != _currentWave)
-                    OnChangedCurrentWave?.Invoke(_currentWave);
+                    OnChangedCurrentWaveAction?.Invoke(_currentWave);
             }
         }
 
@@ -35,6 +35,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         private GameEventChannelSO _gameEventChannel;
         private PoolManagerSO _poolManager;
         private GameObject[] _spawnPoints;
+        private EnemyPartySO _enemyParty;
 
         private List<Agent> _enemyList = new();
 
@@ -45,7 +46,6 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 
             _maxWave = (byte)UIEvent.EnemyPrevieChoiceEvent.enemyPartySO.UnitDatas.Count;
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
-            _spawnPoints = GameObject.FindGameObjectsWithTag("EnemySpawnPoint");
             _gameEventChannel.AddListener<StartWave>(HandleStartWave);
             _gameEventChannel.AddListener<ClearWave>(HandleClearWave);
         }
@@ -71,35 +71,48 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         {
             StartWave();
         }
-
+        
         public void StartWave()
         {
-            Debug.Log(34);
             SpawnEnemies();
+        }
+
+        public void SetCurrentEnemyWave(EnemyPartySO enemyPartySO, GameObject[] spawnPoints)
+        {
+            _enemyParty = enemyPartySO;
+            _spawnPoints = spawnPoints;
         }
 
         private void SpawnEnemies()
         {
-            EnemyPartySO enemyParty = UIEvent.EnemyPrevieChoiceEvent.enemyPartySO;
-            List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
-            List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
-            for (byte i = 0; i < spawnDatas.Count; i++)
+            try
             {
-                SpawnData spawnData = spawnDatas[i];
-                for (byte j = 0; j < spawnData.spawnAmount; j++)
+                EnemyPartySO enemyParty = _enemyParty;
+                List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
+                List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
+                for (byte i = 0; i < spawnDatas.Count; i++)
                 {
-                    UnitSO unit = spawnData.spawnUnit;
-                    Agent enemy = _poolManager.Pop(unit.UnitPoolType) as Agent;
-                    NavMeshAgent navMeshAgent = enemy.GetComponent<NavMeshAgent>();
-                    navMeshAgent.enabled = false;
-                    int rnd = Random.Range(0, copyOfSpawnPoints.Count);
-                    Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
-                    enemy.transform.position = spawnPoint.position;
-                    navMeshAgent.enabled = true;
-                    copyOfSpawnPoints.RemoveAt(rnd);
-                    _enemyList.Add(enemy);
-                    enemy.HealthCompo.OnDeath += () => { RemoveEnemy(enemy); };
+                    SpawnData spawnData = spawnDatas[i];
+                    for (byte j = 0; j < spawnData.spawnAmount; j++)
+                    {
+                        UnitSO unit = spawnData.spawnUnit;
+                        Agent enemy = _poolManager.Pop(unit.UnitPoolType) as Agent;
+                        NavMeshAgent navMeshAgent = enemy.GetComponent<NavMeshAgent>();
+                        navMeshAgent.enabled = false;
+                        int rnd = Random.Range(0, copyOfSpawnPoints.Count);
+                        Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
+                        enemy.transform.position = spawnPoint.position;
+                        navMeshAgent.enabled = true;
+                        copyOfSpawnPoints.RemoveAt(rnd);
+                        _enemyList.Add(enemy);
+                        enemy.HealthCompo.OnDeath += () => { RemoveEnemy(enemy); };
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+                Debug.LogError($"SpawnEnemies is failed, reason is : {e}");
+                Debug.LogError("Please Fix this exception.");
             }
         }
 

@@ -18,12 +18,10 @@ namespace PJH.Runtime.Players
         private Player _player;
 
         private float _currentBlockingTime;
-        private PlayerMovement _movementCompo;
 
         public void Initialize(Agent agent)
         {
             _player = agent as Player;
-            _movementCompo = _player.GetCompo<PlayerMovement>();
         }
 
         public void AfterInitialize()
@@ -34,7 +32,10 @@ namespace PJH.Runtime.Players
             _player.GetCompo<PlayerAttack>().OnAttack += HandleBlockEnd;
             _player.GetCompo<PlayerAnimationTrigger>().OnBlockEnd += HandleBlockEnd;
             _player.GetCompo<PlayerEnemyFinisher>().OnFinisher += HandleBlockEnd;
-            _movementCompo.OnEvasion += HandleBlockEnd;
+            _player.GetCompo<PlayerCounterAttack>().OnCounterAttackWithoutAnimationClip += HandleBlockEnd;
+
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            movementCompo.OnEvasion += HandleBlockEnd;
         }
 
         private void OnDestroy()
@@ -46,8 +47,10 @@ namespace PJH.Runtime.Players
             _player.GetCompo<PlayerAttack>().OnAttack -= HandleBlockEnd;
             _player.GetCompo<PlayerAnimationTrigger>().OnBlockEnd -= HandleBlockEnd;
             _player.GetCompo<PlayerEnemyFinisher>().OnFinisher -= HandleBlockEnd;
+            _player.GetCompo<PlayerCounterAttack>().OnCounterAttackWithoutAnimationClip -= HandleBlockEnd;
 
-            _movementCompo.OnEvasion -= HandleBlockEnd;
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            movementCompo.OnEvasion -= HandleBlockEnd;
         }
 
         private void HandleApplyDamaged(float damage)
@@ -69,7 +72,9 @@ namespace PJH.Runtime.Players
                 if (stateInfo.IsTag("Blocking")) return;
             }
 
-            if (_movementCompo.IsEvading || _player.IsStunned ||
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+
+            if (movementCompo.IsEvading || _player.IsStunned ||
                 isPressedBlockKey && _player.IsHitting) return;
             if (isPressedBlockKey)
             {

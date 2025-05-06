@@ -9,7 +9,9 @@ using Main.Shared;
 using Sirenix.OdinInspector;
 using UnityEditor;
 using UnityEngine;
+
 [assembly: ZLinq.ZLinqDropInAttribute("Main.Runtime.Agents", ZLinq.DropInGenerateTypes.Everything)]
+
 namespace Main.Runtime.Agents
 {
     public class AgentEquipmentSystem : SerializedMonoBehaviour, IAgentComponent, IAfterInitable

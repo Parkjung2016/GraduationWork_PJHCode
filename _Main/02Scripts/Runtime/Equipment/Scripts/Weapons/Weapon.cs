@@ -95,7 +95,7 @@ namespace Main.Runtime.Equipments.Scripts
             Destroy(gameObject);
         }
 
-        private void HandleDamageTrigger(Collider hitTarget, HitInfo hitInfo)
+        private void  HandleDamageTrigger(Collider hitTarget, HitInfo hitInfo)
         {
             CurrentDurability -= 1;
 

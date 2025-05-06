@@ -9,13 +9,13 @@ namespace PJH.Runtime.Core.InputKeyIcon
     {
         [Delayed, OnValueChanged("ChangeAssetName")]
         public string keyName;
-        public Sprite keyIcon;
-        #if UNITY_EDITOR
+
+        [PreviewField] public Sprite keyIcon;
+#if UNITY_EDITOR
         private void ChangeAssetName()
         {
-            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(this),$"KeyIcon_{keyName}");
-            
+            AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(this), $"KeyIcon_{keyName}");
         }
-        #endif
+#endif
     }
 }

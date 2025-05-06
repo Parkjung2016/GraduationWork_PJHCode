@@ -21,15 +21,11 @@ namespace PJH.Runtime.Players
 
         private Player _player;
 
-        private PlayerFinisherTargetDetection _finisherTargetDetectionCompo;
-        private PlayerMovement _movementCompo;
 
         public void Initialize(Agent agent)
         {
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _player = agent as Player;
-            _finisherTargetDetectionCompo = _player.GetCompo<PlayerFinisherTargetDetection>();
-            _movementCompo = _player.GetCompo<PlayerMovement>();
         }
 
         public void AfterInitialize()
@@ -53,18 +49,22 @@ namespace PJH.Runtime.Players
 
         private void HandleFinisher()
         {
-            if (_player.IsStunned || _player.IsHitting || !_finisherTargetDetectionCompo.GetFinisherTarget(
+            PlayerFinisherTargetDetection finisherTargetDetectionCompo =
+                _player.GetCompo<PlayerFinisherTargetDetection>();
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            if (_player.IsStunned || _player.IsHitting || !finisherTargetDetectionCompo.GetFinisherTarget(
                     out AgentFinisherable target) ||
-                _movementCompo.IsEvading) return;
+                movementCompo.IsEvading) return;
 
             target.SetToFinisherTarget();
-            
+
             FinisherSequenceDataSO finisherSequenceData = GetFinisherSequenceData(_finisherSequence);
             OnAdjustTimelineModelPosition?.Invoke(target.transform, finisherSequenceData.distanceFromEnemy);
             IsFinishering = true;
             EnemyFinisherSequence evt = GameEvents.EnemyFinisherSequence;
             evt.sequenceAsset = finisherSequenceData.sequenceAsset;
-            evt.enemyAnimator = target.Agent.GetCompo<AgentAnimator>(true).Animancer.Animator;
+            evt.enemyAnimator = target.Agent.GetCompo<AgentAnimator>(true).Animator;
+            evt.playerAnimator = _player.GetCompo<AgentAnimator>(true).Animator;
             _gameEventChannel.RaiseEvent(evt);
             OnFinisherTimeline?.Invoke(IsFinishering);
         }

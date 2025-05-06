@@ -12,7 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fd0cd96b94044098d1a5c34977fbaef, type: 3}
   m_Name: Command Action Piece_Squad_Punch
   m_EditorClassIdentifier: 
-  pieceSprite: {fileID: -123014715, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  pieceSprite: {fileID: -1235557080, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
   actionName: Squad_Punch
   actionDescription: 
   combatData: {fileID: 11400000, guid: 9508590cc4851644aaa94745c43ad9a3, type: 2}

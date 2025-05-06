@@ -105,9 +105,7 @@ namespace PJH.Runtime.Players
                 print(piece.actionName);
             }
             else
-            {
                 Debug.LogError("제한 갯수 넘음");
-            }
         }
     }
 }

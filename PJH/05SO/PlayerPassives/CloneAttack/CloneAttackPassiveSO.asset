@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ead3f18eb641e09146fcd4118a574d, type: 3}
   m_Name: CloneAttackPassiveSO
   m_EditorClassIdentifier: 
-  poolManager: {fileID: 11400000, guid: 7ba9d63098020b64699d6f2375075fea, type: 2}
+  icon: {fileID: 1203667939, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
   cloneAttackCombatDatabase: {fileID: 11400000, guid: d2b71269ae2e7f7488bc375ff4275a6e, type: 2}
   playerClonePoolType: {fileID: 11400000, guid: 546bfb182cccd7c4c816ac353d706292, type: 2}
