@@ -15,4 +15,5 @@ MonoBehaviour:
   _inputKeyIcons:
   - {fileID: 11400000, guid: b0edd18e1a92c0642a0088965c9954a0, type: 2}
   - {fileID: 11400000, guid: 0a42ed7de6a062b4da470f6d06f86c08, type: 2}
+  - {fileID: 11400000, guid: 78e770a015b25f945ad184858ffa63f9, type: 2}
   - {fileID: 11400000, guid: 4bb60392473374548bb689fd552a66a3, type: 2}

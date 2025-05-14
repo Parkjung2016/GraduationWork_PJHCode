@@ -5,6 +5,7 @@ using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using MoreMountains.Feedbacks;
 using TMPro;
+using TransitionsPlus;
 using UnityEngine;
 
 namespace PJH.Runtime.UI
@@ -16,12 +17,15 @@ namespace PJH.Runtime.UI
         [SerializeField] private RectTransform _lineEffectTrm;
         private TextMeshProUGUI _heartCountTMP;
         private CanvasGroup _canvasGroup;
+        private TransitionAnimator _transitionAnimator;
 
         private void Awake()
         {
+            _transitionAnimator = GetComponent<TransitionAnimator>();
             _showDeathUIEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
-            _heartCountTMP = transform.Find("Heart Count").GetComponent<TextMeshProUGUI>();
-            _canvasGroup = GetComponent<CanvasGroup>();
+            Transform deathUITrm = transform.Find("Transition Root/DeathUI");
+            _heartCountTMP = deathUITrm.Find("Heart Count").GetComponent<TextMeshProUGUI>();
+            _canvasGroup = deathUITrm.GetComponent<CanvasGroup>();
             _showDeathUIEventChannel.AddListener<ShowDeathUI>(HandleShowDeathUI);
             _canvasGroup.alpha = 0;
             gameObject.SetActive(false);
@@ -43,9 +47,15 @@ namespace PJH.Runtime.UI
 
         private void HandleShowDeathUI(ShowDeathUI evt)
         {
-            if (evt.isShowUI)
+            gameObject.SetActive(true);
+            _transitionAnimator.Play();
+        }
+
+        public void ShowDeathUI()
+        {
+            ShowDeathUI showDeathUIEvt = UIEvents.ShowDeathUI;
+            if (showDeathUIEvt.isShowUI)
             {
-                gameObject.SetActive(true);
                 _heartCountTMP.SetText(PlayerManager.Instance.CurrentHeartCount.ToString());
 
                 _canvasGroup.DOFade(1, 1);

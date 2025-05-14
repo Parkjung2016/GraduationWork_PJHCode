@@ -57,11 +57,12 @@ namespace Main.Runtime.Combat
             if (other.gameObject.layer == _owner.GameObject.layer) return;
             if (other.TryGetComponent(out IDamageable damageable))
             {
+                float increaseMomentumGauge = _increaseMomentumGauge * _combatData.increaseMomentumGaugeMultiplier;
                 GetDamagedInfo getDamagedInfo = new()
                 {
                     hitPoint = transform.position,
                     damage = _combatData.damageMultiplier * _power,
-                    increaseMomentumGauge = _increaseMomentumGauge,
+                    increaseMomentumGauge = increaseMomentumGauge,
                     attacker = _owner,
                     isForceAttack = _combatData.isForceAttack,
                     isKnockDown = _combatData.isKnockDown,

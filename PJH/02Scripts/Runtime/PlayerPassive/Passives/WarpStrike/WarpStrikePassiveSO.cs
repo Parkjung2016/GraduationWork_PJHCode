@@ -3,7 +3,6 @@ using System.Threading;
 using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using KHJ.Passive;
 using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
@@ -13,7 +12,7 @@ using PJH.Runtime.Players;
 using UnityEngine;
 using Debug = Main.Core.Debug;
 
-namespace PJH.Runtime.PlayerPassive
+namespace PJH.Runtime.PlayerPassive.Passives
 {
     [CreateAssetMenu(menuName = "SO/Passive/WarpStrikePassive")]
     public class WarpStrikePassiveSO : PassiveSO
@@ -27,10 +26,11 @@ namespace PJH.Runtime.PlayerPassive
         [SerializeField] private float _power;
         private GameEventChannelSO _gameEventChannel;
         private CancellationTokenSource _targetSelectionTokenSource;
+        private Player _player;
 
         public override void Init(IPlayer player)
         {
-            base.Init(player);
+            _player = player as Player;
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
         }
 

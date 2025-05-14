@@ -16,6 +16,7 @@ namespace PJH.Runtime.Players
                 IsAttacking = false;
                 PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
                 movementCompo.CanMove = true;
+                ExitBattleAfterDelay();
             }
             else if (ComboCount != 0)
             {
@@ -64,14 +65,7 @@ namespace PJH.Runtime.Players
             IsAttacking = false;
             movementCompo.CanMove = true;
             ComboCount = 0;
-            _cameraViewConfigTokenSource = _player.DelayCallBack(_timeToSwitchToIdleAfterCombat, () =>
-            {
-                if (IsInBattle) return;
-                var evt = GameEvents.CameraViewConfig;
-                evt.isChangeConfig = false;
-                _cameraViewConfigEventChannel.RaiseEvent(evt);
-                OnExitBattle?.Invoke();
-            });
+            ExitBattleAfterDelay();
             animationTriggerCompo.OnDisableDamageCollider?.Invoke();
             CommandActionPieceSO commandActionPiece =
                 _currentCommandActionData.ExecuteCommandActionPieces[_prevComboCount];

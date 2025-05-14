@@ -23,6 +23,7 @@ MonoBehaviour:
     SerializationNodes: []
   pieceSprite: {fileID: 795798366, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
   actionName: Haymaker
+  actionDisplay: 
   actionDescription: 
   combatData: {fileID: 11400000, guid: 488c75154605bc8488416aa50956dda5, type: 2}
   passive: {fileID: 11400000, guid: ce0ca612c82e0e547a027532d619460b, type: 2}

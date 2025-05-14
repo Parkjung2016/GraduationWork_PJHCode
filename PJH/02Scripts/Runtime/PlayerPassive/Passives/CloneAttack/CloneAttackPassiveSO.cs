@@ -1,15 +1,15 @@
-﻿using KHJ.Passive;
-using Main.Core;
+﻿using Main.Core;
 using Main.Runtime.Agents;
 using Main.Shared;
 using PJH.Runtime.Players;
 using UnityEngine;
 
-namespace PJH.Runtime.PlayerPassive
+namespace PJH.Runtime.PlayerPassive.Passives
 {
     [CreateAssetMenu(menuName = "SO/Passive/CloneAttackPassive")]
     public class CloneAttackPassiveSO : PassiveSO
     {
+        private Player _player;
         public CloneAttackCombatDatabase cloneAttackCombatDatabase;
         public PoolTypeSO playerClonePoolType;
         private PoolManagerSO _poolManager;
@@ -17,7 +17,7 @@ namespace PJH.Runtime.PlayerPassive
 
         public override void Init(IPlayer player)
         {
-            base.Init(player);
+            _player = player as Player;
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
             _attackCompo = _player.GetCompo<PlayerAttack>();
         }

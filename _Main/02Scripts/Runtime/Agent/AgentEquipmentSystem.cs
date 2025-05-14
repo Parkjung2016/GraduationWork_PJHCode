@@ -16,7 +16,7 @@ namespace Main.Runtime.Agents
 {
     public class AgentEquipmentSystem : SerializedMonoBehaviour, IAgentComponent, IAfterInitable
     {
-        [SerializeField] public StatSO _powerStat;
+        [SerializeField] public StatSO _powerStat,_increaseMomentumGaugeStat;
         [SerializeField] private EquipmentDatabaseSO equipmentDatabase;
         [SerializeField] private bool _startWithEquipment;
 
@@ -30,6 +30,7 @@ namespace Main.Runtime.Agents
         {
             _agent = agent;
             _powerStat = agent.GetCompo<AgentStat>(true).GetStat(_powerStat);
+            _increaseMomentumGaugeStat = agent.GetCompo<AgentStat>(true).GetStat(_increaseMomentumGaugeStat);
 
             InitializeSocketCache();
             if (!_startWithEquipment)
@@ -51,8 +52,7 @@ namespace Main.Runtime.Agents
 
             if (equipment is Weapon weapon)
             {
-                StatSO powerStat = _powerStat;
-                weapon.Equip(_agent, powerStat);
+                weapon.Equip(_agent, _powerStat, _increaseMomentumGaugeStat);
             }
             else
                 equipment.Equip(_agent);

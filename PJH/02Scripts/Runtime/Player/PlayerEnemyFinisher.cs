@@ -71,8 +71,7 @@ namespace PJH.Runtime.Players
 
         private FinisherSequenceDataSO GetFinisherSequenceData(FinisherSequenceSO finisherSequence)
         {
-            int sequenceDataIdx = Random.Range(0, finisherSequence.sequenceDatas.Count);
-            return finisherSequence.sequenceDatas[sequenceDataIdx];
+            return finisherSequence.sequenceDatas.GetRandom();
         }
     }
 }

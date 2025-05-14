@@ -46,19 +46,25 @@ namespace Main.Runtime.Agents
                 {
                     if (_eventMethodInfos.TryGetValue(eventAsset, out var methodList))
                     {
-                        if (value != null)
+                        try
                         {
-                            Debug.Log(eventAsset);
-                            var parameterType = methodList[0].GetParameters().First().ParameterType;
-                            object convertedValue = Convert.ChangeType(value, parameterType);
-                            methodList[0].Invoke(this, new[] { convertedValue });
-                        }
-                        else
-                        {
-                            if (methodList.Count > 1)
-                                methodList[1].Invoke(this, null);
+                            if (value != null)
+                            {
+                                var parameterType = methodList[0].GetParameters().First().ParameterType;
+                                object convertedValue = Convert.ChangeType(value, parameterType);
+                                methodList[0].Invoke(this, new[] { convertedValue });
+                            }
                             else
-                                methodList[0].Invoke(this, null);
+                            {
+                                if (methodList.Count > 1)
+                                    methodList[1].Invoke(this, null);
+                                else
+                                    methodList[0].Invoke(this, null);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log(e.Message);
                         }
                     }
                 });

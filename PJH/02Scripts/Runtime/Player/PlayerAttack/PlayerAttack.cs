@@ -93,5 +93,25 @@ namespace PJH.Runtime.Players
                    _isComboPossible && !movementCompo.IsEvading && !blockCompo.IsBlocking &&
                    !warpStrikeCompo.Activating;
         }
+
+
+        private void ExitBattleAfterDelay()
+        {
+            if (_cameraViewConfigTokenSource is { IsCancellationRequested: false })
+            {
+                _cameraViewConfigTokenSource.Cancel();
+                _cameraViewConfigTokenSource.Dispose();
+                _cameraViewConfigTokenSource = null;
+            }
+
+            _cameraViewConfigTokenSource = _player.DelayCallBack(_timeToSwitchToIdleAfterCombat, () =>
+            {
+                if (IsInBattle) return;
+                var evt = GameEvents.CameraViewConfig;
+                evt.isChangeConfig = false;
+                _cameraViewConfigEventChannel.RaiseEvent(evt);
+                OnExitBattle?.Invoke();
+            });
+        }
     }
 }

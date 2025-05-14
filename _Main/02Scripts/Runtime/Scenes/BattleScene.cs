@@ -37,7 +37,7 @@ namespace Main.Scenes
             _gameEventChannel.AddListener<PlayerDeath>(HandlePlayerDeath);
             _gameEventChannel.AddListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
             _gameEventChannel.AddListener<PlayerStunned>(HandlePlayerStunned);
-            _gameEventChannel.AddListener<FinishAllWave>(HandleFinishAllWave);
+            // _gameEventChannel.AddListener<FinishAllWave>(HandleFinishAllWave);
             _gameEventChannel.AddListener<EndBattle>(HandleEndBattle);
         }
 
@@ -47,7 +47,7 @@ namespace Main.Scenes
             _gameEventChannel.RemoveListener<PlayerDeath>(HandlePlayerDeath);
             _gameEventChannel.RemoveListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
             _gameEventChannel.RemoveListener<PlayerStunned>(HandlePlayerStunned);
-            _gameEventChannel.RemoveListener<FinishAllWave>(HandleFinishAllWave);
+            // _gameEventChannel.RemoveListener<FinishAllWave>(HandleFinishAllWave);
             _gameEventChannel.RemoveListener<EndBattle>(HandleEndBattle);
         }
 
@@ -56,13 +56,13 @@ namespace Main.Scenes
             BIS.Manager.Managers.UI.ShowPopup<RankingUpPopupUI>();
         }
 
-        private void HandleFinishAllWave(FinishAllWave evt)
-        {
-            Managers.FMODManager.MusicEventInstance.setParameterByNameWithLabel("MusicType", "EndBattle");
-
-            Transform _rewardChest = _poolManager.Pop(_rewardChestPoolType).GameObject.transform;
-            _rewardChest.position = _rewardCehstPointTrm.position;
-        }
+        // private void HandleFinishAllWave(FinishAllWave evt)
+        // {
+        //     Managers.FMODManager.MusicEventInstance.setParameterByNameWithLabel("MusicType", "EndBattle");
+        //
+        //     Transform _rewardChest = _poolManager.Pop(_rewardChestPoolType).GameObject.transform;
+        //     _rewardChest.position = _rewardCehstPointTrm.position;
+        // }
 
         private void HandlePlayerStunned(PlayerStunned evt)
         {
@@ -109,7 +109,7 @@ namespace Main.Scenes
                 showDeathUIEvt.isShowUI = true;
                 _uiEventChannel.RaiseEvent(showDeathUIEvt);
             });
-            seq.AppendInterval(3);
+            seq.AppendInterval(5);
             seq.AppendCallback(() => { SceneManagerEx.LoadScene("Lobby", true); });
         }
 

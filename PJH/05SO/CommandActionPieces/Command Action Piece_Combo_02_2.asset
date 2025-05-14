@@ -25,5 +25,5 @@ MonoBehaviour:
   actionName: Combo_02_2
   actionDescription: 
   combatData: {fileID: 11400000, guid: a9154b17ac20da344904a69ae35c1e36, type: 2}
-  passive: {fileID: 11400000, guid: ce0ca612c82e0e547a027532d619460b, type: 2}
+  passive: {fileID: 0}
   overlappingPassives: []

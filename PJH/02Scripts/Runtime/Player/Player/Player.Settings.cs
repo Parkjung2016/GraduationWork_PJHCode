@@ -22,7 +22,6 @@ namespace PJH.Runtime.Players
             PlayerHealth playerHealth = (HealthCompo as PlayerHealth);
             playerHealth.OnAvoidingAttack += HandleAvoidingAttack;
         }
-
         private void UnSubscribeEvents()
         {
             PlayerInput.LockOnToggleEvent -= HandleLockOnToggle;

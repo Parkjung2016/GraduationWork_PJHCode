@@ -6,7 +6,7 @@ using Main.Runtime.Combat.Core;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-namespace PJH.Runtime.PlayerPassive
+namespace PJH.Runtime.PlayerPassive.Passives
 {
     public class PlayerClone : MonoBehaviour, IPoolable
     {

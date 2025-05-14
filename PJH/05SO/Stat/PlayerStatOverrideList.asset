@@ -34,3 +34,6 @@ MonoBehaviour:
   - _stat: {fileID: 11400000, guid: ecaa411f055a44245863d3dc471611d4, type: 2}
     _isUseOverride: 1
     _overrideValue: 1.9616613
+  - _stat: {fileID: 11400000, guid: dc7d7debef329614194340451cfea602, type: 2}
+    _isUseOverride: 1
+    _overrideValue: 4.010989

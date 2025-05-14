@@ -152,4 +152,4 @@ MonoBehaviour:
   _blockAttackKnockBackDuration: 0.1
   _blockedAttackByParryingAnimation: {fileID: 11400000, guid: 2121775ce218a7e41ba1e4efd9057b1f, type: 2}
   _increaseHealthStatOnFinisher: {fileID: 11400000, guid: 94c130df7955a544596f4f6488ddc1ab, type: 2}
-  _shieldStat: {fileID: 0}
+  _shieldStat: {fileID: 11400000, guid: e1a454eb515f9fc4881ceb39008323cf, type: 2}

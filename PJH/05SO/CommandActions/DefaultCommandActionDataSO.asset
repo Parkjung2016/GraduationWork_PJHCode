@@ -16,6 +16,4 @@ MonoBehaviour:
     <ExecuteCommandActionPieces>k__BackingField:
     - {fileID: 11400000, guid: 4e08a5f1860d24341bd8a61becc28ed3, type: 2}
     - {fileID: 11400000, guid: f2f0b21d67b1c814a85f2a421d263d49, type: 2}
-    - {fileID: 11400000, guid: 12a0cc2192a56ec40b31805f9e35f5ec, type: 2}
     - {fileID: 11400000, guid: e2f02c697da5a3840acb82a60a6543e2, type: 2}
-    - {fileID: 11400000, guid: ad7d52b008386e744942129f19e9da34, type: 2}

@@ -14,7 +14,8 @@
         "GUID:9fc11ab03a9187d45baf4f15474639fe",
         "GUID:5ff5028d970048f469e1a9b38c2e5a45",
         "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
-        "GUID:ee699b6d22b637f418f28698fdc309c9"
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "TransitionPlus.Runtime.Scripts"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

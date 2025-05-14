@@ -7,7 +7,8 @@ namespace PJH.Runtime.Core.InputKeyIcon
     [CreateAssetMenu(menuName = "SO/InputKeyIcon/List")]
     public class InputKeyIconListSO : ScriptableObject
     {
-        [SerializeField, InlineEditor] private List<InputKeyIcon> _inputKeyIcons;
+        [SerializeField, AssetList(AssetNamePrefix = "KeyIcon_", AutoPopulate = true)]
+        private List<InputKeyIcon> _inputKeyIcons;
 
         public InputKeyIcon GetInputKeyIcon(string inputKeyName)
         {

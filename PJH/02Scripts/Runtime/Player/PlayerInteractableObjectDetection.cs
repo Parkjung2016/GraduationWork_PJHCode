@@ -63,7 +63,6 @@ namespace PJH.Runtime.Players
                     await UniTask.WaitUntil(() => gameObject.activeSelf, cancellationToken: _cancellationToken.Token);
                     await UniTask.WaitForSeconds(_detectInterval,
                         cancellationToken: _cancellationToken.Token);
-
                     int cnt = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
                         _whatIsInteractable);
                     if (cnt > 0)
@@ -94,14 +93,18 @@ namespace PJH.Runtime.Players
                     }
 
                     var evt = UIEvents.ShowInteractUIEventChannel;
-                    evt.isShowUI = _interactableTarget != null;
-                    evt.interactableTarget = _interactableTarget;
-                    if (_interactableTarget != null)
+                    bool isShowUI = _interactableTarget != null;
+                    if (evt.isShowUI != isShowUI)
                     {
-                        evt.interactDescription = _interactableTarget.Description;
-                    }
+                        evt.isShowUI = _interactableTarget != null;
+                        evt.interactableTarget = _interactableTarget;
+                        if (_interactableTarget != null)
+                        {
+                            evt.interactDescription = _interactableTarget.Description;
+                        }
 
-                    _showInteractUIEventChannel.RaiseEvent(evt);
+                        _showInteractUIEventChannel.RaiseEvent(evt);
+                    }
                 }
             }
             catch (Exception e)

@@ -37,6 +37,8 @@ namespace Main.Runtime.Core.Events
 
     public class StartWave : GameEvent
     {
+        public ScriptableObject enemyPartySO;
+        public GameObject[] spawnPoints;
     }
 
     public class FinishAllWave : GameEvent

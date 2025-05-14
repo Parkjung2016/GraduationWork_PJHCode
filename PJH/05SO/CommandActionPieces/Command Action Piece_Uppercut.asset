@@ -23,7 +23,8 @@ MonoBehaviour:
     SerializationNodes: []
   pieceSprite: {fileID: 1135084973, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
   actionName: Uppercut
-  actionDescription: 
+  actionDisplay: "\uC5B4\uD37C\uCEF7"
+  actionDescription: "\uC544\uB798\uC5D0\uC11C \uC704\uB85C \uACF5\uACA9\uD55C\uB2E4."
   combatData: {fileID: 11400000, guid: da979c34532ec6f4f895b2acacf1729b, type: 2}
   passive: {fileID: 0}
   overlappingPassives: []

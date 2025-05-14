@@ -7,6 +7,7 @@ using BIS.Events;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
+using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using Debug = UnityEngine.Debug;
@@ -31,7 +32,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         }
 
         private byte _currentWave;
-        private byte _maxWave;
+        private int _maxWave;
         private GameEventChannelSO _gameEventChannel;
         private PoolManagerSO _poolManager;
         private GameObject[] _spawnPoints;
@@ -43,8 +44,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         {
             _currentWave = 1;
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
-
-            _maxWave = (byte)UIEvent.EnemyPrevieChoiceEvent.enemyPartySO.UnitDatas.Count;
+            
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
             _gameEventChannel.AddListener<StartWave>(HandleStartWave);
             _gameEventChannel.AddListener<ClearWave>(HandleClearWave);
@@ -62,13 +62,16 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             _gameEventChannel.RaiseEvent(GameEvents.StartWave);
         }
 
-        private void Start()
-        {
-            _gameEventChannel.RaiseEvent(GameEvents.StartWave);
-        }
+        // private void Start()
+        // {
+        //     _gameEventChannel.RaiseEvent(GameEvents.StartWave);
+        // }
 
         private void HandleStartWave(StartWave evt)
         {
+            _enemyParty = evt.enemyPartySO as EnemyPartySO;
+            _spawnPoints = evt.spawnPoints;
+            _maxWave = ((EnemyPartySO)evt.enemyPartySO).UnitDatas.Count;
             StartWave();
         }
         
@@ -77,21 +80,16 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             SpawnEnemies();
         }
 
-        public void SetCurrentEnemyWave(EnemyPartySO enemyPartySO, GameObject[] spawnPoints)
-        {
-            _enemyParty = enemyPartySO;
-            _spawnPoints = spawnPoints;
-        }
-
         private void SpawnEnemies()
         {
-            try
-            {
+            // try
+            // {
                 EnemyPartySO enemyParty = _enemyParty;
                 List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
                 List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
                 for (byte i = 0; i < spawnDatas.Count; i++)
                 {
+                    Debug.Log(spawnDatas[i].spawnAmount);
                     SpawnData spawnData = spawnDatas[i];
                     for (byte j = 0; j < spawnData.spawnAmount; j++)
                     {
@@ -103,18 +101,31 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
                         Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
                         enemy.transform.position = spawnPoint.position;
                         navMeshAgent.enabled = true;
-                        copyOfSpawnPoints.RemoveAt(rnd);
+                        // copyOfSpawnPoints.RemoveAt(rnd);
                         _enemyList.Add(enemy);
                         enemy.HealthCompo.OnDeath += () => { RemoveEnemy(enemy); };
                     }
                 }
-            }
-            catch(Exception e)
-            {
-                Debug.LogError($"SpawnEnemies is failed, reason is : {e}");
-                Debug.LogError("Please Fix this exception.");
-            }
+
+                StartCombatEvent evt = GameEvents.StartCombat;
+                _gameEventChannel.RaiseEvent(evt);
+            // }
+            // catch(Exception e)
+            // {
+            //     Debug.LogError($"SpawnEnemies is failed, reason is : {e}");
+            //     Debug.LogError("Please Fix this exception.");
+            // }
         }
+
+        // private int[] DivideSpawnCount(int spawnCount, int spawnPoint)
+        // {
+        //     int[] spawnCountArray = new int[spawnPoint];
+        //     if (spawnCount % spawnPoint == 0)
+        //     {   
+        //         
+        //     }
+        //     return spawnCount % spawnPoint == 0 ? new int[spawnCount / spawnPoint];
+        // }
 
         private void RemoveEnemy(Agent enemy)
         {
@@ -124,6 +135,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
                 {
                     if (CurrentWave >= _maxWave)
                     {
+                        CurrentWave = 0;
                         var evt = GameEvents.FinishAllWave;
                         _gameEventChannel.RaiseEvent(evt);
                     }

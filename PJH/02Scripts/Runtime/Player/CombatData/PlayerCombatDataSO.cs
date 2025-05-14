@@ -14,7 +14,6 @@ namespace PJH.Runtime.Players
         [ShowIf("isManualMove")] [LabelText("공격 중에 앞으로 가는 시간"), SuffixLabel("초", true)]
         public float manualMoveSpeed;
 
-
 #if UNITY_EDITOR
         private void OnValidate()
         {

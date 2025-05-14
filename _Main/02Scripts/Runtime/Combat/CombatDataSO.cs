@@ -17,6 +17,8 @@ namespace Main.Runtime.Combat
         [Space(10)] [Title("Combat Options")] [LabelText("데미지 배율"), SuffixLabel("배", true)]
         public float damageMultiplier = 1.0f;
 
+        public float increaseMomentumGaugeMultiplier = 1;
+
 
         [LabelText("넉다운 여부")] public bool isKnockDown;
 
@@ -32,6 +34,7 @@ namespace Main.Runtime.Combat
 
         [Space(10)] [Title("Feedback Data")] [InlineProperty, HideLabel]
         public CombatFeedbackData combatFeedbackData;
+
 
         private float _originAttackSpeed;
 

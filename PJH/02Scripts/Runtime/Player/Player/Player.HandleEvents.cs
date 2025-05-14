@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using DG.Tweening;
 using Main.Runtime.Core.Events;
 using UnityEngine;
 
@@ -19,7 +20,10 @@ namespace PJH.Runtime.Players
 
         private void HandleAvoidingAttack()
         {
-            _avoidingAttackFeedback?.PlayFeedbacks();
+            if (!_avoidingAttackFeedback) return;
+            if (_avoidingAttackFeedback.IsPlaying)
+                _avoidingAttackFeedback.StopFeedbacks();
+            _avoidingAttackFeedback.PlayFeedbacks();
         }
 
 
@@ -48,10 +52,13 @@ namespace PJH.Runtime.Players
 
         private void HandleDeath()
         {
-            var evt = GameEvents.PlayerDeath;
-            _gameEventChannel.RaiseEvent(evt);
-            PlayerInput.EnablePlayerInput(false);
-            _componentManager.EnableComponents(false);
+            DOVirtual.DelayedCall(1.6f, () =>
+            {
+                var evt = GameEvents.PlayerDeath;
+                _gameEventChannel.RaiseEvent(evt);
+                PlayerInput.EnablePlayerInput(false);
+                _componentManager.EnableComponents(false);
+            });
         }
 
         private void HandleFinisherTimeline(bool isFinishering)

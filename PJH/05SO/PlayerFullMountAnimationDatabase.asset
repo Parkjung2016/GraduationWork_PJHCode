@@ -21,6 +21,5 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _fullMountAnimationDats:
+  fullMountAnimationDats:
   - {fileID: 11400000, guid: 3d5ab811efa1d344988cc27dc39bdacc, type: 2}
-  - {fileID: 11400000, guid: 4c3d250f96b5916448336f804969e251, type: 2}

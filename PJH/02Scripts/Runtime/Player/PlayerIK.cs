@@ -42,13 +42,13 @@ namespace PJH.Runtime.Players
             animationTriggerCompo.OnEndCombo += HandleEndCombo;
             animationTriggerCompo.OnBlockEnd += HandleEndCombo;
 
-
             _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline += HandleFinisherTimeline;
             LookAnimator.SwitchLooking(false);
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
             _movementCompo.OnEvasion -= HandleEvasion;
             _movementCompo.OnMovement -= HandleMovement;
@@ -114,8 +114,8 @@ namespace PJH.Runtime.Players
             LegsAnimator.User_SetIsMoving(true);
             LookAnimator.SwitchLooking(false);
         }
-        
-        
+
+
         protected override void HandleTriggerRagdoll()
         {
             base.HandleTriggerRagdoll();

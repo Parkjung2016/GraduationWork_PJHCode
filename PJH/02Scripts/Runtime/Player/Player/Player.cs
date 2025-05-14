@@ -25,8 +25,9 @@ namespace PJH.Runtime.Players
             SubscribeEvents();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             if (_stunTokenSource is { IsCancellationRequested: false })
             {
                 _stunTokenSource.Cancel();

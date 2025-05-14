@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbed49f5f7984860b91f47b857c630b5, type: 3}
+  m_Name: KeyIcon_F
+  m_EditorClassIdentifier: 
+  keyName: F
+  keyIcon: {fileID: 21300000, guid: 83c5c826db18f394eb547650dacf1324, type: 3}

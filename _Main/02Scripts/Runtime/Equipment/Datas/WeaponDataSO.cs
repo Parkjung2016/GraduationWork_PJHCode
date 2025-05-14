@@ -13,7 +13,7 @@ namespace Main.Runtime.Equipments.Datas
         public EventReference hitImpactSound;
         public float damageMultiplier = 1;
         public float damageMultiplierWhenThrow = 1;
-        public float increaseMomentumGauge = 10;
+        public float increaseMomentumGaugeMultiplier = 1;
         [ShowIf("isDurable"), SerializeField] public int maxDurability;
         public bool isDurable = true;
     }

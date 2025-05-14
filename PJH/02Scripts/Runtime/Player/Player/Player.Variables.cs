@@ -22,7 +22,6 @@ namespace PJH.Runtime.Players
         private Renderer[] _meshRenderers;
 
         public SkinnedMeshRenderer ModelRenderer { get; private set; }
-        public Transform ModelTrm => base.ModelTrm;
         [field: SerializeField] public PlayerInputSO PlayerInput { get; private set; }
         [SerializeField] private StatSO _stunDurationStat;
         [SerializeField] private MMF_Player _avoidingAttackFeedback;

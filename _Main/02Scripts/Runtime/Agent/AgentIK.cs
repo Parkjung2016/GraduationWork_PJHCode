@@ -24,7 +24,7 @@ namespace Main.Runtime.Agents
             animationTriggerCompo.OnTriggerRagdoll += HandleTriggerRagdoll;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnTriggerRagdoll -= HandleTriggerRagdoll;

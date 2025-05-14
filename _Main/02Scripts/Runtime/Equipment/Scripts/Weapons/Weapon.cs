@@ -23,7 +23,7 @@ namespace Main.Runtime.Equipments.Scripts
         private Rigidbody _rigidbodyCompo;
         private Collider _meshCollider;
         private DamageCollider _damageCollider;
-        private StatSO _powerStat;
+        private StatSO _powerStat, _increaseMomentumGaugeStat;
         private int _currentDurability;
 
         public int CurrentDurability
@@ -54,13 +54,15 @@ namespace Main.Runtime.Equipments.Scripts
             _meshCollider = GetComponent<Collider>();
         }
 
-        public void Equip(IAgent owner, StatSO powerStat)
+        public void Equip(IAgent owner, StatSO powerStat, StatSO increaseMomentumGaugeStat)
         {
             base.Equip(owner);
             _powerStat = powerStat;
+            _increaseMomentumGaugeStat = increaseMomentumGaugeStat;
             _damageCollider = GetComponentInChildren<DamageCollider>();
-            _damageCollider.Init(owner, _powerStat.Value * WeaponData.damageMultiplier,
-                WeaponData.increaseMomentumGauge);
+            float power = _powerStat.Value * WeaponData.damageMultiplier;
+            float increaseMomentumGauge = _increaseMomentumGaugeStat.Value * WeaponData.increaseMomentumGaugeMultiplier;
+            _damageCollider.Init(owner, power, increaseMomentumGauge);
             _damageCollider.OnDamageTrigger += HandleDamageTrigger;
             if (_rigidbodyCompo)
             {
@@ -95,7 +97,7 @@ namespace Main.Runtime.Equipments.Scripts
             Destroy(gameObject);
         }
 
-        private void  HandleDamageTrigger(Collider hitTarget, HitInfo hitInfo)
+        private void HandleDamageTrigger(Collider hitTarget, HitInfo hitInfo)
         {
             CurrentDurability -= 1;
 
