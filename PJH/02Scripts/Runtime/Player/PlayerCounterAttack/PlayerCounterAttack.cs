@@ -6,7 +6,6 @@ using Main.Runtime.Agents;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
-using MoreMountains.Feedbacks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,20 +15,17 @@ namespace PJH.Runtime.Players
     {
         public event Action<ITransition> OnCounterAttack;
         public event Action OnCounterAttackWithoutAnimationClip;
-
+        public event Action OnHitCounterAttackTarget;
         public bool IsCounterAttacking { get; private set; }
         [SerializeField] private List<PlayerCounterAttackDataSO> _counterAttackCombatDatas;
         [SerializeField] private StatSO _powerStat;
 
-        private MMF_Player _hitFeedback, _onCounterAttackFeedback;
         private Player _player;
         private PlayerCounterAttackDataSO _currentCounterAttackCombatData;
 
         public void Initialize(Agent agent)
         {
             _player = agent as Player;
-            _hitFeedback = transform.Find("HitFeedback").GetComponent<MMF_Player>();
-            _onCounterAttackFeedback = transform.Find("OnCounterAttackFeedback").GetComponent<MMF_Player>();
         }
 
         public void AfterInitialize()
@@ -59,14 +55,16 @@ namespace PJH.Runtime.Players
         {
             Agent target = _player.HealthCompo.GetDamagedInfo.attacker as Agent;
             _player.GetCompo<PlayerEnemyDetection>().SetForceTargetEnemy(target);
+            float damage = _powerStat.Value * _currentCounterAttackCombatData.damageMultiplier;
             GetDamagedInfo info = new GetDamagedInfo
             {
                 attacker = _player,
-                damage = _powerStat.Value,
-                getDamagedAnimationClip = _currentCounterAttackCombatData.getDamagedAnimationClip
+                damage = damage,
+                ignoreDirection = true,
+                getDamagedAnimationClipOnIgnoreDirection = _currentCounterAttackCombatData.getDamagedAnimationClip,
+                hitPoint = _player.transform.position
             };
-            _hitFeedback.PlayFeedbacks();
-
+            OnHitCounterAttackTarget?.Invoke();
             target.HealthCompo.ApplyDamage(info);
         }
 
@@ -77,10 +75,9 @@ namespace PJH.Runtime.Players
             int idx = Random.Range(0, _counterAttackCombatDatas.Count);
             _currentCounterAttackCombatData = _counterAttackCombatDatas[idx];
             OnCounterAttack?.Invoke(_currentCounterAttackCombatData.attackAnimationClip);
-            _onCounterAttackFeedback.PlayFeedbacks();
             OnCounterAttackWithoutAnimationClip?.Invoke();
             _player.ModelTrm.DOKill();
-            Vector3 attackerPosition = _player.HealthCompo.GetDamagedInfo.attacker.GameObject.transform.position;
+            Vector3 attackerPosition = _player.HealthCompo.GetDamagedInfo.attacker.transform.position;
             _player.ModelTrm.DOLookAt(attackerPosition, .3f);
         }
     }

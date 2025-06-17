@@ -4,7 +4,6 @@ using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using UnityEngine;
 
-
 namespace PJH.Runtime.Players
 {
     public class PlayerBlock : MonoBehaviour, IAgentComponent, IAfterInitable
@@ -36,6 +35,7 @@ namespace PJH.Runtime.Players
 
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             movementCompo.OnEvasion += HandleBlockEnd;
+            movementCompo.OnEvasionWhileHitting += HandleBlockEnd;
         }
 
         private void OnDestroy()
@@ -51,6 +51,7 @@ namespace PJH.Runtime.Players
 
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             movementCompo.OnEvasion -= HandleBlockEnd;
+            movementCompo.OnEvasionWhileHitting -= HandleBlockEnd;
         }
 
         private void HandleApplyDamaged(float damage)

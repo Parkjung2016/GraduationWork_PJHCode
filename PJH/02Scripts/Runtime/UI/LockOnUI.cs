@@ -1,4 +1,5 @@
 using Main.Core;
+using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Main.Shared;
@@ -14,6 +15,8 @@ namespace PJH.Runtime.UI
         private ILockOnAble _lockOnTarget;
 
 
+        private bool _isLockOn;
+
         private void Awake()
         {
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
@@ -23,6 +26,7 @@ namespace PJH.Runtime.UI
         {
             Player player = PlayerManager.Instance.Player as Player;
             player.OnLockOn += HandleLockOn;
+            HandleLockOn(player.IsLockOn);
             _uiEventChannel.AddListener<ShowLockOnUI>(HandleShowLockOnUI);
         }
 
@@ -30,8 +34,9 @@ namespace PJH.Runtime.UI
         {
             if (PlayerManager.Instance)
             {
-                Player player = PlayerManager.Instance.Player as Player;
-                player.OnLockOn -= HandleLockOn;
+                Agent player = PlayerManager.Instance.Player;
+                if (player != null)
+                    (player as Player).OnLockOn -= HandleLockOn;
             }
 
             _uiEventChannel.RemoveListener<ShowLockOnUI>(HandleShowLockOnUI);
@@ -39,11 +44,14 @@ namespace PJH.Runtime.UI
 
         private void HandleLockOn(bool isLockOn)
         {
-            gameObject.SetActive(isLockOn);
+            _isLockOn = isLockOn;
+            if (_lockOnTarget != null)
+                gameObject.SetActive(isLockOn);
         }
 
         private void HandleShowLockOnUI(ShowLockOnUI evt)
         {
+            if (!_isLockOn) return;
             gameObject.SetActive(evt.isShowUI);
             _lockOnTarget = evt.lockOnTarget;
         }

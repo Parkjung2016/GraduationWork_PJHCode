@@ -62,14 +62,18 @@ namespace PJH.Runtime.Players
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             _isComboPossible = true;
-            IsAttacking = false;
             movementCompo.CanMove = true;
             ComboCount = 0;
             ExitBattleAfterDelay();
             animationTriggerCompo.OnDisableDamageCollider?.Invoke();
-            CommandActionPieceSO commandActionPiece =
-                _currentCommandActionData.ExecuteCommandActionPieces[_prevComboCount];
-            commandActionPiece.DeactivePassive();
+            if (IsAttacking)
+            {
+                CommandActionPieceSO commandActionPiece =
+                    _currentCommandActionData.ExecuteCommandActionPieces[_prevComboCount];
+                commandActionPiece.DeActivePassive();
+            }
+
+            IsAttacking = false;
         }
 
         private void HandleAttack()
@@ -94,12 +98,12 @@ namespace PJH.Runtime.Players
 
         private void HandleUseCommandAction(CommandActionData commandActionData)
         {
-            if (commandActionData == null) return;
-            if (commandActionData.ExecuteCommandActionPieces.Count == 0) return;
+            _currentCommandActionData?.UnEquip();
+            
             _currentCommandActionData = commandActionData;
+            _currentCommandActionData.Equip(_player);
             _prevComboCount = 0;
             ComboCount = 0;
-            _currentCommandActionData.Init(_player);
         }
 
         private void HandleBlock(bool isBlocking)

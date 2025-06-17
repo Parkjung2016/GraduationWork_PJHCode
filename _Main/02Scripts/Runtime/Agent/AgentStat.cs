@@ -1,6 +1,8 @@
-﻿using Main.Runtime.Core;
+﻿using System;
+using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
 using Sirenix.OdinInspector;
+using System.Linq;
 using UnityEngine;
 using ZLinq;
 
@@ -23,7 +25,7 @@ namespace Main.Runtime.Agents
         public StatSO GetStat(StatSO stat)
         {
             Debug.Assert(stat != null, "Stats : GetStat - stat cannot be null");
-            return _stats.FirstOrDefault(x => x.statName == stat.statName);
+                return _stats.FirstOrDefault(x => x.statName == stat.statName);
         }
 
         public bool TryGetStat(StatSO stat, out StatSO outStat)
@@ -36,20 +38,14 @@ namespace Main.Runtime.Agents
         public void SetBaseValue(StatSO stat, float value) => GetStat(stat).BaseValue = value;
         public float GetBaseValue(StatSO stat) => GetStat(stat).BaseValue;
         public float IncreaseBaseValue(StatSO stat, float value) => GetStat(stat).BaseValue += value;
-        public void AddModifier(StatSO stat, object key, float value) => GetStat(stat).AddModifyValue(key, value);
-        public void RemoveModifier(StatSO stat, object key) => GetStat(stat).RemoveModifyValue(key);
+        public void AddValueModifier(StatSO stat, object key, float value) => GetStat(stat).AddModifyValue(key, value);
+        public void RemoveValueModifier(StatSO stat, object key) => GetStat(stat).RemoveModifyValue(key);
 
-        public void AddIncreaseValuePercent(StatSO stat, object key, float value) =>
-            GetStat(stat).AddIncreaseValuePercent(key, value);
+        public void AddValuePercentModifier(StatSO stat, object key, float value) =>
+            GetStat(stat).AddModifyValuePercent(key, value);
 
-        public void RemoveIncreaseValuePercent(StatSO stat, object key) =>
-            GetStat(stat).RemoveIncreaseValuePercent(key);
-
-        public void AddReductionValuePercent(StatSO stat, object key, float value) =>
-            GetStat(stat).AddReductionValuePercent(key, value);
-
-        public void RemoveReductionValuePercent(StatSO stat, object key) =>
-            GetStat(stat).RemoveReductionValuePercent(key);
+        public void RemoveValuePercentModifier(StatSO stat, object key) =>
+            GetStat(stat).RemoveModifyValuePercent(key);
 
 
         public void ClearAllStatModifier()
@@ -60,19 +56,19 @@ namespace Main.Runtime.Agents
             }
         }
 
-        public void ClearAllStatIncreaseValuePercent()
+        public void ClearAllStatValueModifier()
         {
             foreach (var stat in _stats)
             {
-                stat.ClearIncreaseValuePercent();
+                stat.ClearModifyValue();
             }
         }
 
-        public void ClearAllStatReductionValuePercent()
+        public void ClearAllStatValuePercentModifier()
         {
             foreach (var stat in _stats)
             {
-                stat.ClearReductionValuePercent();
+                stat.ClearModifyValuePercent();
             }
         }
     }

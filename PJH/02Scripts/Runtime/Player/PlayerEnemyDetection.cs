@@ -43,6 +43,7 @@ namespace PJH.Runtime.Players
             PlayerAttack attackCompo = _player.GetCompo<PlayerAttack>();
             attackCompo.OnAttack += HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible += HandleComboPossible;
+            _player.PlayerInput.ChangeLockOnTargetEvent += HandleChangeLockOnTarget;
             DetectNearTarget().Forget();
         }
 
@@ -59,6 +60,44 @@ namespace PJH.Runtime.Players
             PlayerAttack attackCompo = _player.GetCompo<PlayerAttack>();
             attackCompo.OnAttack -= HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible -= HandleComboPossible;
+
+            _player.PlayerInput.ChangeLockOnTargetEvent -= HandleChangeLockOnTarget;
+        }
+
+        private void HandleChangeLockOnTarget()
+        {
+            if (!_target) return;
+            int cnt = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
+                Define.MLayerMask.WhatIsEnemy);
+            Agent prevTarget = null;
+            var evt = UIEvents.ShowLockOnUI;
+
+            if (cnt > 0)
+            {
+                var copyArray = _detectColliders.ToArray();
+                Array.Resize(ref copyArray, cnt);
+                Collider nearCollider;
+                Agent nearTarget;
+
+                nearCollider =
+                    copyArray.Where(collider => collider.gameObject != _target.gameObject)
+                        .OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
+                        .FirstOrDefault();
+
+                if (!nearCollider)
+                    return;
+
+                nearTarget = nearCollider.GetComponent<Agent>();
+                if (nearTarget.HealthCompo.IsDead)
+                    return;
+                if (nearTarget == _target) return;
+                prevTarget = _target;
+                _target = nearTarget;
+                evt.isShowUI = true;
+                evt.lockOnTarget = _target.GetComponent<ILockOnAble>();
+                _showLockOnUIEventChannel.RaiseEvent(evt);
+                OnChangedTargetEnemy?.Invoke(prevTarget, _target);
+            }
         }
 
         private async UniTaskVoid DetectNearTarget()
@@ -91,14 +130,11 @@ namespace PJH.Runtime.Players
                                 _target = null;
                                 OnChangedTargetEnemy?.Invoke(prevTarget, _target);
                                 evt.isShowUI = false;
+                                evt.lockOnTarget = null;
                                 _showLockOnUIEventChannel.RaiseEvent(evt);
-                                continue;
                             }
 
-                            if (Array.Exists(copyArray, x => x.gameObject == _target.gameObject))
-                            {
-                                continue;
-                            }
+                            continue;
                         }
 
                         nearCollider =
@@ -111,6 +147,7 @@ namespace PJH.Runtime.Players
                         nearTarget = nearCollider.GetComponent<Agent>();
                         if (nearTarget.HealthCompo.IsDead)
                             continue;
+                        if (nearTarget == _target) continue;
                         prevTarget = _target;
                         _target = nearTarget;
                         evt.isShowUI = true;
@@ -122,6 +159,7 @@ namespace PJH.Runtime.Players
                         prevTarget = _target;
                         _target = null;
                         evt.isShowUI = false;
+                        evt.lockOnTarget = null;
                     }
 
                     _showLockOnUIEventChannel.RaiseEvent(evt);

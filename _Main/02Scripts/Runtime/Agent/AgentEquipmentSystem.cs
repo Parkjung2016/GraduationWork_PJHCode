@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
 using Main.Runtime.Equipments.Datas;
@@ -7,11 +8,12 @@ using Main.Runtime.Equipments.Scripts;
 using Main.Runtime.Equipments.Scripts.Weapons;
 using Main.Shared;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 [assembly: ZLinq.ZLinqDropInAttribute("Main.Runtime.Agents", ZLinq.DropInGenerateTypes.Everything)]
-
 namespace Main.Runtime.Agents
 {
     public class AgentEquipmentSystem : SerializedMonoBehaviour, IAgentComponent, IAfterInitable

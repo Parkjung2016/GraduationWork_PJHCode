@@ -1,6 +1,5 @@
 ﻿using Main.Runtime.Combat;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
 
 namespace PJH.Runtime.Players
@@ -15,11 +14,12 @@ namespace PJH.Runtime.Players
         public float manualMoveSpeed;
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
             if (attackAnimationClip.Name == name) return;
-            string path = AssetDatabase.GetAssetPath(this);
-            AssetDatabase.RenameAsset(path, attackAnimationClip.Name);
+            string path = UnityEditor.AssetDatabase.GetAssetPath(this);
+            UnityEditor.AssetDatabase.RenameAsset(path, attackAnimationClip.Name);
         }
 #endif
     }

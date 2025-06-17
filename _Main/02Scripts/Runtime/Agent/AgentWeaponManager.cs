@@ -29,6 +29,7 @@ namespace Main.Runtime.Agents
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnEnableDamageCollider += HandleEnableDamageCollider;
+            animationTriggerCompo.OnSetGetDamagedAnimationIndex += HandleSetGetDamagedAnimationIndex;
             animationTriggerCompo.OnDisableDamageCollider += HandleDisableDamageCollider;
         }
 
@@ -36,7 +37,14 @@ namespace Main.Runtime.Agents
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnEnableDamageCollider -= HandleEnableDamageCollider;
+            animationTriggerCompo.OnSetGetDamagedAnimationIndex -= HandleSetGetDamagedAnimationIndex;
+
             animationTriggerCompo.OnDisableDamageCollider -= HandleDisableDamageCollider;
+        }
+
+        private void HandleSetGetDamagedAnimationIndex(int idx)
+        {
+            CurrentCombatData.currentGetDamagedAnimationClipIndex = idx;
         }
 
         private void HandleEnableDamageCollider(Define.ESocketType socketType)

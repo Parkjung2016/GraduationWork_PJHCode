@@ -26,5 +26,5 @@ MonoBehaviour:
   actionDisplay: "\uD68C\uC804 \uACF5"
   actionDescription: "\uD68C\uC804\uD558\uC5EC \uACF5\uACA9\uD55C\uB2E4."
   combatData: {fileID: 11400000, guid: 906bfa08ef03182439a38e603bee6586, type: 2}
-  passive: {fileID: 11400000, guid: ce0ca612c82e0e547a027532d619460b, type: 2}
+  passive: {fileID: 0}
   overlappingPassives: []

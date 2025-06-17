@@ -1,48 +1,51 @@
 using System;
-using System.Collections.Generic;
 using Animancer;
 using DG.Tweening;
 using Main.Core;
 using Main.Runtime.Agents;
+using Main.Runtime.Combat;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
-using MoreMountains.Feedbacks;
 using PJH.Runtime.Core;
 using PJH.Runtime.Core.PlayerCamera;
 using UnityEngine;
-using Debug = Main.Core.Debug;
+using Debug = UnityEngine.Debug;
 
 namespace PJH.Runtime.Players
 {
+    public class WarpStrikeAttackInfo
+    {
+        public GetDamagedAnimationClipInfo getDamagedAnimationClipInfo;
+        public TransitionAsset attackAnimation;
+    }
+
     public class PlayerWarpStrike : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         private event Action OnTriggeredWarpStrike;
+        public event Action OnHitWarpStrikeTarget;
         public event Action<ITransition> OnWarpStrikeAttack;
         public bool Activating { get; private set; }
         [SerializeField] private LayerMask _whatIsWarpStrikeTarget;
-        [SerializeField] private List<TransitionAsset> _warpStrikeAnimations;
         [SerializeField] private PoolTypeSO _playerMotionTrailPoolType;
-        [SerializeField] private PoolManagerSO _poolManager;
+        private PoolManagerSO _poolManager;
         private Player _player;
         private PlayerCamera _playerCamera;
         private GameEventChannelSO _uiEventChannel;
         private Agent _warpStrikeTarget;
         private RaycastHit[] _warpStrikeTargets;
-        private MMF_Player _hitFeedback;
-        private ITransition _currentWarpStrikeAnimation;
-        private ClipTransition _getDamagedAnimationClip;
+        private WarpStrikeAttackInfo _currentWarpStrikeAttackInfo;
 
         private float _power;
 
         public void Initialize(Agent agent)
         {
-            _hitFeedback = transform.Find("HitFeedback").GetComponent<MMF_Player>();
+            _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
             _warpStrikeTargets = new RaycastHit[10];
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _player = agent as Player;
-            _playerCamera = (PlayerManager.Instance.PlayerCamera as PlayerCamera);
+            _playerCamera = PlayerManager.Instance.PlayerCamera;
             enabled = false;
         }
 
@@ -68,8 +71,7 @@ namespace PJH.Runtime.Players
             _player.ModelTrm.DOKill();
             _player.ModelTrm.DOLookAt(_warpStrikeTarget.transform.position, .2f, AxisConstraint.Y).OnComplete(() =>
             {
-                _currentWarpStrikeAnimation = _warpStrikeAnimations.GetRandomElement();
-                OnWarpStrikeAttack?.Invoke(_currentWarpStrikeAnimation);
+                OnWarpStrikeAttack?.Invoke(_currentWarpStrikeAttackInfo.attackAnimation);
             });
         }
 
@@ -78,7 +80,7 @@ namespace PJH.Runtime.Players
             (_poolManager.Pop(_playerMotionTrailPoolType) as MotionTrail)?.SnapshotMesh(_player.ModelRenderer);
             _player.EnableMeshRenderers(false);
             PlayerAnimator animatorCompo = _player.GetCompo<PlayerAnimator>();
-            animatorCompo.Animancer.States[_currentWarpStrikeAnimation].EffectiveSpeed = 0;
+            animatorCompo.Animancer.States[_currentWarpStrikeAttackInfo.attackAnimation].EffectiveSpeed = 0;
             Vector3 dir = _warpStrikeTarget.HeadTrm.transform.position - transform.position;
             Ray ray = new Ray(transform.position, dir.normalized);
             int cnt = Physics.RaycastNonAlloc(ray, _warpStrikeTargets, dir.magnitude, _whatIsWarpStrikeTarget);
@@ -97,21 +99,21 @@ namespace PJH.Runtime.Players
                             _player.GetCompo<PlayerMovement>().CC.enabled = true;
                             _player.EnableMeshRenderers(true);
 
-                            _hitFeedback.PlayFeedbacks();
                             GetDamagedInfo info = new()
                             {
                                 attacker = _player,
                                 damage = _power,
-                                getDamagedAnimationClip = _getDamagedAnimationClip,
+                                getDamagedAnimationClip = _currentWarpStrikeAttackInfo.getDamagedAnimationClipInfo,
                                 hitPoint = warpPoint,
                                 increaseMomentumGauge = 0,
                                 isForceAttack = false,
                                 isKnockDown = false,
                             };
-
+                            OnHitWarpStrikeTarget?.Invoke();
                             _warpStrikeTarget.HealthCompo.ApplyDamage(info);
                             Activating = false;
-                            animatorCompo.Animancer.States[_currentWarpStrikeAnimation].EffectiveSpeed = 1;
+                            animatorCompo.Animancer.States[_currentWarpStrikeAttackInfo.attackAnimation]
+                                .EffectiveSpeed = 1;
                             _player.GetCompo<PlayerAnimationTrigger>().OnEndCombo();
                         });
                         break;
@@ -128,6 +130,7 @@ namespace PJH.Runtime.Players
             {
                 var evt = UIEvents.ShowWarpStrikeTargetUI;
                 evt.isShowUI = true;
+                Debug.Log(target);
                 _warpStrikeTarget = target;
                 evt.target = _warpStrikeTarget;
                 _uiEventChannel.RaiseEvent(evt);
@@ -156,11 +159,11 @@ namespace PJH.Runtime.Players
             }
         }
 
-        public void EnableWarpStrike(float power, ClipTransition getDamagedAnimationClip,
+        public void EnableWarpStrike(float power, WarpStrikeAttackInfo warpStrikeAttackInfo,
             Action triggeredWarpStrikeEvent)
         {
             _power = power;
-            _getDamagedAnimationClip = getDamagedAnimationClip;
+            _currentWarpStrikeAttackInfo = warpStrikeAttackInfo;
             OnTriggeredWarpStrike = triggeredWarpStrikeEvent;
             enabled = true;
             _player.PlayerInput.AttackEvent += TriggerWarpStrike;

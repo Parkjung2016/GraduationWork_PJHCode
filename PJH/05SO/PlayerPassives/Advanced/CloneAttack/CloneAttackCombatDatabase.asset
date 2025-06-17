@@ -1,0 +1,266 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c84c48cedb9b49fc8eb4570755176cbf, type: 3}
+  m_Name: CloneAttackCombatDatabase
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: eb17f1626c2e1ab4aa4f1501ff3e5502, type: 2}
+    - {fileID: 11400000, guid: f6fc9054f7a15ea42a7c4a5034966fb4, type: 2}
+    - {fileID: 11400000, guid: a9154b17ac20da344904a69ae35c1e36, type: 2}
+    - {fileID: 11400000, guid: cfd9046e601d18942bcea75f9a863b4e, type: 2}
+    - {fileID: 11400000, guid: 5575ff197aefb4647845c4188c9162ce, type: 2}
+    - {fileID: 11400000, guid: a7b9f1fe3bc8244408adb0384e080ac7, type: 2}
+    - {fileID: 11400000, guid: 488c75154605bc8488416aa50956dda5, type: 2}
+    - {fileID: 11400000, guid: eb57a0646a2b3044faaddb160308c935, type: 2}
+    - {fileID: 11400000, guid: 607d5b056c0195d47afd56dc9731a9d8, type: 2}
+    - {fileID: 11400000, guid: de6ccb494867eab409606473a9c75f2a, type: 2}
+    - {fileID: 11400000, guid: 906bfa08ef03182439a38e603bee6586, type: 2}
+    - {fileID: 11400000, guid: 9508590cc4851644aaa94745c43ad9a3, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: _attackCombats
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[PJH.Runtime.Players.PlayerCombatDataSO,
+        PJH.Runtime.Player.CombatDataBase],[PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData,
+        PJH.Runtime.PlayerPassive.ActivePassive]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.ObjectEqualityComparer`1[[PJH.Runtime.Players.PlayerCombatDataSO,
+        PJH.Runtime.Player.CombatDataBase]], mscorlib
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 10
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 0
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 3
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 1.5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 4
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 5
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 6
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 7
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 8
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 9
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 10
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
+      Data: 11
+    - Name: $v
+      Entry: 7
+      Data: PJH.Runtime.PlayerPassive.Passives.CloneAttackCombatData, PJH.Runtime.PlayerPassive.ActivePassive
+    - Name: combatData
+      Entry: 10
+      Data: 1
+    - Name: additionalCloneOffset
+      Entry: 4
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 

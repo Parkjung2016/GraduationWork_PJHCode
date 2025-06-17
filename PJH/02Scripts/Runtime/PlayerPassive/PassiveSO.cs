@@ -1,18 +1,21 @@
-using Main.Shared;
+using PJH.Shared;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace PJH.Runtime.PlayerPassive
 {
-    public abstract class PassiveSO : ScriptableObject
+    public enum PassiveRankType
     {
-        public string displayName;
-        public string description;
-        public Sprite icon;
+        Low,
+        Middle,
+        Advanced
+    }
 
-        public abstract void Init(IPlayer player);
-
-        public abstract void ActivePassive();
-
-        public abstract void DeactivePassive();
+    public abstract class PassiveSO : PlayerPieceSO
+    {
+        [field: SerializeField]
+        [field: LabelText("µî±Þ")]
+        [field: EnumToggleButtons]
+        public PassiveRankType RankType { get; private set; }
     }
 }

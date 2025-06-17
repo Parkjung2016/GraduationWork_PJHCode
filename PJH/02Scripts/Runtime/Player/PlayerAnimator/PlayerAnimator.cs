@@ -51,7 +51,6 @@ namespace PJH.Runtime.Players
             var movementCompo = _player.GetCompo<PlayerMovement>();
             float velocity = (movementCompo.CC.velocity.magnitude / movementCompo.Speed) * Time.timeScale;
             float offset = 0.5f * Convert.ToByte(movementCompo.IsRunning) + 0.5f;
-
             float value = velocity * offset;
             if (!movementCompo.enabled)
             {
@@ -62,9 +61,9 @@ namespace PJH.Runtime.Players
             SetParam(_isMovingParam, velocity > 0.1f);
             SetParam(_fadeOffLeaningParam, velocity < 0.1f);
             SetParam(_isGroundedParam, movementCompo.IsGrounded);
-            SetParam(_velocityParam, value, .1f, Time.unscaledDeltaTime);
-            SetParam(_horizontalParam, input.x, .3f, Time.unscaledDeltaTime);
-            SetParam(_verticalParam, input.z, .3f, Time.unscaledDeltaTime);
+            SetParam(_velocityParam, value, .1f, Time.deltaTime);
+            SetParam(_horizontalParam, input.x, .3f, Time.deltaTime);
+            SetParam(_verticalParam, input.z, .3f, Time.deltaTime);
         }
 
         private void OnAnimatorMove()

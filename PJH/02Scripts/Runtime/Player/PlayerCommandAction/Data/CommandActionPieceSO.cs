@@ -1,78 +1,233 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Main.Shared;
 using PJH.Runtime.PlayerPassive;
+using PJH.Shared;
 using Sirenix.OdinInspector;
-using UnityEditor;
 using UnityEngine;
+using ZLinq;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
     [CreateAssetMenu(menuName = "SO/CommandAction/Piece")]
-    public class CommandActionPieceSO : SerializedScriptableObject
+    public class CommandActionPieceSO : PlayerPieceSO
     {
-        [Title("📌 기본 정보", titleAlignment: TitleAlignments.Centered, bold: true)]
-        [HorizontalGroup("Top", Width = 80)]
-        [PreviewField(70), HideLabel]
-        public Sprite pieceSprite;
-
-        [VerticalGroup("Top/Right")] [OnValueChanged("OnChangeActionName"), Delayed] [LabelText("📝 이름")]
-        public string actionName;
-
-        [VerticalGroup("Top/Right")] [OnValueChanged("OnChangeActionName"), Delayed] [LabelText("📝 디스플레이 이름")]
-        public string actionDisplay;
-
-        [VerticalGroup("Top/Right")] [MultiLineProperty(3)] [LabelText("📖 설명")]
-        public string actionDescription;
+        public event Action OnChangePassive;
 
         [VerticalGroup("Top/Right")] [LabelText("⚔ 전투 데이터")]
         public PlayerCombatDataSO combatData;
 
-        [BoxGroup("⚙ 패시브 설정", showLabel: true)] [LabelText("🌟 메인 패시브")] [SerializeField]
-        public PassiveSO passive;
+        [BoxGroup("⚙ 패시브 설정", showLabel: true)] [LabelText("🌟 각인된 패시브들")] [SerializeField]
+        private List<PassiveSO> _passives = new();
 
-        [BoxGroup("⚙ 패시브 설정")]
-        [LabelText("📚 중첩 패시브들")]
-        [SerializeField, ReadOnly]
-        [ListDrawerSettings(
-            Expanded = true,
-            DraggableItems = false,
-            ShowPaging = false,
-            ShowItemCount = true,
-            NumberOfItemsPerPage = 5,
-            ListElementLabelName = "name"
-        )]
-        public List<PassiveSO> overlappingPassives;
+        public IReadOnlyList<PassiveSO> Passives => _passives;
+        private IPlayer _player;
 
-        public void InitPassive(IPlayer player)
+
+        public override void EquipPiece(IPlayer player)
         {
-            (passive)?.Init(player);
+            base.EquipPiece(player);
+            if (!combatData.name.Contains("(Clone)"))
+                combatData = Instantiate(combatData);
+            _player = player;
+            OnChangePassive += HandleChangedPassive;
+
+            for (int i = 0; i < _passives.Count; i++)
+            {
+                _passives[i] = _passives[i].Clone<PassiveSO>();
+                if (_passives[i] is IBuffPassive buffPassive)
+                {
+                    BuffPassiveInfo buffPassiveInfo = buffPassive.BuffPassiveInfo;
+                    buffPassive.BuffPassiveInfo.ApplyBuffEvent += () =>
+                    {
+                        if (buffPassive is ICooldownPassive cooldownPassive)
+                        {
+                            if (cooldownPassive.CooldownPassiveInfo.remainingCooldownTime > 0)
+                            {
+                                Debug.LogError("쿨타임이 남아있습니다. 쿨타임: " +
+                                               cooldownPassive.CooldownPassiveInfo.remainingCooldownTime);
+                                return;
+                            }
+                        }
+
+                        buffPassiveInfo.remainingBuffTime = buffPassiveInfo.buffDuration;
+                        buffPassive.StartBuff();
+                    };
+                }
+
+                if (_passives[i] is ICooldownPassive cooldownPassive)
+                {
+                    CooldownPassiveInfo cooldownPassiveInfo = cooldownPassive.CooldownPassiveInfo;
+                    cooldownPassiveInfo.StartCooldownEvent += () =>
+                    {
+                        cooldownPassiveInfo.remainingCooldownTime = cooldownPassiveInfo.cooldownTime;
+                        cooldownPassiveInfo.OnUpdateCooldownTime?.Invoke(cooldownPassiveInfo.remainingCooldownTime,
+                            cooldownPassiveInfo.cooldownTime);
+                    };
+                }
+
+                _passives[i].EquipPiece(player);
+            }
+        }
+
+        public override void UnEquipPiece()
+        {
+            base.UnEquipPiece();
+            _player = null;
+            OnChangePassive -= HandleChangedPassive;
+            _passives.ForEach(passive => passive.UnEquipPiece());
+        }
+
+        private void HandleChangedPassive()
+        {
+            _passives.ForEach(passive => passive.EquipPiece(_player));
         }
 
         public void ActivePassive()
         {
-            (passive)?.ActivePassive();
-            foreach (var passive in overlappingPassives)
+            _passives.AsValueEnumerable().OfType<IActivePassive>().ToList()
+                .ForEach(activePassive =>
+                {
+                    if (activePassive is ICooldownPassive cooldownPassive)
+                    {
+                        if (cooldownPassive.CooldownPassiveInfo.remainingCooldownTime > 0)
+                        {
+                            Debug.LogError("쿨타임이 남아있습니다. 쿨타임: " +
+                                           cooldownPassive.CooldownPassiveInfo.remainingCooldownTime);
+                            return;
+                        }
+                    }
+
+                    activePassive.ActivePassive();
+                });
+        }
+
+        public void DeActivePassive()
+        {
+            _passives.AsValueEnumerable().OfType<IActivePassive>().ToList()
+                .ForEach(activePassive => activePassive.DeActivePassive());
+        }
+
+        public void UpdatePassive()
+        {
+            _passives.AsValueEnumerable().OfType<ICooldownPassive>().ToList()
+                .ForEach(UpdateCooldownPassiveTime);
+            _passives.AsValueEnumerable().OfType<IBuffPassive>().ToList()
+                .ForEach(UpdateBuffPassiveTime);
+        }
+
+        private void UpdateBuffPassiveTime(IBuffPassive buffPassive)
+        {
+            if (buffPassive.BuffPassiveInfo.remainingBuffTime > 0)
             {
-                (passive)?.ActivePassive();
+                BuffPassiveInfo buffPassiveInfo = buffPassive.BuffPassiveInfo;
+                buffPassiveInfo.remainingBuffTime -= Time.deltaTime;
+                if (buffPassiveInfo.remainingBuffTime < 0)
+                {
+                    buffPassiveInfo.remainingBuffTime = 0;
+
+                    buffPassive.EndBuff();
+                }
+                else
+                {
+                    (buffPassive as IBuffPassiveUpdateable)?.UpdateBuff();
+                }
+
+                buffPassiveInfo.OnUpdateBuffTime?.Invoke(buffPassiveInfo.remainingBuffTime,
+                    buffPassiveInfo.buffDuration);
             }
         }
 
-        public void DeactivePassive()
+        private void UpdateCooldownPassiveTime(ICooldownPassive cooldownPassive)
         {
-            (passive)?.DeactivePassive();
-            foreach (var passive in overlappingPassives)
+            if (cooldownPassive.CooldownPassiveInfo.remainingCooldownTime > 0)
             {
-                (passive).DeactivePassive();
+                CooldownPassiveInfo cooldownPassiveInfo = cooldownPassive.CooldownPassiveInfo;
+                cooldownPassiveInfo.remainingCooldownTime -= Time.deltaTime;
+                if (cooldownPassiveInfo.remainingCooldownTime < 0)
+                {
+                    cooldownPassiveInfo.remainingCooldownTime = 0;
+
+                    if (cooldownPassive is ICooldownPassiveEndable cooldownPassiveEndable)
+                    {
+                        cooldownPassiveEndable.EndCooldown();
+                    }
+                }
+
+                cooldownPassiveInfo.OnUpdateCooldownTime?.Invoke(cooldownPassiveInfo.remainingCooldownTime,
+                    cooldownPassiveInfo.cooldownTime);
+            }
+        }
+
+        public bool TryCombineCommandActionPiece(CommandActionPieceSO other)
+        {
+            if (!other) return false;
+            if (other.pieceDisplayName != pieceDisplayName)
+            {
+                Debug.LogError("다른 타입의 CommandActionPiece를 합칠 수 없습니다.");
+                return false;
             }
 
-            overlappingPassives.Clear();
+            if (_passives.Count + other._passives.Count > 2)
+            {
+                Debug.LogError("패시브의 최대 개수는 2개입니다.");
+                return false;
+            }
+
+            if (other._passives.Count > 0)
+            {
+                foreach (var passive in other._passives)
+                {
+                    if (!_passives.Contains(passive))
+                    {
+                        _passives.Add(passive);
+                    }
+                }
+            }
+
+            other = null;
+            Debug.Log("<color=green>병합 성공</color>");
+            OnChangePassive?.Invoke();
+            return true;
+        }
+
+        public bool TryAddPassive(PassiveSO passive)
+        {
+            _passives.Add(passive);
+            return true;
+        }
+
+        public bool TryRemovePassive(PassiveSO passive)
+        {
+            if (_passives.Remove(passive))
+            {
+                if (passive is IBuffPassive buffPassive)
+                {
+                    BuffPassiveInfo buffPassiveInfo = buffPassive.BuffPassiveInfo;
+                    buffPassiveInfo.ApplyBuffEvent = null;
+                }
+
+                if (passive is ICooldownPassive cooldownPassive)
+                {
+                    CooldownPassiveInfo cooldownPassiveInfo = cooldownPassive.CooldownPassiveInfo;
+                    cooldownPassiveInfo.StartCooldownEvent = null;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 #if UNITY_EDITOR
-        private void OnChangeActionName()
+        private void OnValidate()
         {
-            string path = AssetDatabase.GetAssetPath(this);
-            AssetDatabase.RenameAsset(path, $"Command Action Piece_{actionName}");
+            string newName = $"Command Action Piece_{combatData.name}";
+            if (name == newName) return;
+            string path = UnityEditor.AssetDatabase.GetAssetPath(this);
+            UnityEditor.AssetDatabase.RenameAsset(path, newName);
         }
+
 #endif
     }
 }

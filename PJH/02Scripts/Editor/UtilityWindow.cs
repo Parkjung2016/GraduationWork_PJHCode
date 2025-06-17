@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using Main.Runtime.Combat;
 using PJH.Runtime.Players;
@@ -148,7 +149,7 @@ namespace PJH.Editor
                 case MainMenuTab.CommandActionPiece:
                     tree.AddAllAssetsAtPath("SOList", commandActionPieceSOPath,
                             typeof(CommandActionPieceSO))
-                        .AddIcons(item => (item.Value as CommandActionPieceSO)?.pieceSprite).ForEach(item =>
+                        .AddIcons(item => (item.Value as CommandActionPieceSO)?.pieceIcon).ForEach(item =>
                         {
                             item.Name = item.Name.Replace("Command Action Piece_", "");
                         });
@@ -163,3 +164,4 @@ namespace PJH.Editor
         }
     }
 }
+#endif

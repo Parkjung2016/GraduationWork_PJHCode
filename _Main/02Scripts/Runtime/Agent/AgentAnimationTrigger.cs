@@ -12,16 +12,14 @@ namespace Main.Runtime.Agents
     public class AgentAnimationTrigger : MonoBehaviour, IAgentComponent
     {
         [SerializeField] private List<AnimancerEventAssetSO> _animationEvents;
-
         public event Action OnAnimationEnd;
+        public event Action<int> OnSetGetDamagedAnimationIndex;
         public Action OnTriggerRagdoll;
         public Action OnGetUp;
         public event Action<Define.ESocketType> OnEnableDamageCollider;
 
         public Action OnDisableDamageCollider;
 
-        private Agent _agent;
-        protected Animator _animator;
         private HybridAnimancerComponent _hybridAnimancer;
 
 
@@ -30,8 +28,6 @@ namespace Main.Runtime.Agents
         public virtual void Initialize(Agent agent)
         {
             _eventMethodInfos = new();
-            _agent = agent;
-            _animator = GetComponent<Animator>();
 
             _hybridAnimancer = GetComponent<HybridAnimancerComponent>();
 
@@ -124,6 +120,11 @@ namespace Main.Runtime.Agents
         private void GetUp()
         {
             OnGetUp?.Invoke();
+        }
+
+        private void SetGetDamagedAnimationIndex(int idx)
+        {
+            OnSetGetDamagedAnimationIndex?.Invoke(idx);
         }
     }
 }

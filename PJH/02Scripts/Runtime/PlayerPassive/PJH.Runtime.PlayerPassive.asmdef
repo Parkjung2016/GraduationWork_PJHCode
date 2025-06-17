@@ -2,7 +2,8 @@
     "name": "PJH.Runtime.PlayerPassive",
     "rootNamespace": "",
     "references": [
-        "GUID:308c623e4493ebb40a9d8177e9a2043b"
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:5c8004d2fc1627443a0d0aa855d7ba23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

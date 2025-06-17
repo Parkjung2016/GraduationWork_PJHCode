@@ -4,31 +4,42 @@ using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
+using TrailsFX;
 using UnityEngine;
 
 
 namespace PJH.Runtime.Players
 {
-    public class PlayerEffect : SerializedMonoBehaviour, IAgentComponent, IAfterInitable
+    public class PlayerEffect : AgentEffect
     {
+        [SerializeField] private PoolTypeSO _parryingEffectPoolType;
+        [SerializeField] private TrailEffect _meshTrailEffect;
         private Player _player;
-        private PlayerAttack _attackCompo;
         private GameEventChannelSO _spawnEventChannel;
         private GameEventChannelSO _gameEventChannel;
-        [SerializeField] private PoolTypeSO _parryingEffectPoolType;
-        [SerializeField] private MMF_Player _applyDamagedFeedback;
+        private MMF_Player _applyDamagedFeedback, _evasionFeedbackWhileHitting;
+        private MMF_Player _counterAttackFeedback, _hitCounterAttackTargetFeedback;
+        private MMF_Player _hitWarpStrikeTargetFeedback, _avoidingAttackFeedback;
 
-        public void Initialize(Agent agent)
+        public override void Initialize(Agent agent)
         {
+            base.Initialize(agent);
+            _counterAttackFeedback = transform.Find("CounterAttackFeedback").GetComponent<MMF_Player>();
+            _hitCounterAttackTargetFeedback =
+                transform.Find("HitCounterAttackTargetFeedback").GetComponent<MMF_Player>();
+            _applyDamagedFeedback = transform.Find("ApplyDamagedFeedback").GetComponent<MMF_Player>();
+            _hitWarpStrikeTargetFeedback = transform.Find("HitWarpStrikeTargetFeedback").GetComponent<MMF_Player>();
+            _evasionFeedbackWhileHitting = transform.Find("EvasionFeedbackWhileHitting").GetComponent<MMF_Player>();
+            _avoidingAttackFeedback = transform.Find("AvoidingAttackFeedback").GetComponent<MMF_Player>();
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _spawnEventChannel = AddressableManager.Load<GameEventChannelSO>("SpawnEventChannel");
-
             _player = agent as Player;
-            _attackCompo = _player.GetCompo<PlayerAttack>();
+            _meshTrailEffect.active = false;
         }
 
-        public void AfterInitialize()
+        public override void AfterInitialize()
         {
+            base.AfterInitialize();
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
 
             _player.OnStartStun += HandleStartStun;
@@ -36,10 +47,22 @@ namespace PJH.Runtime.Players
 
             PlayerHealth playerHealth = (_player.HealthCompo as PlayerHealth);
             playerHealth.OnParrying += HandleParrying;
+            playerHealth.OnAvoidingAttack += HandleAvoidingAttack;
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            movementCompo.OnEvasionWhileHitting += HandleEvasionWhileHitting;
+            movementCompo.OnEvasionEndWhileHitting += HandleEvasionEndWhileHitting;
+
+            PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
+            counterAttackCompo.OnCounterAttackWithoutAnimationClip += HandleCounterAttack;
+            counterAttackCompo.OnHitCounterAttackTarget += HandleHitCounterAttackTarget;
+
+            PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
+            warpStrikeCompo.OnHitWarpStrikeTarget += HandleHitWarpStrikeTarget;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
             _player.OnStartStun -= HandleStartStun;
             _player.OnEndStun -= HandleEndStun;
@@ -47,6 +70,52 @@ namespace PJH.Runtime.Players
 
             PlayerHealth playerHealth = (_player.HealthCompo as PlayerHealth);
             playerHealth.OnParrying -= HandleParrying;
+            playerHealth.OnAvoidingAttack -= HandleAvoidingAttack;
+
+            PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
+            movementCompo.OnEvasionWhileHitting -= HandleEvasionWhileHitting;
+            movementCompo.OnEvasionEndWhileHitting -= HandleEvasionEndWhileHitting;
+
+            PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
+            counterAttackCompo.OnCounterAttackWithoutAnimationClip -= HandleCounterAttack;
+            counterAttackCompo.OnHitCounterAttackTarget -= HandleHitCounterAttackTarget;
+
+            PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
+            warpStrikeCompo.OnHitWarpStrikeTarget -= HandleHitWarpStrikeTarget;
+        }
+
+        private void HandleAvoidingAttack()
+        {
+            if (!_avoidingAttackFeedback) return;
+            if (_avoidingAttackFeedback.IsPlaying)
+                _avoidingAttackFeedback.StopFeedbacks();
+            _avoidingAttackFeedback.PlayFeedbacks();
+        }
+
+        private void HandleHitWarpStrikeTarget()
+        {
+            _hitWarpStrikeTargetFeedback?.PlayFeedbacks();
+        }
+
+        private void HandleHitCounterAttackTarget()
+        {
+            _hitCounterAttackTargetFeedback?.PlayFeedbacks();
+        }
+
+        private void HandleCounterAttack()
+        {
+            _counterAttackFeedback?.PlayFeedbacks();
+        }
+
+        private void HandleEvasionWhileHitting()
+        {
+            _evasionFeedbackWhileHitting?.PlayFeedbacks();
+            _meshTrailEffect.active = true;
+        }
+
+        private void HandleEvasionEndWhileHitting()
+        {
+            _meshTrailEffect.active = false;
         }
 
         private void HandleStartStun()

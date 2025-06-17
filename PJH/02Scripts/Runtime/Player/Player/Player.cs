@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Main.Core;
@@ -25,6 +26,12 @@ namespace PJH.Runtime.Players
             SubscribeEvents();
         }
 
+        protected override void Start()
+        {
+            base.Start();
+            IsLockOn = true;
+        }
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -45,7 +52,7 @@ namespace PJH.Runtime.Players
 
         public void EnableMeshRenderers(bool enabled)
         {
-            for (int i = 0; i < _meshRenderers.Length; i++)
+            for (byte i = 0; i < _meshRenderers.Length; i++)
             {
                 _meshRenderers[i].enabled = enabled;
             }

@@ -21,6 +21,12 @@ namespace Main.Runtime.Core.Events
         public static readonly CameraInvertInput CameraInvertInput = new CameraInvertInput();
         public static readonly ChangeCameraFOV ChangeCameraFOV = new ChangeCameraFOV();
         public static readonly ChangeCameraUpdate ChangeCameraUpdate = new ChangeCameraUpdate();
+        public static readonly LockOn LockOn = new LockOn();
+    }
+
+    public class LockOn : GameEvent
+    {
+        public bool isLockOn;
     }
 
     public class DestroyDeadEnemy : GameEvent
@@ -78,7 +84,6 @@ namespace Main.Runtime.Core.Events
     {
         public PlayableAsset sequenceAsset;
         public Animator enemyAnimator;
-        public Animator playerAnimator;
     }
 
     public class PlayerStunned : GameEvent

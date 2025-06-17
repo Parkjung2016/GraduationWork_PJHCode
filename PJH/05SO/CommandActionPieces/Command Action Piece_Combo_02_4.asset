@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fd0cd96b94044098d1a5c34977fbaef, type: 3}
-  m_Name: Command Action Piece_Combo_02_4
+  m_Name: Command Action Piece_combo_02_4
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -21,9 +21,8 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceSprite: {fileID: -123014715, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
-  actionName: Combo_02_4
-  actionDescription: 
+  pieceIcon: {fileID: 21300000, guid: d7591b4d6f56a5149b10753e2a8f4265, type: 3}
+  pieceDisplayName: 
+  pieceDescription: 
   combatData: {fileID: 11400000, guid: 5575ff197aefb4647845c4188c9162ce, type: 2}
-  passive: {fileID: 0}
-  overlappingPassives: []
+  _passives: []

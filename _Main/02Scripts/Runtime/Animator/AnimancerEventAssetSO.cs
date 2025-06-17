@@ -1,6 +1,8 @@
 ﻿using System;
 using Animancer;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.Serialization;
 

@@ -1,0 +1,4 @@
+{
+	"name": "PJH.Runtime.PlayerPassive.BuffPassives",
+	"references":[ "GUID:2373c20d2432eae4a8c2cf2061f879e2", "GUID:5ff5028d970048f469e1a9b38c2e5a45", "GUID:308c623e4493ebb40a9d8177e9a2043b", "GUID:5c8004d2fc1627443a0d0aa855d7ba23", "GUID:a88e20ec90497d6429de4f692695fe43", "GUID:58a794baed936514a87c05a706b80ca7", "GUID:9fc11ab03a9187d45baf4f15474639fe" ]
+}

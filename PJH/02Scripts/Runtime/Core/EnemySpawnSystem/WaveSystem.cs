@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BIS.Data;
-using BIS.Events;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
-using Sirenix.Utilities;
 using UnityEngine;
 using UnityEngine.AI;
 using Debug = UnityEngine.Debug;
@@ -44,7 +42,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         {
             _currentWave = 1;
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
-            
+
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
             _gameEventChannel.AddListener<StartWave>(HandleStartWave);
             _gameEventChannel.AddListener<ClearWave>(HandleClearWave);
@@ -70,11 +68,12 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         private void HandleStartWave(StartWave evt)
         {
             _enemyParty = evt.enemyPartySO as EnemyPartySO;
+            Debug.Log(_enemyParty);
             _spawnPoints = evt.spawnPoints;
             _maxWave = ((EnemyPartySO)evt.enemyPartySO).UnitDatas.Count;
             StartWave();
         }
-        
+
         public void StartWave()
         {
             SpawnEnemies();
@@ -84,31 +83,27 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         {
             // try
             // {
-                EnemyPartySO enemyParty = _enemyParty;
-                List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
-                List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
-                for (byte i = 0; i < spawnDatas.Count; i++)
+            EnemyPartySO enemyParty = _enemyParty;
+            List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
+            List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
+            for (byte i = 0; i < spawnDatas.Count; i++)
+            {
+                Debug.Log(spawnDatas[i].spawnAmount);
+                SpawnData spawnData = spawnDatas[i];
+                for (byte j = 0; j < spawnData.spawnAmount; j++)
                 {
-                    Debug.Log(spawnDatas[i].spawnAmount);
-                    SpawnData spawnData = spawnDatas[i];
-                    for (byte j = 0; j < spawnData.spawnAmount; j++)
-                    {
-                        UnitSO unit = spawnData.spawnUnit;
-                        Agent enemy = _poolManager.Pop(unit.UnitPoolType) as Agent;
-                        NavMeshAgent navMeshAgent = enemy.GetComponent<NavMeshAgent>();
-                        navMeshAgent.enabled = false;
-                        int rnd = Random.Range(0, copyOfSpawnPoints.Count);
-                        Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
-                        enemy.transform.position = spawnPoint.position;
-                        navMeshAgent.enabled = true;
-                        // copyOfSpawnPoints.RemoveAt(rnd);
-                        _enemyList.Add(enemy);
-                        enemy.HealthCompo.OnDeath += () => { RemoveEnemy(enemy); };
-                    }
+                    UnitSO unit = spawnData.spawnUnit;
+                    Agent enemy = _poolManager.Pop(unit.UnitPoolType) as Agent;
+                    int rnd = Random.Range(0, copyOfSpawnPoints.Count);
+                    Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
+                    enemy.transform.position = spawnPoint.position;
+                    _enemyList.Add(enemy);
+                    enemy.HealthCompo.OnDeath += () => { RemoveEnemy(enemy); };
                 }
+            }
 
-                StartCombatEvent evt = GameEvents.StartCombat;
-                _gameEventChannel.RaiseEvent(evt);
+            StartCombatEvent evt = GameEvents.StartCombat;
+            _gameEventChannel.RaiseEvent(evt);
             // }
             // catch(Exception e)
             // {
@@ -135,7 +130,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
                 {
                     if (CurrentWave >= _maxWave)
                     {
-                        CurrentWave = 0;
+                        CurrentWave = 1;
                         var evt = GameEvents.FinishAllWave;
                         _gameEventChannel.RaiseEvent(evt);
                     }

@@ -15,6 +15,15 @@ namespace Main.Shared
             LeftLowerLeg,
             RightLowerLeg
         }
+
+        public enum EDirection
+        {
+            Front,
+            Back,
+            Left,
+            Right
+        }
+
         public static class MLayerMask
         {
             public static readonly LayerMask WhatIsGround = LayerMask.GetMask("Ground");

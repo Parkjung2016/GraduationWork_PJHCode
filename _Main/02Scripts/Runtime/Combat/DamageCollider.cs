@@ -1,9 +1,8 @@
 using System;
+using Animancer;
 using Main.Runtime.Combat.Core;
-using Main.Runtime.Core.StatSystem;
 using Main.Shared;
 using MoreMountains.Feedbacks;
-using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -58,23 +57,26 @@ namespace Main.Runtime.Combat
             if (other.TryGetComponent(out IDamageable damageable))
             {
                 float increaseMomentumGauge = _increaseMomentumGauge * _combatData.increaseMomentumGaugeMultiplier;
+                int getDamagedAnimationIndex = _combatData.currentGetDamagedAnimationClipIndex;
+                GetDamagedAnimationClipInfo getDamagedAnimationClip =
+                    _combatData.getDamagedAnimationClips[getDamagedAnimationIndex];
                 GetDamagedInfo getDamagedInfo = new()
                 {
                     hitPoint = transform.position,
                     damage = _combatData.damageMultiplier * _power,
                     increaseMomentumGauge = increaseMomentumGauge,
-                    attacker = _owner,
+                    attacker = _owner as MonoBehaviour,
                     isForceAttack = _combatData.isForceAttack,
                     isKnockDown = _combatData.isKnockDown,
                     knockDownTime = _combatData.knockDownTime,
                     getUpAnimationClip = _combatData.getUpAnimationClip,
-                    getDamagedAnimationClip = _combatData.getDamagedAnimationClip
+                    getDamagedAnimationClip = getDamagedAnimationClip
                 };
+                IAgent hitTarget = (damageable as MonoBehaviour).GetComponent<IAgent>();
                 HitInfo hitInfo = new()
                 {
-                    hitTarget = (damageable as MonoBehaviour).GetComponent<IAgent>()
+                    hitTarget = hitTarget
                 };
-
                 if (damageable.ApplyDamage(getDamagedInfo))
                 {
                     _impulseSource.ImpulseDefinition.ImpulseShape = _combatData.combatFeedbackData.impulseShape;

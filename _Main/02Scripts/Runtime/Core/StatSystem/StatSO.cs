@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace Main.Runtime.Core.StatSystem
@@ -37,15 +39,13 @@ namespace Main.Runtime.Core.StatSystem
         private float _minValue, _maxValue;
 
         private Dictionary<object, Stack<float>> _modifyValueByKeys = new Dictionary<object, Stack<float>>();
-        private Dictionary<object, float> _reductionValuePercentByKeys = new();
-        private Dictionary<object, float> _increaseValuePercentByKeys = new();
+        private Dictionary<object, float> _modifyValuePercentByKeys = new();
 
         [field: SerializeField, VerticalGroup("Data/Stats")]
         public bool IsPercent { get; private set; }
 
         private float _modifiedValue = 0;
-        private float _reductionValuePercent = 0f;
-        private float _increaseValuePercent = 0f;
+        private float _modifiedValuePercent = 0f;
         public Sprite Icon => _icon;
 
         public float MaxValue
@@ -65,10 +65,11 @@ namespace Main.Runtime.Core.StatSystem
             get
             {
                 float value = Mathf.Clamp(_baseValue + _modifiedValue, MinValue, MaxValue);
-                if (_reductionValuePercent > 0)
-                    value *= (1 - _reductionValuePercent * .01f);
-                if (_increaseValuePercent > 0)
-                    value += (1 + _increaseValuePercent * .01f);
+                if (_modifiedValuePercent != 0)
+                {
+                    value *= (1 + _modifiedValuePercent * .01f);
+                }
+
                 float roundedValue = (float)System.Math.Round(value, 1);
                 return roundedValue;
             }
@@ -128,46 +129,25 @@ namespace Main.Runtime.Core.StatSystem
             }
         }
 
-        public void AddReductionValuePercent(object key, float value)
-        {
-            if (_reductionValuePercentByKeys.ContainsKey(key)) return;
-            float prevValue = Value;
-            _reductionValuePercent += value;
 
-            _reductionValuePercentByKeys.Add(key, value);
+        public void AddModifyValuePercent(object key, float value)
+        {
+            if (_modifyValuePercentByKeys.ContainsKey(key)) return;
+            float prevValue = Value;
+            _modifiedValuePercent += value;
+            Debug.Log(_modifiedValuePercent);
+
+            _modifyValuePercentByKeys.Add(key, value);
 
             TryInvokeValueChangeEvent(Value, prevValue);
         }
 
-        public void RemoveReductionValuePercent(object key)
+        public void RemoveModifyValuePercent(object key)
         {
-            if (_reductionValuePercentByKeys.Remove(key, out float value))
+            if (_modifyValuePercentByKeys.Remove(key, out float value))
             {
                 float prevValue = Value;
-                _reductionValuePercent -= value;
-
-                TryInvokeValueChangeEvent(Value, prevValue);
-            }
-        }
-
-
-        public void AddIncreaseValuePercent(object key, float value)
-        {
-            if (_increaseValuePercentByKeys.ContainsKey(key)) return;
-            float prevValue = Value;
-            _increaseValuePercent += value;
-
-            _increaseValuePercentByKeys.Add(key, value);
-
-            TryInvokeValueChangeEvent(Value, prevValue);
-        }
-
-        public void RemoveIncreaseValuePercent(object key)
-        {
-            if (_increaseValuePercentByKeys.Remove(key, out float value))
-            {
-                float prevValue = Value;
-                _increaseValuePercent -= value;
+                _modifiedValuePercent -= value;
 
                 TryInvokeValueChangeEvent(Value, prevValue);
             }
@@ -175,25 +155,23 @@ namespace Main.Runtime.Core.StatSystem
 
         public void ClearModifier()
         {
+            ClearModifyValue();
+            ClearModifyValuePercent();
+        }
+
+        public void ClearModifyValue()
+        {
             float prevValue = Value;
             _modifyValueByKeys.Clear();
             _modifiedValue = 0;
             TryInvokeValueChangeEvent(Value, prevValue);
         }
 
-        public void ClearReductionValuePercent()
+        public void ClearModifyValuePercent()
         {
             float prevValue = Value;
-            _reductionValuePercentByKeys.Clear();
-            _reductionValuePercent = 0;
-            TryInvokeValueChangeEvent(Value, prevValue);
-        }
-
-        public void ClearIncreaseValuePercent()
-        {
-            float prevValue = Value;
-            _increaseValuePercentByKeys.Clear();
-            _increaseValuePercent = 0;
+            _modifyValuePercentByKeys.Clear();
+            _modifiedValuePercent = 0;
             TryInvokeValueChangeEvent(Value, prevValue);
         }
 

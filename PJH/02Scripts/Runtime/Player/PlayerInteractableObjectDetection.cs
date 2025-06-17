@@ -71,14 +71,7 @@ namespace PJH.Runtime.Players
                         Array.Resize(ref copyArray, cnt);
 
                         Collider nearCollider =
-                            copyArray.Where(col =>
-                                {
-                                    Vector3 viewPos =
-                                        Camera.main.WorldToViewportPoint(col.transform.position + Vector3.up);
-                                    return viewPos.x is >= 0 and <= 1 && viewPos.y is >= 0 and <= 1 &&
-                                           viewPos.z > 0;
-                                })
-                                .OrderBy(c => Vector3.Distance(_player.transform.position, c.transform.position))
+                            copyArray.OrderBy(c => Vector3.Distance(_player.transform.position, c.transform.position))
                                 .FirstOrDefault();
                         if (nearCollider)
                         {

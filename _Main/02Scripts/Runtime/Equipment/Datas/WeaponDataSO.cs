@@ -14,7 +14,7 @@ namespace Main.Runtime.Equipments.Datas
         public float damageMultiplier = 1;
         public float damageMultiplierWhenThrow = 1;
         public float increaseMomentumGaugeMultiplier = 1;
-        [ShowIf("isDurable"), SerializeField] public int maxDurability;
+        [ShowIf("isDurable"), SerializeField] public byte maxDurability;
         public bool isDurable = true;
     }
 }

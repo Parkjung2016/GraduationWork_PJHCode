@@ -1,16 +1,38 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Animancer;
+using Main.Shared;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Main.Runtime.Combat
 {
+    public class GetDamagedAnimationClipInfo : IEnumerable<KeyValuePair<Define.EDirection, ClipTransition>>
+    {
+        [SerializeField, DictionaryDrawerSettings(KeyLabel = "Direction", ValueLabel = "Clip")]
+        private Dictionary<Define.EDirection, ClipTransition> _getDamagedAnimationClips = new();
+
+        public ClipTransition this[Define.EDirection direction] => _getDamagedAnimationClips[direction];
+
+        public IEnumerator<KeyValuePair<Define.EDirection, ClipTransition>> GetEnumerator()
+        {
+            return _getDamagedAnimationClips.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
     [CreateAssetMenu(fileName = "CombatData", menuName = "SO/Combat/CombatData")]
     public class CombatDataSO : SerializedScriptableObject
     {
-        [Title("Animation Clips")] [LabelText("피격 시 타겟의 애니메이션")]
-        public ClipTransition getDamagedAnimationClip;
+        [OdinSerialize] [Title("Animation Clips")] [LabelText("피격 시 타겟의 애니메이션")]
+        public List<GetDamagedAnimationClipInfo> getDamagedAnimationClips = new();
 
         [LabelText("공격 애니메이션")] public ClipTransition attackAnimationClip;
 
@@ -18,6 +40,7 @@ namespace Main.Runtime.Combat
         public float damageMultiplier = 1.0f;
 
         public float increaseMomentumGaugeMultiplier = 1;
+        [HideInInspector] public int currentGetDamagedAnimationClipIndex = 0;
 
 
         [LabelText("넉다운 여부")] public bool isKnockDown;
@@ -35,7 +58,6 @@ namespace Main.Runtime.Combat
         [Space(10)] [Title("Feedback Data")] [InlineProperty, HideLabel]
         public CombatFeedbackData combatFeedbackData;
 
-
         private float _originAttackSpeed;
 
         public void SetAttackOverrideSpeed(float speed)
@@ -47,6 +69,20 @@ namespace Main.Runtime.Combat
         {
             _originAttackSpeed = attackAnimationClip.Speed;
         }
+
+
+#if UNITY_EDITOR
+        protected virtual void OnValidate()
+        {
+            foreach (var info in getDamagedAnimationClips)
+            {
+                foreach (var pair in info)
+                {
+                    pair.Value.FadeDuration = .03f;
+                }
+            }
+        }
+#endif
     }
 
     [Serializable]

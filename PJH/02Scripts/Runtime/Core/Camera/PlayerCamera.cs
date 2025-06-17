@@ -169,8 +169,9 @@ namespace PJH.Runtime.Core.PlayerCamera
             Transform trackingTarget = _cinemachineCamera.Target.TrackingTarget;
             trackingTarget.rotation *=
                 Quaternion.AngleAxis(look.x * (_invertXAxis ? -1 : 1) * _rotationPower.x, Vector3.up);
-            trackingTarget.rotation *=
-                Quaternion.AngleAxis(look.y * (_invertYAxis ? 1 : -1) * _rotationPower.y, Vector3.right);
+            if (_cinemachineCamera.IsLive)
+                trackingTarget.rotation *=
+                    Quaternion.AngleAxis(look.y * (_invertYAxis ? 1 : -1) * _rotationPower.y, Vector3.right);
 
             Vector3 angles = trackingTarget.eulerAngles;
             angles.z = 0;

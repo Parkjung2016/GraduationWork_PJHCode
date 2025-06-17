@@ -21,9 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceSprite: {fileID: -435580731, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
-  actionName: Combo_02_1
-  actionDescription: 
+  pieceIcon: {fileID: 0}
+  pieceDisplayName: "\uB354\uBE14 \uD6C5"
+  pieceDescription: "\uC591\uC190\uC744 \uBC88\uAC08\uC544 \uD718\uB450\uB985\uB2C8\uB2E4."
   combatData: {fileID: 11400000, guid: eb17f1626c2e1ab4aa4f1501ff3e5502, type: 2}
-  passive: {fileID: 11400000, guid: ce0ca612c82e0e547a027532d619460b, type: 2}
-  overlappingPassives: []
+  _passives:
+  - {fileID: 11400000, guid: 5f0a7eb9ae70b194fa9fa8a98a87af6d, type: 2}

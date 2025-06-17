@@ -28,7 +28,12 @@ public class PoolManagerSO : ScriptableObject
         {
             var handle = item.prefab.LoadAssetAsync<GameObject>();
             if (!handle.IsDone)
+            {
                 yield return handle;
+            }
+
+            Debug.Log(item);
+
             IPoolable poolable = handle.Result.GetComponent<IPoolable>();
             Debug.Assert(poolable != null, $"PoolItem does not have IPoolable {handle.Result.name}");
 

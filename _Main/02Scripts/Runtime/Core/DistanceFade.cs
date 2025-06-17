@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-using Cysharp.Threading.Tasks;
 using Unity.Cinemachine;
 using UnityEngine;
 using ZLinq;
@@ -15,15 +12,11 @@ namespace Main.Runtime.Core
         [SerializeField] private bool _isRootObject = true;
         private Renderer[] _renderers;
 
-        private CinemachineBrain _cinemachineBrain;
-        private Transform _mainPlayerCameraTrm;
         private Collider _collider;
 
         private void Awake()
         {
             _collider = GetComponent<Collider>();
-            _cinemachineBrain = Camera.main.GetComponent<CinemachineBrain>();
-            _mainPlayerCameraTrm = GameObject.FindGameObjectWithTag("MainPlayerCamera")?.transform;
             if (!_isRootObject)
                 _renderers = transform.parent.GetComponentsInChildren<Renderer>()
                     .AsValueEnumerable().Where(x => x.material.HasFloat(FadeAmountHash)).ToArray();
@@ -35,15 +28,12 @@ namespace Main.Runtime.Core
         private void LateUpdate()
         {
             float value = 0;
+            Transform mainCameraTrm = Camera.main.transform;
 
-            if (_cinemachineBrain.ActiveVirtualCamera != null &&
-                (_cinemachineBrain.ActiveVirtualCamera as MonoBehaviour).transform == _mainPlayerCameraTrm)
-            {
-                Vector3 closestPoint = _collider.ClosestPoint(_cinemachineBrain.transform.position);
-                value = Vector3.Distance(closestPoint, _cinemachineBrain.transform.position);
+            Vector3 closestPoint = _collider.ClosestPoint(mainCameraTrm.transform.position);
+            value = Vector3.Distance(closestPoint, mainCameraTrm.transform.position);
 
-                value = Remap(value, _minMaxDistance.y, 0, _minMaxDistance.x, 1);
-            }
+            value = Remap(value, _minMaxDistance.y, 0, _minMaxDistance.x, 1);
 
             for (int i = 0; i < _renderers.Length; i++)
             {

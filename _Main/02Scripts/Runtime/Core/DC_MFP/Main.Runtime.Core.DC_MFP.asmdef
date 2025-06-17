@@ -1,0 +1,4 @@
+{
+	"name": "Main.Runtime.Core.DC_MFP",
+	"references":[ "GUID:7ff1d9b7deeacb840a11da1b7af66c30", "GUID:37151e2099022af42afa90e2ee1b768a" ]
+}

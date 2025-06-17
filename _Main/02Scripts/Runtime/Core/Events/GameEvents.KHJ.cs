@@ -9,10 +9,10 @@ namespace Main.Runtime.Core.Events
         public static readonly ModifyPlayerStat ModifyPlayerStat = new ModifyPlayerStat();
         public static readonly CurrentBlockInfo CurrentBlockInfo = new CurrentBlockInfo();
         public static readonly InventoryInfo InventoryInfo = new InventoryInfo();
-
         public static readonly TutorialInfo TutorialInfo = new TutorialInfo();
-
         public static readonly ShakeInven ShakeInven = new ShakeInven();
+        public static readonly ClearTutorial ClearTutorial = new ClearTutorial();
+        public static readonly StartTutorial StartTutorial = new StartTutorial();
     }
 
     public class ModifyPlayerStat : GameEvent
@@ -46,4 +46,7 @@ namespace Main.Runtime.Core.Events
     }
 
     public class ShakeInven : GameEvent { }
+
+    public class ClearTutorial : GameEvent { }
+    public class StartTutorial : GameEvent { }
 }

@@ -18,13 +18,6 @@ namespace PJH.Runtime.Players
             transform.position = startPosition;
         }
 
-        private void HandleAvoidingAttack()
-        {
-            if (!_avoidingAttackFeedback) return;
-            if (_avoidingAttackFeedback.IsPlaying)
-                _avoidingAttackFeedback.StopFeedbacks();
-            _avoidingAttackFeedback.PlayFeedbacks();
-        }
 
 
         private void HandleEndFullMount()
@@ -83,8 +76,11 @@ namespace PJH.Runtime.Players
         private void HandleLockOnToggle()
         {
             IsLockOn = !IsLockOn;
+        }
 
-            OnLockOn?.Invoke(IsLockOn);
+        private void HandleEvasionWhileHitting()
+        {
+            IsHitting = false;
         }
     }
 }

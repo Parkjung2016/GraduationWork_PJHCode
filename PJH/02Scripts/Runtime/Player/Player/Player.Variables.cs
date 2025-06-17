@@ -3,8 +3,6 @@ using System.Threading;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Core.StatSystem;
 using MoreMountains.Feedbacks;
-using RayFire;
-using Unity.Cinemachine;
 using UnityEngine;
 
 namespace PJH.Runtime.Players
@@ -17,10 +15,23 @@ namespace PJH.Runtime.Players
         public event Action OnEndStun;
         public event Action<bool> OnLockOn;
         public bool IsStunned { get; private set; }
-        public bool IsLockOn { get; private set; } = true;
+
+        public bool IsLockOn
+        {
+            get => _isLockOn;
+            private set
+            {
+                _isLockOn = value;
+                OnLockOn?.Invoke(IsLockOn);
+                var evt = GameEvents.LockOn;
+                evt.isLockOn = IsLockOn;
+                _gameEventChannel.RaiseEvent(evt);
+            }
+        }
+
         public bool IsAvoidingAttack { get; private set; }
         private Renderer[] _meshRenderers;
-
+        private bool _isLockOn;
         public SkinnedMeshRenderer ModelRenderer { get; private set; }
         [field: SerializeField] public PlayerInputSO PlayerInput { get; private set; }
         [SerializeField] private StatSO _stunDurationStat;

@@ -12,8 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe2bb80b1df04a8e9f3c09e3f26f97ae, type: 3}
   m_Name: PlayerCounterAttackData
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   attackAnimationClip:
-    _FadeDuration: 0.25
+    _FadeDuration: 0.1
     _Speed: 1
     _Events:
       _NormalizedTimes:
@@ -25,14 +34,14 @@ MonoBehaviour:
     _Clip: {fileID: 8993902097722301239, guid: 3bef28ee4b92eab4d9e3b3cb866abe48, type: 3}
     _NormalizedStartTime: NaN
   getDamagedAnimationClip:
-    _FadeDuration: 0.25
+    _FadeDuration: 0.15
     _Speed: 1
     _Events:
       _NormalizedTimes: []
       _Callbacks: []
       _Names: []
-    _Clip: {fileID: 8993902097722301239, guid: 58d2ec2e20470864f938be14f4c049d3, type: 3}
-    _NormalizedStartTime: NaN
+    _Clip: {fileID: 8993902097722301239, guid: 86970009b7019874a9b6141ac047e244, type: 3}
+    _NormalizedStartTime: 0.3
   references:
     version: 2
     RefIds: []

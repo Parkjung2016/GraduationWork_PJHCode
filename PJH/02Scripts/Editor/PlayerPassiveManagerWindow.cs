@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using PJH.Runtime.Players;
 using Sirenix.OdinInspector.Editor;
@@ -104,3 +105,4 @@ namespace PJH.Editor
         }
     }
 }
+#endif

@@ -11,11 +11,12 @@ namespace PJH.Runtime.Players
         [field: SerializeField]
         public List<CommandActionPieceSO> ExecuteCommandActionPieces { get; private set; } = new();
 
-        private int _maxActionCount = 5;
+        public int maxActionCount = 5;
+        
 
         public bool TryAddCommandActionPiece(CommandActionPieceSO commandActionPiece)
         {
-            if (ExecuteCommandActionPieces.Count >= _maxActionCount) return false;
+            if (ExecuteCommandActionPieces.Count >= maxActionCount) return false;
             ExecuteCommandActionPieces.Add(commandActionPiece);
             return true;
         }
@@ -30,9 +31,20 @@ namespace PJH.Runtime.Players
             return false;
         }
 
-        public void Init(IPlayer player)
+        public void Equip(IPlayer player)
         {
-            ExecuteCommandActionPieces.ForEach(x => x.InitPassive(player));
+            ExecuteCommandActionPieces.ForEach(x => x.EquipPiece(player));
+        }
+
+        public void UnEquip()
+        {
+            ExecuteCommandActionPieces.ForEach(x => x.UnEquipPiece());
+        }
+
+        public void ClearPieces()
+        {
+            UnEquip();
+            ExecuteCommandActionPieces.Clear();
         }
     }
 }

@@ -9,11 +9,13 @@ namespace Main.Runtime.Combat.Core
         public Vector3 hitPoint;
         public float damage;
         public float increaseMomentumGauge;
-        public ClipTransition getDamagedAnimationClip;
-        public IAgent attacker;
+        public GetDamagedAnimationClipInfo getDamagedAnimationClip;
+        public MonoBehaviour attacker;
         public bool isKnockDown;
         public bool isForceAttack;
+        public bool ignoreDirection;
+        public ITransition getDamagedAnimationClipOnIgnoreDirection;
         public float knockDownTime;
-        public ClipTransition getUpAnimationClip;
+        public ITransition getUpAnimationClip;
     }
 }

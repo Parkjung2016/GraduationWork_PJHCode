@@ -6,6 +6,7 @@
         {
             _player.HealthCompo.OnDeath += HandleDeath;
             _player.PlayerInput.RunEvent += HandleRun;
+            _player.PlayerInput.EvadeEvent += HandleEvade;
             _player.PlayerInput.MovementEvent += HandleMovement;
             _player.OnStartKnockBack += HandleStartKnockBack;
             _player.OnEndKnockBack += HandleEndKnockBack;
@@ -14,8 +15,7 @@
             PlayerAnimator animatorCompo = _player.GetCompo<PlayerAnimator>();
             animatorCompo.AnimatorMoveEvent += HandleAnimatorMove;
             animatorCompo.OnEndHitAnimation += EndManualMove;
-
-
+            
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnEndEvasion += HandleEndEvasion;
             animationTriggerCompo.OnBlockEnd += HandleEndEvasion;
@@ -32,6 +32,8 @@
         {
             _player.HealthCompo.OnDeath -= HandleDeath;
             _player.PlayerInput.RunEvent -= HandleRun;
+            _player.PlayerInput.EvadeEvent -= HandleEvade;
+
             _player.PlayerInput.MovementEvent -= HandleMovement;
             _player.OnStartKnockBack -= HandleStartKnockBack;
             _player.OnEndKnockBack -= HandleEndKnockBack;

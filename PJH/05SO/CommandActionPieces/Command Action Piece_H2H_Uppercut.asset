@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd0cd96b94044098d1a5c34977fbaef, type: 3}
+  m_Name: Command Action Piece_H2H_Uppercut
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  pieceSprite: {fileID: 1135084973, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
+  actionName: Uppercut
+  actionDisplay: "\uC5B4\uD37C\uCEF7"
+  actionDescription: "\uC544\uB798\uC5D0\uC11C \uC704\uB85C \uACF5\uACA9\uD55C\uB2E4."
+  combatData: {fileID: 11400000, guid: da979c34532ec6f4f895b2acacf1729b, type: 2}
+  passive: {fileID: 0}
+  overlappingPassives: []

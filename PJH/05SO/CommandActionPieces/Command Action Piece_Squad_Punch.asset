@@ -21,11 +21,10 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceSprite: {fileID: -1235557080, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
-  actionName: Squad_Punch
-  actionDisplay: "\uC5F0\uACA9"
-  actionDescription: "\uC5EC\uB7EC \uBC88\uC758 \uD380\uCE58\uB97C \uBE60\uB974\uAC8C
-    \uB0A0\uB9B0\uB2E4."
+  pieceIcon: {fileID: 0}
+  pieceDisplayName: "\u3139\u3139"
+  pieceDescription: "\u3139\u3139"
+  pieceStamps:
+  - {fileID: 11400000, guid: 0b2a95532d38de745935e7c0ab67e3d8, type: 2}
   combatData: {fileID: 11400000, guid: 9508590cc4851644aaa94745c43ad9a3, type: 2}
   passive: {fileID: 0}
-  overlappingPassives: []

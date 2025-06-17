@@ -1,7 +1,9 @@
 ﻿using Animancer;
 using Main.Runtime.Equipments.Datas;
 using Sirenix.OdinInspector;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace PJH.Runtime.Players
@@ -9,7 +11,8 @@ namespace PJH.Runtime.Players
     [CreateAssetMenu(menuName = "SO/Player/FullMount/FullMountAnimationData")]
     public class FullMountAnimationDataSO : ScriptableObject
     {
-        [InfoBox("Automatically changed according to SO name setting value")] [OnValueChanged("ChangeAssetName")]
+        [InfoBox("Automatically changed according to SO name setting value")]
+        [OnValueChanged("ChangeAssetName")]
         public EquipmentDataSO key;
 
         public ClipTransition fullMountAttackAnimation;

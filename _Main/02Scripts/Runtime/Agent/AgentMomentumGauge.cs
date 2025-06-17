@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Main.Runtime.Agents
 {
-    public class AgentMomentumGauge : MonoBehaviour, IAgentComponent
+    public class AgentMomentumGauge : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         public delegate void ChangedMomentumGaugeEvent(float currentMomentum, float maxMomentum);
 
@@ -31,6 +31,11 @@ namespace Main.Runtime.Agents
             }
         }
 
+        public bool IsFullMomentumGauge
+        {
+            get => _currentMomentumGauge == _maxMomentumGauge.Value;
+        }
+
         public StatSO MaxMomentumGauge => _maxMomentumGauge;
         [SerializeField, Required] private StatSO _maxMomentumGauge;
         [SerializeField] private float _decreaseMomentumGaugePerTick = 4;
@@ -45,6 +50,17 @@ namespace Main.Runtime.Agents
             _agent = agent;
             AgentStat agentStat = _agent.GetCompo<AgentStat>(true);
             _maxMomentumGauge = agentStat.GetStat(_maxMomentumGauge);
+        }
+
+        public void AfterInitialize()
+        {
+            _agent.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
+        }
+
+        private void HandleApplyDamaged(float damage)
+        {
+            float increaseMomentumGauge = _agent.HealthCompo.GetDamagedInfo.increaseMomentumGauge;
+            IncreaseMomentumGauge(increaseMomentumGauge);
         }
 
         private async void Start()
@@ -76,6 +92,9 @@ namespace Main.Runtime.Agents
         {
             DisposeTokenSource();
             StopDecreaseMomentumGauge();
+            
+            _agent.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
+
         }
 
         public void DisposeTokenSource()

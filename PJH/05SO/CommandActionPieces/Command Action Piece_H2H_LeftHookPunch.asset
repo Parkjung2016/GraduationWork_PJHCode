@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd0cd96b94044098d1a5c34977fbaef, type: 3}
+  m_Name: Command Action Piece_H2H_LeftHookPunch
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  pieceIcon: {fileID: 21300000, guid: b3fae815942959840b2c432da7f433bd, type: 3}
+  pieceDisplayName: 
+  pieceDescription: 
+  combatData: {fileID: 11400000, guid: eb57a0646a2b3044faaddb160308c935, type: 2}
+  _passives: []

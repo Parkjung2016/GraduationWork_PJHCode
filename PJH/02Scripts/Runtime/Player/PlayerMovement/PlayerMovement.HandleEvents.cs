@@ -31,7 +31,14 @@ namespace PJH.Runtime.Players
         {
             IsEvading = false;
             _currentEvasionDelayTime = Time.time;
-            _isEvadingCoolTime = true;
+            _canEvading = true;
+
+            if (IsEvadingWhileHitting)
+            {
+                IsEvadingWhileHitting = false;
+                OnEvasionEndWhileHitting?.Invoke();
+            }
+
             if (IsManualMove)
                 EndManualMove();
         }
@@ -61,11 +68,6 @@ namespace PJH.Runtime.Players
 
         private void HandleRun(bool isRunning)
         {
-            if (!IsRunning)
-            {
-                Evasion();
-            }
-
             IsRunning = isRunning;
             OnRun?.Invoke(isRunning);
         }
@@ -73,6 +75,11 @@ namespace PJH.Runtime.Players
         private void HandleBlockEnd()
         {
             _currentEvasionDelayTime = Time.time;
+        }
+
+        private void HandleEvade()
+        {
+            Evasion();
         }
     }
 }

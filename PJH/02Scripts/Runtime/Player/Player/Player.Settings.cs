@@ -8,7 +8,9 @@ namespace PJH.Runtime.Players
         private void SubscribeEvents()
         {
             PlayerInput.LockOnToggleEvent += HandleLockOnToggle;
-            GetCompo<PlayerMovement>().OnRun += HandleRun;
+            PlayerMovement movementCompo = GetCompo<PlayerMovement>();
+            movementCompo.OnRun += HandleRun;
+            movementCompo.OnEvasionWhileHitting += HandleEvasionWhileHitting;
             PlayerEnemyFinisher enemyFinisher = GetCompo<PlayerEnemyFinisher>();
             enemyFinisher.OnFinisherTimeline += HandleFinisherTimeline;
             enemyFinisher.OnAdjustTimelineModelPosition += HandleAdjustTimelineModelPosition;
@@ -18,15 +20,16 @@ namespace PJH.Runtime.Players
             HealthCompo.OnDeath += HandleDeath;
             _gameEventChannel.AddListener<ReOffsetPlayer>(HandleReOffsetPlayer);
             _gameEventChannel.AddListener<FinishTimeline>(HandleFinishTimeline);
-
-            PlayerHealth playerHealth = (HealthCompo as PlayerHealth);
-            playerHealth.OnAvoidingAttack += HandleAvoidingAttack;
+            _gameEventChannel.AddListener<FinishTimeline>(HandleFinishTimeline);
         }
+
         private void UnSubscribeEvents()
         {
             PlayerInput.LockOnToggleEvent -= HandleLockOnToggle;
 
-            GetCompo<PlayerMovement>().OnRun -= HandleRun;
+            PlayerMovement movementCompo = GetCompo<PlayerMovement>();
+            movementCompo.OnRun -= HandleRun;
+            movementCompo.OnEvasionWhileHitting -= HandleEvasionWhileHitting;
             PlayerEnemyFinisher enemyFinisher = GetCompo<PlayerEnemyFinisher>();
             enemyFinisher.OnFinisherTimeline -= HandleFinisherTimeline;
             enemyFinisher.OnAdjustTimelineModelPosition -= HandleAdjustTimelineModelPosition;
@@ -39,8 +42,6 @@ namespace PJH.Runtime.Players
 
             _gameEventChannel.RemoveListener<ReOffsetPlayer>(HandleReOffsetPlayer);
             _gameEventChannel.RemoveListener<FinishTimeline>(HandleFinishTimeline);
-            PlayerHealth playerHealth = (HealthCompo as PlayerHealth);
-            playerHealth.OnAvoidingAttack -= HandleAvoidingAttack;
         }
     }
 }

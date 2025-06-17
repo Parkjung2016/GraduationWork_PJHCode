@@ -1,4 +1,5 @@
-﻿using Animancer;
+﻿using System;
+using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Main.Runtime.Agents;
@@ -13,25 +14,24 @@ namespace PJH.Runtime.Players
     {
         public async void Initialize(Agent agent)
         {
-            _player = agent as Player;
-            _animatorCompo = _player.GetCompo<PlayerAnimator>();
-            _warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
-            _enemyDetectionCompo = _player.GetCompo<PlayerEnemyDetection>();
-            _attackCompo = _player.GetCompo<PlayerAttack>();
-            CC = _player.GetComponent<CharacterController>();
-            await UniTask.WaitUntil(() => _animatorCompo.Animancer != null);
-            _rootMotionMultiplierCurve = new AnimatedFloat(_animatorCompo.Animancer, "RootMotionMultiplier");
-        }
-
-        private void GetStatFromComponent()
-        {
-            PlayerStat statCompo = _player.GetCompo<PlayerStat>();
-            _movementSpeedStat = statCompo.GetStat(_movementSpeedStat);
+            try
+            {
+                _player = agent as Player;
+                _animatorCompo = _player.GetCompo<PlayerAnimator>();
+                _warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
+                _enemyDetectionCompo = _player.GetCompo<PlayerEnemyDetection>();
+                _attackCompo = _player.GetCompo<PlayerAttack>();
+                CC = _player.GetComponent<CharacterController>();
+                await UniTask.WaitUntil(() => _animatorCompo.Animancer != null);
+                _rootMotionMultiplierCurve = new AnimatedFloat(_animatorCompo.Animancer, "RootMotionMultiplier");
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         public void AfterInitialize()
         {
-            GetStatFromComponent();
             SubscribeEvents();
         }
 
@@ -55,11 +55,20 @@ namespace PJH.Runtime.Players
 
         private void Evasion()
         {
-            if ((_isEvadingCoolTime && _currentEvasionDelayTime + _evasionDelay > Time.time) || _player.IsStunned ||
+            if ((_canEvading && _currentEvasionDelayTime + _evasionDelay > Time.time) || _player.IsStunned ||
                 IsKnockBack ||
-                IsEvading || _player.IsHitting) return;
+                IsEvading) return;
+
+            if (_player.IsHitting)
+            {
+                if (_currentEvasionWhileHittingDelayTime + _evasionWhileHittingDelay > Time.time) return;
+                _currentEvasionWhileHittingDelayTime = Time.time;
+                IsEvadingWhileHitting = true;
+                OnEvasionWhileHitting?.Invoke();
+            }
+
             IsEvading = true;
-            _isEvadingCoolTime = false;
+            _canEvading = false;
             Vector3 evasionDir = _player.PlayerInput.Input;
             float yawCamera = Camera.main.transform.eulerAngles.y;
             if (evasionDir == Vector3.zero)
@@ -133,13 +142,26 @@ namespace PJH.Runtime.Players
         private void ApplyRotation()
         {
             if (_player.IsStunned || IsManualMove ||
-                (_animatorCompo.IsRootMotion && !_animatorCompo.IsEnabledInputWhileRootMotion) ||
                 IsKnockBack || _warpStrikeCompo.Activating) return;
+            Quaternion targetRot = Quaternion.identity;
+
+            if ((_animatorCompo.IsRootMotion && !_animatorCompo.IsEnabledInputWhileRootMotion))
+            {
+                PlayerBlock blockCompo = _player.GetCompo<PlayerBlock>();
+                if (blockCompo.IsBlocking && _enemyDetectionCompo.TryGetTargetEnemyNoInput(out Agent target))
+                {
+                    Vector3 dir = (target.transform.position - transform.position).normalized;
+                    dir.y = 0;
+                    targetRot = Quaternion.LookRotation(dir);
+                }
+                else
+                    return;
+            }
+
             Vector3 input = _player.PlayerInput.Input;
             if (input == Vector3.zero && !_attackCompo.IsInBattle) return;
             Transform cameraTrm = Camera.main.transform;
-            Quaternion targetRot = Quaternion.identity;
-            if (IsRunning && input != Vector3.zero)
+            if (input != Vector3.zero && (IsRunning))
             {
                 var right = cameraTrm.right;
                 right.y = 0;
@@ -155,9 +177,9 @@ namespace PJH.Runtime.Players
                 dir.y = 0;
                 targetRot = Quaternion.LookRotation(dir);
             }
-            else if (_attackCompo.IsInBattle || input != Vector3.zero)
+            else if (input != Vector3.zero || (!_player.IsLockOn && _attackCompo.IsInBattle))
             {
-                float y = cameraTrm.transform.eulerAngles.y;
+                float y = cameraTrm.eulerAngles.y;
                 targetRot = Quaternion.Euler(0, y, 0);
             }
 

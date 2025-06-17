@@ -6,7 +6,6 @@ using Main.Runtime.Core.Events;
 using PJH.Runtime.Players.FinisherSequence;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace PJH.Runtime.Players
 {
@@ -64,7 +63,6 @@ namespace PJH.Runtime.Players
             EnemyFinisherSequence evt = GameEvents.EnemyFinisherSequence;
             evt.sequenceAsset = finisherSequenceData.sequenceAsset;
             evt.enemyAnimator = target.Agent.GetCompo<AgentAnimator>(true).Animator;
-            evt.playerAnimator = _player.GetCompo<AgentAnimator>(true).Animator;
             _gameEventChannel.RaiseEvent(evt);
             OnFinisherTimeline?.Invoke(IsFinishering);
         }

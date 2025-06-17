@@ -24,9 +24,9 @@ namespace Main.Runtime.Equipments.Scripts
         private Collider _meshCollider;
         private DamageCollider _damageCollider;
         private StatSO _powerStat, _increaseMomentumGaugeStat;
-        private int _currentDurability;
+        private byte _currentDurability;
 
-        public int CurrentDurability
+        public byte CurrentDurability
         {
             get => _currentDurability;
             set

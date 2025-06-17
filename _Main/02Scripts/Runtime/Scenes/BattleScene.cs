@@ -125,12 +125,6 @@ namespace Main.Scenes
                     _playableDirector.SetGenericBinding(track, evt.enemyAnimator);
                     break;
                 }
-
-                if (track.name == "Player Animation Track")
-                {
-                    _playableDirector.SetGenericBinding(track, evt.playerAnimator);
-                    break;
-                }
             }
 
             _playableDirector.Play();
@@ -153,11 +147,6 @@ namespace Main.Scenes
         {
             ReOffsetPlayer evt = GameEvents.ReOffsetPlayer;
             _gameEventChannel.RaiseEvent(evt);
-        }
-
-        public void DecreaseHeart()
-        {
-            PlayerManager.Instance.CurrentHeartCount--;
         }
     }
 }

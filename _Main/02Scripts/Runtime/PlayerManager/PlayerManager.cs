@@ -1,53 +1,41 @@
 ﻿using System;
-using Main.Shared;
+using Main.Runtime.Agents;
+using PJH.Runtime.Core.PlayerCamera;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Main.Runtime.Manager
 {
+    [DefaultExecutionOrder(-10000)]
     public class PlayerManager : MonoBehaviour
     {
-        public event Action<int> OnChangedHeartCount;
         private static PlayerManager _instance;
-        private int _currentHeartCount = 3;
-
-        public int CurrentHeartCount
-        {
-            get => _currentHeartCount;
-            set
-            {
-                _currentHeartCount = Mathf.Max(value, 0);
-                OnChangedHeartCount?.Invoke(value);
-            }
-        }
 
         public static PlayerManager Instance;
 
-        private IPlayer _player;
+        private Agent _player;
 
-        public IPlayer Player
+        public Agent Player
         {
             get
             {
-                if (ReferenceEquals(_player, null))
-                    _player = GameObject.FindGameObjectWithTag("Player").GetComponent<IPlayer>();
-
-                Debug.Log(_player);
-
+                if (_player == null)
+                {
+                    _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Agent>();
+                }
 
                 return _player;
             }
         }
 
-        private ICamera _playerCamera;
+        private PlayerCamera _playerCamera;
 
-        public ICamera PlayerCamera
+        public PlayerCamera PlayerCamera
         {
             get
             {
-                if (ReferenceEquals(_playerCamera, null))
+                if (_playerCamera == null)
                 {
-                    _playerCamera = GameObject.FindGameObjectWithTag("MainPlayerCamera").GetComponent<ICamera>();
+                    _playerCamera = GameObject.FindGameObjectWithTag("MainPlayerCamera")?.GetComponent<PlayerCamera>();
                 }
 
                 return _playerCamera;
@@ -57,28 +45,13 @@ namespace Main.Runtime.Manager
         private void Awake()
         {
             PlayerManager[] instances = FindObjectsByType<PlayerManager>(FindObjectsSortMode.None);
-
             if (instances.Length > 1)
                 Destroy(gameObject);
             else
             {
                 DontDestroyOnLoad(gameObject);
-                SceneManager.sceneLoaded += HandleSceneLoaded;
                 Instance = this;
             }
-        }
-
-        private void OnDestroy()
-        {
-            SceneManager.sceneLoaded -= HandleSceneLoaded;
-        }
-
-        private void HandleSceneLoaded(Scene arg0, LoadSceneMode arg1)
-        {
-            _player = null;
-            _player = GameObject.FindGameObjectWithTag("Player")?.GetComponent<IPlayer>();
-            if (_player != null)
-                _playerCamera = GameObject.FindGameObjectWithTag("MainPlayerCamera").GetComponent<ICamera>();
         }
     }
 }

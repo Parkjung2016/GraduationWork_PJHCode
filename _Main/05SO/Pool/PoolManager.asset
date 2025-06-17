@@ -15,7 +15,6 @@ MonoBehaviour:
   poolingItemList:
   - {fileID: 11400000, guid: 1c4de5b63f4d3a2409e920c936e624ba, type: 2}
   - {fileID: 11400000, guid: 75e91016a79030d41900f86e512fb8ca, type: 2}
-  - {fileID: 11400000, guid: 441abd89ec0c7cd4fa604a77fbd7db9e, type: 2}
   - {fileID: 11400000, guid: 9259686572194d947ba27a09bb646ef9, type: 2}
   - {fileID: 11400000, guid: 403ceafa515900947a73112a2985a209, type: 2}
   - {fileID: 11400000, guid: 39558b6ccea09184d86b71feccc85c51, type: 2}

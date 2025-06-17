@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
-using Opsive.GraphDesigner.Runtime.Variables;
+using PJH.Runtime.PlayerPassive;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 
 namespace PJH.Runtime.Players
 {
     public class Test : MonoBehaviour, IAgentComponent
     {
         [SerializeField] private CommandActionPieceSO[] _actionPiece;
+        [SerializeField] private PassiveSO[] _passives;
         private PlayerCommandActionManager _commandActionManagerCompo;
         private Player _player;
 
         [ReadOnly] public bool startActionInput;
+        [ReadOnly] public bool startCombineInput;
         [ReadOnly] public bool startAssignmentKey;
 
         [ReadOnly] public List<CommandActionPieceSO> pieceList = new();
@@ -24,6 +24,13 @@ namespace PJH.Runtime.Players
 
         public void Initialize(Agent agent)
         {
+            for (int i = 0; i < _actionPiece.Length; i++)
+            {
+                _actionPiece[i] = Instantiate(_actionPiece[i]);
+                if (_passives.Length >= i + 1 && _passives[i] != null)
+                    _actionPiece[i].TryAddPassive(Instantiate(_passives[i]));
+            }
+
             _player = agent as Player;
             _commandActionManagerCompo = _player.GetCompo<PlayerCommandActionManager>();
         }
@@ -73,7 +80,7 @@ namespace PJH.Runtime.Players
                     actionData = new();
 
                     Debug.Log("<color=red>행동 입력 시작</color>");
-                    Debug.Log("<color=green>5 : Haymaker 6 : LegSweep 7 : Spinning</color>");
+                    Debug.Log("<color=green>5 ~ 7번 키로 조각을 추가해라.</color>");
                     startActionInput = true;
                 }
             }
@@ -86,6 +93,40 @@ namespace PJH.Runtime.Players
                     Debug.Log("<color=red>행동 입력 끝</color>");
                     Debug.Log("<color=green>할당 키를 정해라. H(1) J(2) K(3)</color>");
                     startAssignmentKey = true;
+                }
+            }
+
+            if (Keyboard.current.kKey.wasPressedThisFrame)
+            {
+                if (!startCombineInput)
+                {
+                    Debug.Log("<color=red>조각 병합 시작</color>");
+                    Debug.Log("<color=green>5 ~ 7번 키로 병합할 조각을 선택해라.</color>");
+                    startCombineInput = true;
+                }
+            }
+
+            if (startCombineInput)
+            {
+                if (Keyboard.current.digit5Key.wasPressedThisFrame)
+                {
+                    _player.GetCompo<PlayerCommandActionManager>().CommandActions[0].ExecuteCommandActionPieces[0]
+                        .TryCombineCommandActionPiece(_actionPiece[0]);
+                    startCombineInput = false;
+                }
+
+                if (Keyboard.current.digit6Key.wasPressedThisFrame)
+                {
+                    _player.GetCompo<PlayerCommandActionManager>().CommandActions[0].ExecuteCommandActionPieces[0]
+                        .TryCombineCommandActionPiece(_actionPiece[1]);
+                    startCombineInput = false;
+                }
+
+                if (Keyboard.current.digit7Key.wasPressedThisFrame)
+                {
+                    _player.GetCompo<PlayerCommandActionManager>().CommandActions[0].ExecuteCommandActionPieces[0]
+                        .TryCombineCommandActionPiece(_actionPiece[2]);
+                    startCombineInput = false;
                 }
             }
         }
@@ -102,7 +143,7 @@ namespace PJH.Runtime.Players
             if (actionData.TryAddCommandActionPiece(piece))
             {
                 pieceList.Add(piece);
-                print(piece.actionName);
+                print(piece);
             }
             else
                 Debug.LogError("제한 갯수 넘음");

@@ -32,6 +32,7 @@ namespace PJH.Runtime.Players
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
 
             _movementCompo.OnEvasion += HandleEvasion;
+            _movementCompo.OnEvasionWhileHitting += HandleEvasion;
             _movementCompo.OnMovement += HandleMovement;
             PlayerAttack attackCompo = _player.GetCompo<PlayerAttack>();
             attackCompo.OnAttack += HandleAttack;
@@ -51,6 +52,7 @@ namespace PJH.Runtime.Players
             base.OnDestroy();
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
             _movementCompo.OnEvasion -= HandleEvasion;
+            _movementCompo.OnEvasionWhileHitting -= HandleEvasion;
             _movementCompo.OnMovement -= HandleMovement;
 
 

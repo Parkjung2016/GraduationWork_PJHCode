@@ -80,7 +80,7 @@ namespace PJH.Runtime.Players
                 animationTriggerCompo.OnDisableDamageCollider?.Invoke();
                 CommandActionPieceSO commandActionPiece =
                     _currentCommandActionData.ExecuteCommandActionPieces[_prevComboCount];
-                commandActionPiece.DeactivePassive();
+                commandActionPiece.DeActivePassive();
             }
         }
 
@@ -104,7 +104,7 @@ namespace PJH.Runtime.Players
                 _cameraViewConfigTokenSource = null;
             }
 
-            _cameraViewConfigTokenSource = _player.DelayCallBack(_timeToSwitchToIdleAfterCombat, () =>
+            _cameraViewConfigTokenSource = _player.DelayCallBack(gameObject, _timeToSwitchToIdleAfterCombat, () =>
             {
                 if (IsInBattle) return;
                 var evt = GameEvents.CameraViewConfig;

@@ -32,9 +32,9 @@ namespace PJH.Runtime.Players
         private void HandleIncreasePlayerStat(ModifyPlayerStat evt)
         {
             if (evt.isIncreaseStat)
-                AddModifier(evt.modifyPlayerStat, evt.modifyKey, evt.modifyPlayerStatValue);
+                AddValueModifier(evt.modifyPlayerStat, evt.modifyKey, evt.modifyPlayerStatValue);
             else
-                RemoveModifier(evt.modifyPlayerStat, evt.modifyKey);
+                RemoveValueModifier(evt.modifyPlayerStat, evt.modifyKey);
         }
     }
 }

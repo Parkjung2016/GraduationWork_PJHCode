@@ -1,0 +1,30 @@
+{
+    "name": "PJH.Runtime.PlayerPassive.ActivePassive",
+    "rootNamespace": "",
+    "references": [
+        "GUID:029c1c1b674aaae47a6841a0b89ad80e",
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "GUID:5ff5028d970048f469e1a9b38c2e5a45",
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:2373c20d2432eae4a8c2cf2061f879e2",
+        "GUID:5c8004d2fc1627443a0d0aa855d7ba23",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:4c25c05f410a3a447a75c3b0909152ef",
+        "GUID:4a1cb1490dc4df8409b2580d6b44e75e",
+        "GUID:1bc30e539656bfd45b968dcf8cc848c9",
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

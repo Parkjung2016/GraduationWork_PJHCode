@@ -1,5 +1,4 @@
 ﻿using Animancer;
-using Main.Core;
 
 namespace PJH.Runtime.Players
 {
@@ -7,6 +6,7 @@ namespace PJH.Runtime.Players
     {
         private void HandleEndStun()
         {
+            DisableRootMotion();
             SetParam(_isStunnedParam, false);
         }
 
