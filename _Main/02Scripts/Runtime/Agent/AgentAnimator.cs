@@ -23,8 +23,11 @@ namespace Main.Runtime.Agents
         protected Agent _agent;
         CancellationTokenSource _knockDownToken;
 
+        private float _effectiveAnimationSpeed;
+
         public virtual void Initialize(Agent agent)
         {
+            _effectiveAnimationSpeed = 1.0f;
             _agent = agent;
         }
 
@@ -68,16 +71,30 @@ namespace Main.Runtime.Agents
         {
             if ((newAilment & Ailment.Slow) > 0)
             {
-                _hybridAnimancer.Speed = .2f;
+                float value = _agent.HealthCompo.ailmentStat.GetAilmentValue(Ailment.Slow) * 0.01f;
+                _effectiveAnimationSpeed = 1 - value;
+                foreach (var state in _hybridAnimancer.States)
+                {
+                    state.Speed = _effectiveAnimationSpeed;
+                }
+                _hybridAnimancer.Controller.Speed = _effectiveAnimationSpeed;
+                
             }
             else
             {
-                _hybridAnimancer.Speed = 1.0f;
+                _effectiveAnimationSpeed = 1.0f;
+                foreach (var state in _hybridAnimancer.States)
+                {
+                    state.Speed = _effectiveAnimationSpeed;
+                }
+
+                _hybridAnimancer.Controller.Speed = _effectiveAnimationSpeed;
             }
         }
 
         private void HandleTriggerRagdoll()
         {
+            _effectiveAnimationSpeed = 1.0f;
             Animator.enabled = false;
         }
 
@@ -199,6 +216,7 @@ namespace Main.Runtime.Agents
         {
             if (clip == null) return;
             AnimancerState state = _hybridAnimancer.Play(clip, clip.FadeDuration, mode: FadeMode.FromStart);
+            state.Speed *= _effectiveAnimationSpeed;
             state.Events(this).OnEnd ??= () =>
             {
                 if (state.FadeGroup != null || _hybridAnimancer.Controller.State.FadeGroup != null) return;

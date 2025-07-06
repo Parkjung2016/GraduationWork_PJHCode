@@ -6,10 +6,10 @@ using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
-using Sirenix.OdinInspector;
 using UnityEngine;
+using YTH.Shared;
 using ZLinq;
-
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -18,17 +18,16 @@ namespace PJH.Runtime.Players
         public delegate void ChangedTargetEnemyEvent(Agent prevTarget, Agent currentTarget);
 
         public event ChangedTargetEnemyEvent OnChangedTargetEnemy;
+
         [SerializeField] private float _detectionRadius = 5f;
         [SerializeField] private float _detectInterval = 0.05f;
         [SerializeField] private int _maxDetectCount = 5;
 
-
-        [SerializeField, ReadOnly] private Agent _target;
+        private Agent _target;
         private Collider[] _detectColliders;
         private Player _player;
         private CancellationTokenSource _cancellationToken;
         private GameEventChannelSO _showLockOnUIEventChannel;
-
 
         public void Initialize(Agent agent)
         {
@@ -39,9 +38,7 @@ namespace PJH.Runtime.Players
 
         public void AfterInitialize()
         {
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline += HandleFinisherTimeline;
-            PlayerAttack attackCompo = _player.GetCompo<PlayerAttack>();
-            attackCompo.OnAttack += HandleAttack;
+            _player.GetCompo<PlayerAttack>().OnAttack += HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible += HandleComboPossible;
             _player.PlayerInput.ChangeLockOnTargetEvent += HandleChangeLockOnTarget;
             DetectNearTarget().Forget();
@@ -49,121 +46,58 @@ namespace PJH.Runtime.Players
 
         private void OnDestroy()
         {
-            if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
-            {
-                _cancellationToken.Cancel();
-                _cancellationToken.Dispose();
-            }
+            _cancellationToken?.Cancel();
+            _cancellationToken?.Dispose();
 
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline -= HandleFinisherTimeline;
-
-            PlayerAttack attackCompo = _player.GetCompo<PlayerAttack>();
-            attackCompo.OnAttack -= HandleAttack;
+            _player.GetCompo<PlayerAttack>().OnAttack -= HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible -= HandleComboPossible;
-
             _player.PlayerInput.ChangeLockOnTargetEvent -= HandleChangeLockOnTarget;
         }
 
         private void HandleChangeLockOnTarget()
         {
             if (!_target) return;
-            int cnt = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
-                Define.MLayerMask.WhatIsEnemy);
-            Agent prevTarget = null;
-            var evt = UIEvents.ShowLockOnUI;
 
-            if (cnt > 0)
-            {
-                var copyArray = _detectColliders.ToArray();
-                Array.Resize(ref copyArray, cnt);
-                Collider nearCollider;
-                Agent nearTarget;
+            var nearEnemy = GetNearestEnemy(exclude: _target.gameObject);
+            if (!nearEnemy || nearEnemy.HealthCompo.IsDead || nearEnemy == _target)
+                return;
 
-                nearCollider =
-                    copyArray.Where(collider => collider.gameObject != _target.gameObject)
-                        .OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
-                        .FirstOrDefault();
-
-                if (!nearCollider)
-                    return;
-
-                nearTarget = nearCollider.GetComponent<Agent>();
-                if (nearTarget.HealthCompo.IsDead)
-                    return;
-                if (nearTarget == _target) return;
-                prevTarget = _target;
-                _target = nearTarget;
-                evt.isShowUI = true;
-                evt.lockOnTarget = _target.GetComponent<ILockOnAble>();
-                _showLockOnUIEventChannel.RaiseEvent(evt);
-                OnChangedTargetEnemy?.Invoke(prevTarget, _target);
-            }
+            ApplyNewTarget(nearEnemy);
         }
 
         private async UniTaskVoid DetectNearTarget()
         {
             _cancellationToken = new CancellationTokenSource();
+
             try
             {
                 while (!_cancellationToken.IsCancellationRequested)
                 {
                     await UniTask.WaitUntil(() => gameObject.activeSelf, cancellationToken: _cancellationToken.Token);
-                    await UniTask.WaitForSeconds(_detectInterval,
+                    await UniTask.Delay(TimeSpan.FromSeconds(_detectInterval),
                         cancellationToken: _cancellationToken.Token);
-                    int cnt = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
+
+                    int count = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
                         Define.MLayerMask.WhatIsEnemy);
-                    Agent prevTarget = null;
-                    var evt = UIEvents.ShowLockOnUI;
-
-                    if (cnt > 0)
+                    if (count == 0)
                     {
-                        var copyArray = _detectColliders.ToArray();
-                        Array.Resize(ref copyArray, cnt);
-                        Collider nearCollider;
-                        Agent nearTarget;
-
                         if (_target)
-                        {
-                            if (_target.HealthCompo.IsDead)
-                            {
-                                prevTarget = _target;
-                                _target = null;
-                                OnChangedTargetEnemy?.Invoke(prevTarget, _target);
-                                evt.isShowUI = false;
-                                evt.lockOnTarget = null;
-                                _showLockOnUIEventChannel.RaiseEvent(evt);
-                            }
-
-                            continue;
-                        }
-
-                        nearCollider =
-                            copyArray.OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
-                                .FirstOrDefault();
-
-                        if (!nearCollider)
-                            continue;
-
-                        nearTarget = nearCollider.GetComponent<Agent>();
-                        if (nearTarget.HealthCompo.IsDead)
-                            continue;
-                        if (nearTarget == _target) continue;
-                        prevTarget = _target;
-                        _target = nearTarget;
-                        evt.isShowUI = true;
-                        evt.lockOnTarget = _target.GetComponent<ILockOnAble>();
+                            ClearTarget();
+                        continue;
                     }
-                    else
+
+                    if (_target && _target.HealthCompo.IsDead)
                     {
-                        if (!_target) continue;
-                        prevTarget = _target;
-                        _target = null;
-                        evt.isShowUI = false;
-                        evt.lockOnTarget = null;
+                        ClearTarget();
+                        continue;
                     }
 
-                    _showLockOnUIEventChannel.RaiseEvent(evt);
-                    OnChangedTargetEnemy?.Invoke(prevTarget, _target);
+                    if (!_target)
+                    {
+                        var nearEnemy = GetNearestEnemy(detectColliders: _detectColliders, count: count);
+                        if (nearEnemy && !nearEnemy.HealthCompo.IsDead)
+                            ApplyNewTarget(nearEnemy);
+                    }
                 }
             }
             catch (Exception e)
@@ -171,118 +105,127 @@ namespace PJH.Runtime.Players
             }
         }
 
-        private void HandleComboPossible()
+        private Agent GetNearestEnemy(GameObject exclude = null, Predicate<Collider> filter = null,
+            Collider[] detectColliders = null, int count = 0)
         {
-            enabled = true;
-        }
-
-        private void HandleAttack()
-        {
-            enabled = false;
-        }
-
-        private void HandleFinisherTimeline(bool isPlayingTimeline)
-        {
-            enabled = !isPlayingTimeline;
-        }
-
-        public bool TryGetTargetEnemy<T>(out T target) where T : Agent
-        {
-            Agent targetEnemy = GetTargetEnemy();
-            if (targetEnemy != null)
+            if (detectColliders == null)
             {
-                target = targetEnemy as T;
-                return target != null;
+                count = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
+                    Define.MLayerMask.WhatIsEnemy);
             }
 
-            target = null;
-            return false;
+            if (count == 0) return null;
+
+            return _detectColliders
+                .Take(count)
+                .Where(c => c && c.gameObject != exclude && (filter?.Invoke(c) ?? true))
+                .OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
+                .Select(c => c.GetComponent<Agent>())
+                .FirstOrDefault(a => a);
         }
 
-        public Agent GetTargetEnemyNoInput()
-        {
-            return _target;
-        }
-
-        public void SetForceTargetEnemy(Agent target)
+        private void ApplyNewTarget(Agent newTarget)
         {
             Agent prevTarget = _target;
-            _target = target;
-            var evt = UIEvents.ShowLockOnUI;
-            evt.isShowUI = true;
-            evt.lockOnTarget = _target.GetComponent<ILockOnAble>();
 
+            if (_player.IsLockOn && prevTarget is IEnemy prevEnemy)
+                prevEnemy.SetAsTargeted(false);
+
+            _target = newTarget;
+
+            if (_player.IsLockOn && _target is IEnemy newEnemy)
+                newEnemy.SetAsTargeted(true);
+
+            RaiseLockOnEvent(_target);
             OnChangedTargetEnemy?.Invoke(prevTarget, _target);
+        }
+
+        private void ClearTarget()
+        {
+            Agent prevTarget = _target;
+
+            if (_target is IEnemy enemy)
+                enemy.SetAsTargeted(false);
+
+            _target = null;
+            RaiseLockOnEvent(_target);
+            OnChangedTargetEnemy?.Invoke(prevTarget, _target);
+        }
+
+        private void RaiseLockOnEvent(Agent target)
+        {
+            var evt = UIEvents.ShowLockOnUI;
+            evt.isShowUI = target;
+            evt.lockOnTarget = !target ? null : target.GetComponent<ILockOnAble>();
             _showLockOnUIEventChannel.RaiseEvent(evt);
         }
 
-        public Agent GetTargetEnemy()
+        private void HandleComboPossible() => enabled = true;
+        private void HandleAttack() => enabled = false;
+
+        public bool TryGetTargetEnemy<T>(out T target) where T : Agent
         {
-            Vector3 input = _player.PlayerInput.Input;
-            if (input.sqrMagnitude > 0)
-            {
-                var camera = Camera.main;
-                var forward = camera.transform.forward;
-                var right = camera.transform.right;
-
-                forward.y = 0f;
-                right.y = 0f;
-
-                forward.Normalize();
-                right.Normalize();
-
-                Vector3 inputDirection = forward * input.z + right * input.x;
-                inputDirection = inputDirection.normalized;
-                int cnt = Physics.OverlapSphereNonAlloc(transform.position, _detectionRadius, _detectColliders,
-                    Define.MLayerMask.WhatIsEnemy);
-                if (cnt > 0)
-                {
-                    var copyArray = _detectColliders.ToArray();
-                    Array.Resize(ref copyArray, cnt);
-                    Collider nearCollider;
-                    Agent nearTarget;
-                    nearCollider =
-                        copyArray.Where(col =>
-                            {
-                                Vector3 dirToEnemy = (col.transform.position - _player.transform.position)
-                                    .normalized;
-                                return Vector3.Angle(inputDirection, dirToEnemy) < 125;
-                            })
-                            .OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
-                            .FirstOrDefault();
-                    if (!nearCollider)
-                        return _target;
-                    nearTarget = nearCollider.GetComponent<Agent>();
-                    Agent prevTarget = _target;
-                    _target = nearTarget;
-                    var evt = UIEvents.ShowLockOnUI;
-                    evt.isShowUI = true;
-                    evt.lockOnTarget = _target.GetComponent<ILockOnAble>();
-
-                    OnChangedTargetEnemy?.Invoke(prevTarget, _target);
-                    _showLockOnUIEventChannel.RaiseEvent(evt);
-
-                    return _target;
-                }
-            }
-
-            return _target;
+            target = _target as T;
+            return target;
         }
 
         public bool TryGetTargetEnemy(out Agent target)
         {
             target = GetTargetEnemy();
-            return target != null;
+            return target;
         }
 
         public bool TryGetTargetEnemyNoInput(out Agent target)
         {
             target = _target;
-            return target != null;
+            return target;
+        }
+
+        public Agent GetTargetEnemyNoInput() => _target;
+
+        public void SetForceTargetEnemy(Agent target)
+        {
+            if (!target) return;
+            ApplyNewTarget(target);
+        }
+
+        public Agent GetTargetEnemy()
+        {
+            Vector3 input = _player.PlayerInput.Input;
+            if (input.sqrMagnitude <= 0)
+                return _target;
+
+            Vector3 inputDir = GetWorldInputDirection(input);
+
+            var target = GetNearestEnemy(
+                exclude: null,
+                filter: col =>
+                {
+                    Vector3 dirToEnemy = (col.transform.position - _player.transform.position).normalized;
+                    return Vector3.Angle(inputDir, dirToEnemy) < 125;
+                });
+
+            if (target)
+            {
+                ApplyNewTarget(target);
+            }
+
+            return _target;
+        }
+
+        private Vector3 GetWorldInputDirection(Vector3 input)
+        {
+            var cam = Camera.main;
+            var forward = cam.transform.forward;
+            var right = cam.transform.right;
+
+            forward.y = 0f;
+            right.y = 0f;
+
+            return (forward.normalized * input.z + right.normalized * input.x).normalized;
         }
 
 #if UNITY_EDITOR
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;

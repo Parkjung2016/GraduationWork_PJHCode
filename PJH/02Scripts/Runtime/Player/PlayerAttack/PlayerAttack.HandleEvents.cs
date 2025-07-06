@@ -1,6 +1,6 @@
 ﻿using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
-
+using System.Linq;
 
 [assembly: ZLinq.ZLinqDropInAttribute("PJH.Runtime.Players", ZLinq.DropInGenerateTypes.Everything)]
 
@@ -8,22 +8,6 @@ namespace PJH.Runtime.Players
 {
     public partial class PlayerAttack
     {
-        private void HandleEvasion()
-        {
-            if (IsAttacking)
-            {
-                _isComboPossible = true;
-                IsAttacking = false;
-                PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
-                movementCompo.CanMove = true;
-                ExitBattleAfterDelay();
-            }
-            else if (ComboCount != 0)
-            {
-                HandleEndCombo();
-            }
-        }
-
         private void HandleChangedTargetEnemy(Agent prevTarget, Agent currentTarget)
         {
             IsInBattle = currentTarget != null;
@@ -99,7 +83,7 @@ namespace PJH.Runtime.Players
         private void HandleUseCommandAction(CommandActionData commandActionData)
         {
             _currentCommandActionData?.UnEquip();
-            
+
             _currentCommandActionData = commandActionData;
             _currentCommandActionData.Equip(_player);
             _prevComboCount = 0;

@@ -13,6 +13,7 @@ namespace Main.Runtime.Core.Events
         public static readonly ShakeInven ShakeInven = new ShakeInven();
         public static readonly ClearTutorial ClearTutorial = new ClearTutorial();
         public static readonly StartTutorial StartTutorial = new StartTutorial();
+        public static readonly ChangeCurrentEnemy ChangeCurrentEnemy = new ChangeCurrentEnemy();
     }
 
     public class ModifyPlayerStat : GameEvent
@@ -43,6 +44,11 @@ namespace Main.Runtime.Core.Events
         public string Description;
         public int CurrentAmount;
         public int RequiredAmount;
+    }
+
+    public class ChangeCurrentEnemy : GameEvent
+    {
+        public int enemyCount;
     }
 
     public class ShakeInven : GameEvent { }

@@ -21,10 +21,10 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceIcon: {fileID: 21300000, guid: 68af8cbf38808a343adb286146a42d00, type: 3}
-  pieceDisplayName: "\uC624\uB978\uCABD \uAC15\uD380\uCE58"
+  pieceIcon: {fileID: 21300000, guid: 4dd647494616f154986dd6e3b5c6b036, type: 3}
+  pieceDisplayName: "\uC624\uB978 \uC190 \uAC15\uD380\uCE58"
   pieceDescription: "\uC624\uB978 \uC190\uC73C\uB85C \uAC15\uD558\uAC8C \uD380\uCE58\uB97C
-    \uB0A0\uB9B0\uB2E4."
+    \uB0A0\uB9AC\uB294 \uACF5\uACA9\uC785\uB2C8\uB2E4."
   combatData: {fileID: 11400000, guid: de6ccb494867eab409606473a9c75f2a, type: 2}
-  _passives:
-  - {fileID: 11400000, guid: 35fb2bf7e5c407945ad7d2fd4c66afca, type: 2}
+  _passives: []
+  equipSlotIndex: 0

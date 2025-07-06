@@ -44,6 +44,7 @@ namespace PJH.Runtime.Core.PlayerCamera
             }
             catch (Exception e)
             {
+                
             }
         }
 

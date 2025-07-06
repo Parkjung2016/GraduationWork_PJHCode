@@ -11,7 +11,7 @@ namespace PJH.Runtime.Players
         public event Action<bool> OnBlock;
         public bool IsBlocking { get; private set; }
 
-        [field: SerializeField] public float IncreaseTargetMomentumGaugeOnParrying { get; private set; } = 20;
+        [field: SerializeField] public float IncreaseTargetMomentumGauge { get; private set; } = 20;
         [field: SerializeField] public float IncreaseMomentumGaugeOnBlock { get; private set; } = 20;
         [field: SerializeField] public float IncreaseMomentumGaugeOnParrying { get; private set; } = 20;
         private Player _player;
@@ -30,7 +30,7 @@ namespace PJH.Runtime.Players
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
             _player.GetCompo<PlayerAttack>().OnAttack += HandleBlockEnd;
             _player.GetCompo<PlayerAnimationTrigger>().OnBlockEnd += HandleBlockEnd;
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisher += HandleBlockEnd;
+            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd += HandleBlockEnd;
             _player.GetCompo<PlayerCounterAttack>().OnCounterAttackWithoutAnimationClip += HandleBlockEnd;
 
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
@@ -46,7 +46,7 @@ namespace PJH.Runtime.Players
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
             _player.GetCompo<PlayerAttack>().OnAttack -= HandleBlockEnd;
             _player.GetCompo<PlayerAnimationTrigger>().OnBlockEnd -= HandleBlockEnd;
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisher -= HandleBlockEnd;
+            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd -= HandleBlockEnd;
             _player.GetCompo<PlayerCounterAttack>().OnCounterAttackWithoutAnimationClip -= HandleBlockEnd;
 
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
@@ -75,7 +75,8 @@ namespace PJH.Runtime.Players
 
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
 
-            if (movementCompo.IsEvading || _player.IsStunned ||
+            PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
+            if (counterAttackCompo.IsCounterAttacking || movementCompo.IsEvading || _player.IsStunned ||
                 isPressedBlockKey && _player.IsHitting) return;
             if (isPressedBlockKey)
             {

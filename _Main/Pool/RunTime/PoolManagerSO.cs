@@ -11,6 +11,7 @@ using UnityEngine;
 public class PoolManagerSO : ScriptableObject
 {
     public event Action CompletedInitEvent;
+    public event Action<int, int> ProcessingEvent;
 #if ODIN_INSPECTOR
     [Searchable]
 #endif
@@ -18,12 +19,12 @@ public class PoolManagerSO : ScriptableObject
 
     private Dictionary<string, Pool> _pools;
     private Transform _rootTrm;
-
     public IEnumerator InitializePool(Transform root)
     {
         _rootTrm = root;
         _pools = new Dictionary<string, Pool>();
-
+        int count = 0;
+        ProcessingEvent?.Invoke(count, poolingItemList.Count);
         foreach (var item in poolingItemList)
         {
             var handle = item.prefab.LoadAssetAsync<GameObject>();
@@ -39,6 +40,8 @@ public class PoolManagerSO : ScriptableObject
 
             var pool = new Pool(poolable, _rootTrm, item.initCount);
             _pools.Add(item.poolType.typeName, pool);
+            count++;
+            ProcessingEvent?.Invoke(count, poolingItemList.Count);
         }
 
         CompletedInitEvent?.Invoke();

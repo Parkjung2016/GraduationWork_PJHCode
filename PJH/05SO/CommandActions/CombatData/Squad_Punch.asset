@@ -63,7 +63,7 @@ MonoBehaviour:
       Data: 4|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -132,7 +132,7 @@ MonoBehaviour:
       Data: 9|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
       Data: 14|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -270,7 +270,7 @@ MonoBehaviour:
       Data: 19|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -371,7 +371,7 @@ MonoBehaviour:
       Data: 27|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -440,7 +440,7 @@ MonoBehaviour:
       Data: 32|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -509,7 +509,7 @@ MonoBehaviour:
       Data: 37|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -578,7 +578,7 @@ MonoBehaviour:
       Data: 42|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -679,7 +679,7 @@ MonoBehaviour:
       Data: 50|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -748,7 +748,7 @@ MonoBehaviour:
       Data: 55|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -817,7 +817,7 @@ MonoBehaviour:
       Data: 60|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -886,7 +886,7 @@ MonoBehaviour:
       Data: 65|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -987,7 +987,7 @@ MonoBehaviour:
       Data: 73|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -1056,7 +1056,7 @@ MonoBehaviour:
       Data: 78|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -1125,7 +1125,7 @@ MonoBehaviour:
       Data: 83|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -1194,7 +1194,7 @@ MonoBehaviour:
       Data: 88|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -1272,6 +1272,7 @@ MonoBehaviour:
     _Speed: 1.2
     _Events:
       _NormalizedTimes:
+      - 0.081957884
       - 0.098488115
       - 0.11111111
       - 0.13437195
@@ -1284,10 +1285,12 @@ MonoBehaviour:
       - 0.3719572
       - 0.38012958
       - 0.40311593
-      - 0.4786177
+      - 0.5270506
+      - 0.5631181
       - 0.6624023
       - 0.93281406
       _Callbacks:
+      - rid: -2
       - rid: 7105671321020792977
       - rid: 6518945679347024248
       - rid: -2
@@ -1300,6 +1303,7 @@ MonoBehaviour:
       - rid: 6518945679347024252
       - rid: 7105671321020792981
       _Names:
+      - {fileID: 11400000, guid: 8c8ade2bd239ee64a82900bcd94638cd, type: 2}
       - {fileID: 11400000, guid: 80d810b3ae71991458c9b7b396ccc4a7, type: 2}
       - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
       - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
@@ -1312,6 +1316,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
       - {fileID: 11400000, guid: 80d810b3ae71991458c9b7b396ccc4a7, type: 2}
       - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: a77c97c66f91a71428d2b3dc08a8f38d, type: 2}
       - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
       - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
     _Clip: {fileID: 8993902097722301239, guid: c18716b148ba7284986bc75b2dd24e9d, type: 3}

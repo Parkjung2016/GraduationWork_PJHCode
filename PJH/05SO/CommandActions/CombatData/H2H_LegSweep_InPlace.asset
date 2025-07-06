@@ -63,7 +63,7 @@ MonoBehaviour:
       Data: 4|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -132,7 +132,7 @@ MonoBehaviour:
       Data: 9|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
       Data: 14|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -270,7 +270,7 @@ MonoBehaviour:
       Data: 19|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -348,17 +348,22 @@ MonoBehaviour:
     _Speed: 1
     _Events:
       _NormalizedTimes:
+      - 0.2515652
       - 0.33945632
       - 0.4324324
       - 0.4778369
+      - 0.49796396
       - 0.5416666
       - 0.886134
       _Callbacks:
+      - rid: -2
       - rid: 738560234674193314
       _Names:
+      - {fileID: 11400000, guid: 8c8ade2bd239ee64a82900bcd94638cd, type: 2}
       - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
       - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+      - {fileID: 11400000, guid: a77c97c66f91a71428d2b3dc08a8f38d, type: 2}
       - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
     _Clip: {fileID: 1827226128182048838, guid: fd88119912685f14f947c0bfa8510a53, type: 3}
     _NormalizedStartTime: NaN
@@ -388,6 +393,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 738560234674193314
       type: {class: ParameterSocketType, ns: YTH.Enemies, asm: YTH}
       data:

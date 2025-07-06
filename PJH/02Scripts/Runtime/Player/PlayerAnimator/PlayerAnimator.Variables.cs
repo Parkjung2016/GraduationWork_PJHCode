@@ -30,6 +30,6 @@ namespace PJH.Runtime.Players
         private PlayerMovement _movementCompo;
         private PlayerBlock _blockCompo;
         private Player _player;
-        private bool _isPlayingTimeline;
+        // private bool _isPlayingTimeline;
     }
 }

@@ -1,4 +1,6 @@
-﻿using FMODUnity;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using FMODUnity;
 using Main.Core;
 using Main.Runtime.Manager;
 using Main.Shared;
@@ -10,24 +12,39 @@ namespace Main.Scenes
     [DefaultExecutionOrder(100)]
     public class BaseScene : MonoBehaviour, IScene
     {
-        [SerializeField] protected PlayerInputSO _playerInput;
+        protected PlayerInputSO _playerInput;
         [SerializeField] protected EventReference _bgm;
 
-        private void Awake()
+        protected virtual void Awake()
         {
+            SetPlayerInput();
             BIS.Manager.Managers.UI.PopupStackClear();
+        }
+
+        private async void SetPlayerInput()
+        {
+            try
+            {
+                await UniTask.WaitUntil(() => AddressableManager.IsLoaded,
+                    cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
+                _playerInput.EnablePlayerInput(true);
+                _playerInput.EnableUIInput(true);
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         protected virtual void Start()
         {
             Time.timeScale = 1;
-            _playerInput.EnablePlayerInput(true);
             CursorManager.EnableCursor(false);
-            _playerInput.EnablePlayerInput(true);
             if (!_bgm.IsNull)
             {
                 Managers.FMODManager.PlayMusicSound(_bgm);
             }
+
             BIS.Manager.Managers.Save.LoadGame();
         }
 

@@ -10,7 +10,7 @@ namespace PJH.Runtime.Players
         [Title("Manual Move")] [LabelText("공격 중에 앞으로 가는지(RootMotion이 아닌 애니메이션)")]
         public bool isManualMove;
 
-        [ShowIf("isManualMove")] [LabelText("공격 중에 앞으로 가는 시간"), SuffixLabel("초", true)]
+        [ShowIf("isManualMove")] [LabelText("공격 중에 앞으로 가는 속도"), SuffixLabel("m/s", true)]
         public float manualMoveSpeed;
 
 #if UNITY_EDITOR

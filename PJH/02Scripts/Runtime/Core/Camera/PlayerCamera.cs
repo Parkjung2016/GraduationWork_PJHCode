@@ -66,7 +66,7 @@ namespace PJH.Runtime.Core.PlayerCamera
             _gameEventChannel.AddListener<CameraViewConfig>(HandleCameraViewConfig);
             _gameEventChannel.AddListener<CameraInvertInput>(HandleCameraInvertInput);
             _gameEventChannel.AddListener<EnemyFinisherSequence>(HandleEnemyFinisherSequence);
-            _gameEventChannel.AddListener<FinishTimeline>(HandleFinishTimeline);
+            _gameEventChannel.AddListener<FinishEnemyFinisher>(HandleFinishTimeline);
             _gameEventChannel.AddListener<ChangeCameraFOV>(HandleChangeCameraFOV);
             _gameEventChannel.AddListener<ChangeCameraUpdate>(HandleChangeCameraUpdate);
         }
@@ -76,7 +76,7 @@ namespace PJH.Runtime.Core.PlayerCamera
             _gameEventChannel.RemoveListener<CameraViewConfig>(HandleCameraViewConfig);
             _gameEventChannel.RemoveListener<CameraInvertInput>(HandleCameraInvertInput);
             _gameEventChannel.RemoveListener<EnemyFinisherSequence>(HandleEnemyFinisherSequence);
-            _gameEventChannel.RemoveListener<FinishTimeline>(HandleFinishTimeline);
+            _gameEventChannel.RemoveListener<FinishEnemyFinisher>(HandleFinishTimeline);
             _gameEventChannel.RemoveListener<ChangeCameraFOV>(HandleChangeCameraFOV);
             _gameEventChannel.RemoveListener<ChangeCameraUpdate>(HandleChangeCameraUpdate);
         }
@@ -116,7 +116,7 @@ namespace PJH.Runtime.Core.PlayerCamera
         }
 
 
-        private void HandleFinishTimeline(FinishTimeline evt)
+        private void HandleFinishTimeline(FinishEnemyFinisher evt)
         {
             enabled = true;
         }
@@ -167,11 +167,14 @@ namespace PJH.Runtime.Core.PlayerCamera
             if (!_updateIgnoreTimeScale && Time.timeScale == 0) return;
             Vector2 look = _lookInput.action.ReadValue<Vector2>();
             Transform trackingTarget = _cinemachineCamera.Target.TrackingTarget;
-            trackingTarget.rotation *=
-                Quaternion.AngleAxis(look.x * (_invertXAxis ? -1 : 1) * _rotationPower.x, Vector3.up);
             if (_cinemachineCamera.IsLive)
+            {
                 trackingTarget.rotation *=
-                    Quaternion.AngleAxis(look.y * (_invertYAxis ? 1 : -1) * _rotationPower.y, Vector3.right);
+                    Quaternion.AngleAxis(look.x * (_invertXAxis ? -1 : 1) * _rotationPower.x, Vector3.up);
+            }
+
+            trackingTarget.rotation *=
+                Quaternion.AngleAxis(look.y * (_invertYAxis ? 1 : -1) * _rotationPower.y, Vector3.right);
 
             Vector3 angles = trackingTarget.eulerAngles;
             angles.z = 0;

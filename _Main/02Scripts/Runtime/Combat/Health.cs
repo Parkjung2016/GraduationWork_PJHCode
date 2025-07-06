@@ -11,13 +11,18 @@ namespace Main.Runtime.Combat
 {
     public delegate void HealthChangeHandler(float currentHealth, float minHealth, float maxHealth);
 
+    public delegate void ChangedShieldEventHandler(float currentShield, float maxShield);
+
+
     public class Health : SerializedMonoBehaviour, IDamageable
     {
+        public event Func<GetDamagedInfo, GetDamagedInfo?> SetGetDamagedInfoBeforeApplyDamagedEvent;
         public event Action<float> OnApplyDamaged;
         public event Action<float> OnHeal;
         public event Action OnDeath;
         public event HealthChangeHandler OnChangedHealth;
         public event AilmentChangedEvent OnAilmentChanged;
+        public event ChangedShieldEventHandler OnChangedShield;
 
 
         protected GetDamagedInfo _getDamagedInfo = new();
@@ -38,16 +43,29 @@ namespace Main.Runtime.Combat
             }
         }
 
+
+        public float CurrentShield
+        {
+            get => _currentShield;
+            set
+            {
+                _currentShield = Mathf.Clamp(value, 0, _maxShieldStat.Value);
+                OnChangedShield?.Invoke(_currentShield, _maxShieldStat.Value);
+            }
+        }
+
         public float MaxHealth => _maxHealthStat.Value;
         public bool IsDead { get; private set; }
         public bool IsInitialized { get; private set; }
         public bool IsInvincibility { get; set; }
         public AilmentStat ailmentStat;
 
-        private StatSO _maxHealthStat;
+        protected StatSO _maxShieldStat;
+        protected StatSO _maxHealthStat;
 
         protected IAgent _agent;
-        [SerializeField, ReadOnly] private float _currentHealth;
+        [SerializeField, ReadOnly] protected float _currentShield;
+        [SerializeField, ReadOnly] protected float _currentHealth;
 
         public void ResetToMaxHealth()
         {
@@ -55,9 +73,11 @@ namespace Main.Runtime.Combat
             IsDead = false;
         }
 
-        public virtual async void Init(StatSO maxHealthStat)
+        public virtual void Init(StatSO maxHealthStat, StatSO maxShieldStat)
         {
             _agent = GetComponent<IAgent>();
+
+            _maxShieldStat = maxShieldStat;
             _maxHealthStat = maxHealthStat;
             ResetToMaxHealth();
             IsInitialized = true;
@@ -83,19 +103,35 @@ namespace Main.Runtime.Combat
         private void HandleMaxHealthChanged(StatSO stat, float current, float prev)
         {
             float healthRatio = CurrentHealth / prev;
+            Debug.Log(healthRatio);
             CurrentHealth = current * healthRatio;
         }
 
         private void Update()
         {
             ailmentStat.UpdateAilment();
+            if (Input.GetKeyDown(KeyCode.H))
+                ApplyHeal(10);
         }
 
-        protected virtual bool CanApplyDamage() => IsDead || IsInvincibility;
+        protected virtual bool CanApplyDamage(GetDamagedInfo getDamagedInfo) => !IsDead && !IsInvincibility;
 
         public virtual bool ApplyDamage(GetDamagedInfo getDamagedInfo)
         {
-            if (CanApplyDamage()) return false;
+            if (!CanApplyDamage(getDamagedInfo)) return false;
+
+            if (CurrentShield > 0)
+            {
+                CurrentShield -= getDamagedInfo.damage;
+                getDamagedInfo.damage = 0;
+            }
+            else
+            {
+                GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(getDamagedInfo);
+                if (returnValue.HasValue)
+                    getDamagedInfo = returnValue.Value;
+            }
+
             _getDamagedInfo = getDamagedInfo;
             OnApplyDamaged?.Invoke(_getDamagedInfo.damage);
             CurrentHealth -= _getDamagedInfo.damage;
@@ -104,8 +140,10 @@ namespace Main.Runtime.Combat
 
         public virtual bool ApplyOnlyDamage(float damage)
         {
-            if (CanApplyDamage()) return false;
-            CurrentHealth -= damage;
+            GetDamagedInfo getDamagedInfo = new();
+            getDamagedInfo.damage = damage;
+            if (!CanApplyDamage(getDamagedInfo)) return false;
+            CurrentHealth -= getDamagedInfo.damage;
             return true;
         }
 
@@ -116,7 +154,6 @@ namespace Main.Runtime.Combat
             CurrentHealth += healAmount;
             return true;
         }
-
 
         private void HandleDotDamageEvent(Ailment ailmentType, float damage, ITransition getDamagedAnimation)
         {

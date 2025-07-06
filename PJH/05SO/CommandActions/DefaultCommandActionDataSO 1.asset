@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac66e11921dc4fe48841f0ff812f3af2, type: 3}
+  m_Name: DefaultCommandActionDataSO 1
+  m_EditorClassIdentifier: 
+  commandActionData:
+    <ExecuteCommandActionPieces>k__BackingField:
+    - {fileID: 11400000, guid: f01f5d42ac348e3439bd984ae71c822c, type: 2}
+    - {fileID: 11400000, guid: e7864219b1b193e4ead5064adcaebb73, type: 2}
+    - {fileID: 11400000, guid: 18567b84101f86044a23717db93bc21b, type: 2}
+    maxActionCount: 5

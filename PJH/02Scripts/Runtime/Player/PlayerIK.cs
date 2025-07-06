@@ -43,7 +43,7 @@ namespace PJH.Runtime.Players
             animationTriggerCompo.OnEndCombo += HandleEndCombo;
             animationTriggerCompo.OnBlockEnd += HandleEndCombo;
 
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline += HandleFinisherTimeline;
+            // _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline += HandleFinisherTimeline;
             LookAnimator.SwitchLooking(false);
         }
 
@@ -65,7 +65,7 @@ namespace PJH.Runtime.Players
             animationTriggerCompo.OnEndCombo -= HandleEndCombo;
             animationTriggerCompo.OnBlockEnd -= HandleEndCombo;
 
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline -= HandleFinisherTimeline;
+            // _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline -= HandleFinisherTimeline;
         }
 
         private void HandleMovement(float velocity)
@@ -99,11 +99,11 @@ namespace PJH.Runtime.Players
             LookAnimator.SwitchLooking(false);
         }
 
-        private void HandleFinisherTimeline(bool isPlayingTimeline)
-        {
-            LegsAnimator.enabled = !isPlayingTimeline;
-            LookAnimator.enabled = !isPlayingTimeline;
-        }
+        // private void HandleFinisherTimeline(bool isPlayingTimeline)
+        // {
+        //     LegsAnimator.enabled = !isPlayingTimeline;
+        //     LookAnimator.enabled = !isPlayingTimeline;
+        // }
 
         private void HandleEndCombo()
         {

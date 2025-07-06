@@ -9,10 +9,11 @@ public class PoolManagerMono : MonoBehaviour
     private bool _isSpawned;
 
 
+
     private IEnumerator Start()
     {
         yield return new WaitUntil(() => AddressableManager.IsLoaded);
-        _poolManager =AddressableManager.Load<PoolManagerSO>("PoolManager");
+        _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
         PoolManagerMono[] objs = FindObjectsByType<PoolManagerMono>(FindObjectsSortMode.None);
         if (objs.Length > 1)
         {
@@ -24,6 +25,7 @@ public class PoolManagerMono : MonoBehaviour
             yield return _poolManager.InitializePool(transform);
             DontDestroyOnLoad(gameObject);
         }
+        UnityEngine.Debug.Log("풀링 완료");
     }
 
 

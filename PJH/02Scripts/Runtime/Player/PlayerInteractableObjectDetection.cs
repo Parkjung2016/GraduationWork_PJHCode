@@ -8,6 +8,7 @@ using Main.Runtime.Core.Events;
 using Main.Shared;
 using UnityEngine;
 using ZLinq;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -33,31 +34,38 @@ namespace PJH.Runtime.Players
 
         public void AfterInitialize()
         {
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline += HandleFinisherTimeline;
-            DetectNearInteractTarget().Forget();
+            _player.GetCompo<PlayerEnemyFinisher>().OnFinisher += HandleFinisher;
+            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd += HandleFinisherEnd;
+            DetectNearInteractTarget();
         }
 
         private void OnDestroy()
         {
-            if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
+            if (_cancellationToken is { IsCancellationRequested: false })
             {
                 _cancellationToken.Cancel();
                 _cancellationToken.Dispose();
             }
 
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline -= HandleFinisherTimeline;
+            _player.GetCompo<PlayerEnemyFinisher>().OnFinisher -= HandleFinisher;
+            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd -= HandleFinisherEnd;
         }
 
-        private void HandleFinisherTimeline(bool isPlayingTimeline)
+        private void HandleFinisherEnd()
         {
-            enabled = !isPlayingTimeline;
+            enabled = true;
         }
 
-        private async UniTaskVoid DetectNearInteractTarget()
+        private void HandleFinisher()
         {
-            _cancellationToken = new CancellationTokenSource();
+            enabled = false;
+        }
+
+        private async void DetectNearInteractTarget()
+        {
             try
             {
+                _cancellationToken = new CancellationTokenSource();
                 while (!_cancellationToken.IsCancellationRequested)
                 {
                     await UniTask.WaitUntil(() => gameObject.activeSelf, cancellationToken: _cancellationToken.Token);

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Main.Runtime.Combat.Core;
 using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
 using Sirenix.OdinInspector;
@@ -36,6 +37,10 @@ namespace Main.Runtime.Agents
             get => _currentMomentumGauge == _maxMomentumGauge.Value;
         }
 
+        [field: SerializeField] public float AutoDecreaseMomentumGaugeTime { get; private set; } = 2f;
+        [field: SerializeField] public float DecreaseMomentumGaugeOneFrame { get; private set; } = 0.05f;
+        
+
         public StatSO MaxMomentumGauge => _maxMomentumGauge;
         [SerializeField, Required] private StatSO _maxMomentumGauge;
         [SerializeField] private float _decreaseMomentumGaugePerTick = 4;
@@ -52,7 +57,7 @@ namespace Main.Runtime.Agents
             _maxMomentumGauge = agentStat.GetStat(_maxMomentumGauge);
         }
 
-        public void AfterInitialize()
+        public virtual void AfterInitialize()
         {
             _agent.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
         }
@@ -80,7 +85,7 @@ namespace Main.Runtime.Agents
                 DisposeTokenSource();
 
                 _checkDecreaseMomentumGaugeTokenSource = new CancellationTokenSource();
-                await UniTask.WaitForSeconds(2, cancellationToken: _checkDecreaseMomentumGaugeTokenSource.Token);
+                await UniTask.WaitForSeconds(AutoDecreaseMomentumGaugeTime, cancellationToken: _checkDecreaseMomentumGaugeTokenSource.Token);
                 StartDecreaseMomentumGauge();
             }
             catch (Exception e)
@@ -92,9 +97,8 @@ namespace Main.Runtime.Agents
         {
             DisposeTokenSource();
             StopDecreaseMomentumGauge();
-            
-            _agent.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
 
+            _agent.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
         }
 
         public void DisposeTokenSource()
@@ -119,7 +123,7 @@ namespace Main.Runtime.Agents
             {
                 while (!_autoDecreaseMomentumGaugeTokenSource.IsCancellationRequested && CurrentMomentumGauge > 0)
                 {
-                    await UniTask.WaitForSeconds(.05f,
+                    await UniTask.WaitForSeconds(DecreaseMomentumGaugeOneFrame,
                         cancellationToken: _autoDecreaseMomentumGaugeTokenSource.Token);
                     DecreaseMomentumGauge(_decreaseMomentumGaugePerTick);
                 }

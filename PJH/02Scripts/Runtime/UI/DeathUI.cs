@@ -1,8 +1,6 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Main.Core;
 using Main.Runtime.Core.Events;
-using Main.Runtime.Manager;
 using MoreMountains.Feedbacks;
 using TMPro;
 using TransitionsPlus;
@@ -14,6 +12,8 @@ namespace PJH.Runtime.UI
     {
         private GameEventChannelSO _showDeathUIEventChannel;
         [SerializeField] private MMF_Player _showFeedbackPlayer;
+        [SerializeField] private TextMeshProUGUI _deathTMP;
+        [SerializeField] private string[] _deathTexts;
         private CanvasGroup _canvasGroup;
         private TransitionAnimator _transitionAnimator;
 
@@ -44,6 +44,7 @@ namespace PJH.Runtime.UI
             ShowDeathUI showDeathUIEvt = UIEvents.ShowDeathUI;
             if (showDeathUIEvt.isShowUI)
             {
+                _deathTMP.SetText(_deathTexts.GetRandom());
                 _canvasGroup.DOFade(1, 1);
                 _showFeedbackPlayer.PlayFeedbacks();
             }

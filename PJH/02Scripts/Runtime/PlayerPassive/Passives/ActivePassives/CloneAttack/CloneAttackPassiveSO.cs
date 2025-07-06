@@ -12,8 +12,6 @@ namespace PJH.Runtime.PlayerPassive.Passives
     [CreateAssetMenu(menuName = "SO/Passive/Active/CloneAttackPassive")]
     public class CloneAttackPassiveSO : PassiveSO, IActivePassive, ICooldownPassive
     {
-        private Player _player;
-
         [VerticalGroup("Top/Right")] [LabelText("📂 분신 전투 데이터베이스")]
         public CloneAttackCombatDatabase cloneAttackCombatDatabase;
 
@@ -21,19 +19,12 @@ namespace PJH.Runtime.PlayerPassive.Passives
         public PoolTypeSO playerClonePoolType;
 
         private PoolManagerSO _poolManager;
-        [field: SerializeField,OdinSerialize] public CooldownPassiveInfo CooldownPassiveInfo { get; set; }
+        [field: SerializeField, OdinSerialize] public CooldownPassiveInfo CooldownPassiveInfo { get; set; }
 
         public override void EquipPiece(IPlayer player)
         {
             base.EquipPiece(player);
-            _player = player as Player;
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
-        }
-
-        public override void UnEquipPiece()
-        {
-            base.UnEquipPiece();
-            _player = null;
         }
 
         public void ActivePassive()

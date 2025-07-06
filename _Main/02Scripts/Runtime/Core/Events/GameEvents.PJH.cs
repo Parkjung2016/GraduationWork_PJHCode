@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PJH.Runtime.Players.FinisherSequence;
+using UnityEngine;
 using UnityEngine.Playables;
 
 namespace Main.Runtime.Core.Events
@@ -7,11 +8,10 @@ namespace Main.Runtime.Core.Events
     {
         public static readonly CameraViewConfig CameraViewConfig = new CameraViewConfig();
         public static readonly EnemyFinisherSequence EnemyFinisherSequence = new EnemyFinisherSequence();
-        public static readonly FinishTimeline FinishTimeline = new FinishTimeline();
+        public static readonly FinishEnemyFinisher FinishEnemyFinisher = new FinishEnemyFinisher();
         public static readonly DeadFinisherTarget DeadFinisherTarget = new DeadFinisherTarget();
         public static readonly PlayerDeath PlayerDeath = new PlayerDeath();
         public static readonly TimeSlowByPlayer TimeSlowByPlayer = new TimeSlowByPlayer();
-        public static readonly ReOffsetPlayer ReOffsetPlayer = new ReOffsetPlayer();
         public static readonly PlayerStunned PlayerStunned = new PlayerStunned();
         public static readonly ClearWave ClearWave = new ClearWave();
         public static readonly StartWave StartWave = new StartWave();
@@ -82,20 +82,15 @@ namespace Main.Runtime.Core.Events
 
     public class EnemyFinisherSequence : GameEvent
     {
-        public PlayableAsset sequenceAsset;
-        public Animator enemyAnimator;
+        public Animator playerAnimator;
+        public FinisherDataSO sequenceAsset;
     }
 
     public class PlayerStunned : GameEvent
     {
         public bool isStunned;
     }
-
-    public class ReOffsetPlayer : GameEvent
-    {
-    }
-
-    public class FinishTimeline : GameEvent
+    public class FinishEnemyFinisher : GameEvent
     {
     }
 

@@ -16,7 +16,7 @@ namespace PJH.Runtime.Players
         public event Action<ITransition> OnCounterAttack;
         public event Action OnCounterAttackWithoutAnimationClip;
         public event Action OnHitCounterAttackTarget;
-        public bool IsCounterAttacking { get; private set; }
+        public bool IsCounterAttacking { get; set; }
         [SerializeField] private List<PlayerCounterAttackDataSO> _counterAttackCombatDatas;
         [SerializeField] private StatSO _powerStat;
 

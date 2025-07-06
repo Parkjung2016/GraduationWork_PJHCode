@@ -13,17 +13,17 @@ namespace Main.Runtime.Agents
         public void AddComponentToDictionary(Agent owner)
         {
             owner.GetComponentsInChildren<IAgentComponent>(true)
-                .ToList().ForEach(component => _components.Add(component.GetType(), component));
+                .AsValueEnumerable().ToList().ForEach(component => _components.Add(component.GetType(), component));
         }
 
         public void ComponentInitialize(Agent owner)
         {
-            _components.Values.ToList().ForEach(component => component.Initialize(owner));
+            _components.Values.AsValueEnumerable().ToList().ForEach(component => component.Initialize(owner));
         }
 
         public void AfterInitialize()
         {
-            _components.Values.OfType<IAfterInitable>()
+            _components.Values.AsValueEnumerable().OfType<IAfterInitable>()
                 .ToList().ForEach(afterInitable => afterInitable.AfterInitialize());
         }
 
@@ -36,7 +36,7 @@ namespace Main.Runtime.Agents
 
             if (isDerived == false) return default;
 
-            Type findType = _components.Keys.FirstOrDefault(type => type.IsSubclassOf(typeof(T)));
+            Type findType = _components.Keys.AsValueEnumerable().FirstOrDefault(type => type.IsSubclassOf(typeof(T)));
             if (findType != null)
                 return (T)_components[findType];
 
@@ -51,7 +51,7 @@ namespace Main.Runtime.Agents
 
         public void EnableComponents(bool isEnabled)
         {
-            _components.Values.OfType<MonoBehaviour>().ToList().ForEach(component =>
+            _components.Values.AsValueEnumerable().OfType<MonoBehaviour>().ToList().ForEach(component =>
             {
                 if (component is not AgentAnimator)
                     component.enabled = isEnabled;

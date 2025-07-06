@@ -27,6 +27,7 @@ public class AgentSocket : MonoBehaviour
     {
         item.transform.SetParent(transform);
         item.transform.SetLocalPositionAndRotation(position, rotation);
+        item.transform.localScale = Vector3.one;
 
         _item = item;
     }

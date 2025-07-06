@@ -1,14 +1,15 @@
 ﻿using Animancer;
-using Main.Runtime.Core.StatSystem;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
+using Main.Runtime.Core.Events;
 using UnityEngine;
 
 namespace PJH.Runtime.Players
 {
     public partial class PlayerMovement
     {
+        public event Action<float, float> OnUpdateCooldownEvasionWhileHitting;
         public event Action<float> OnMovement;
         public event Action<bool> OnRun;
         public event Action<ITransition> OnTurn;
@@ -32,6 +33,7 @@ namespace PJH.Runtime.Players
                 return movementSpeed;
             }
         }
+
         [SerializeField] private float _gravity;
         [SerializeField] private float _rotationSpeed;
         [SerializeField] private float _acceleration = 10f;
@@ -41,7 +43,6 @@ namespace PJH.Runtime.Players
 
         [BoxGroup("Animancer Clips")] [FoldoutGroup("Animancer Clips/Evasion"), SerializeField]
         private Dictionary<string, ClipTransition> _evasionAnimations = new();
-
 
         [BoxGroup("Animancer Clips"), SerializeField]
         private ClipTransition _animationAfterEvasion;
@@ -55,10 +56,13 @@ namespace PJH.Runtime.Players
         private PlayerWarpStrike _warpStrikeCompo;
         private PlayerAttack _attackCompo;
         private AnimatedFloat _rootMotionMultiplierCurve;
+        private GameEventChannelSO _uiEventChannel;
         private Vector3 _velocity;
         private Vector3 _desiredVelocity = Vector3.zero;
         private Vector3 _knockBackDir;
         private bool _canEvading;
+        private bool _isCooldownEvasionWhileHitting;
+        private bool _isRotatingTargetWhileAttack;
         private float _yVelocity;
         private float _knockBackPower;
         private float _manualMoveSpeed;

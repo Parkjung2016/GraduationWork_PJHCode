@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Animancer;
-using Main.Runtime.Equipments.Datas;
+﻿using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

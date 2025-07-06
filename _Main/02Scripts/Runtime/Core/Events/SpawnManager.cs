@@ -1,9 +1,9 @@
 ﻿using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
+using System;
 using UnityEngine;
-
-namespace Main.Runtime.Core
+namespace Main.Runtime.Core.Events
 {
     public class SpawnManager : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace Main.Runtime.Core
 
         private void Awake()
         {
-            _spawnEventChannel =AddressableManager.Load<GameEventChannelSO>("SpawnEventChannel");
+            _spawnEventChannel = AddressableManager.Load<GameEventChannelSO>("SpawnEventChannel");
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
         }
 
@@ -20,6 +20,7 @@ namespace Main.Runtime.Core
         {
             _spawnEventChannel.AddListener<SpawnEffect>(HandleSpawnEffect);
         }
+
 
         private void OnDestroy()
         {
@@ -30,6 +31,8 @@ namespace Main.Runtime.Core
         {
             if (!_poolManager) return;
             var effect = _poolManager.Pop(evt.effectType) as PoolEffectPlayer;
+            if (evt.lifeTime > 0)
+                effect.ChangeLifeTime(evt.lifeTime);
             effect.PlayEffects(evt.position, evt.rotation);
         }
     }

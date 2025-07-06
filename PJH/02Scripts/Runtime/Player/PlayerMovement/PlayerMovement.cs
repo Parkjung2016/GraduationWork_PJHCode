@@ -2,8 +2,10 @@
 using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
+using Main.Runtime.Core.Events;
 using PJH.Runtime.Core;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -16,13 +18,14 @@ namespace PJH.Runtime.Players
         {
             try
             {
+                _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
                 _player = agent as Player;
                 _animatorCompo = _player.GetCompo<PlayerAnimator>();
                 _warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
                 _enemyDetectionCompo = _player.GetCompo<PlayerEnemyDetection>();
                 _attackCompo = _player.GetCompo<PlayerAttack>();
                 CC = _player.GetComponent<CharacterController>();
-                await UniTask.WaitUntil(() => _animatorCompo.Animancer != null);
+                await UniTask.WaitUntil(() => _animatorCompo.Animancer);
                 _rootMotionMultiplierCurve = new AnimatedFloat(_animatorCompo.Animancer, "RootMotionMultiplier");
             }
             catch (Exception e)
@@ -46,8 +49,9 @@ namespace PJH.Runtime.Players
             IsManualMove = false;
         }
 
-        private void CheckManualMove()
+        private void HandleAttack()
         {
+            _isRotatingTargetWhileAttack = true;
             if (!_attackCompo.CurrentCombatData.isManualMove) return;
             _manualMoveSpeed = _attackCompo.CurrentCombatData.manualMoveSpeed;
             IsManualMove = true;
@@ -55,15 +59,21 @@ namespace PJH.Runtime.Players
 
         private void Evasion()
         {
+            PlayerCounterAttack counterAttackComp = _player.GetCompo<PlayerCounterAttack>();
+            if (counterAttackComp.IsCounterAttacking) return;
             if ((_canEvading && _currentEvasionDelayTime + _evasionDelay > Time.time) || _player.IsStunned ||
                 IsKnockBack ||
                 IsEvading) return;
 
             if (_player.IsHitting)
             {
-                if (_currentEvasionWhileHittingDelayTime + _evasionWhileHittingDelay > Time.time) return;
-                _currentEvasionWhileHittingDelayTime = Time.time;
+                if (_isCooldownEvasionWhileHitting) return;
+                _currentEvasionWhileHittingDelayTime = _evasionWhileHittingDelay;
+                _isCooldownEvasionWhileHitting = true;
                 IsEvadingWhileHitting = true;
+                var evt = UIEvents.ShowEvasionWhileHittingInfUI;
+                evt.player = _player;
+                _uiEventChannel.RaiseEvent(evt);
                 OnEvasionWhileHitting?.Invoke();
             }
 
@@ -86,12 +96,25 @@ namespace PJH.Runtime.Players
 
         private void Update()
         {
-            if (!CC) return;
+            CheckCooldownEvasionWhileHitting();
+            if (!CC || _player.WarpingComponent.IsActive()) return;
             ApplyRotation();
             CalculateMove();
             ApplyGravity();
             CharacterMove();
             CheckTurn();
+        }
+
+        private void CheckCooldownEvasionWhileHitting()
+        {
+            if (!_isCooldownEvasionWhileHitting) return;
+            _currentEvasionWhileHittingDelayTime -= Time.deltaTime;
+            OnUpdateCooldownEvasionWhileHitting?.Invoke(_currentEvasionWhileHittingDelayTime,
+                _evasionWhileHittingDelay);
+            if (_currentEvasionWhileHittingDelayTime <= 0)
+            {
+                _isCooldownEvasionWhileHitting = false;
+            }
         }
 
         private void CheckTurn()
@@ -145,7 +168,8 @@ namespace PJH.Runtime.Players
                 IsKnockBack || _warpStrikeCompo.Activating) return;
             Quaternion targetRot = Quaternion.identity;
 
-            if ((_animatorCompo.IsRootMotion && !_animatorCompo.IsEnabledInputWhileRootMotion))
+            if ((_animatorCompo.IsRootMotion && !_isRotatingTargetWhileAttack &&
+                 !_animatorCompo.IsEnabledInputWhileRootMotion))
             {
                 PlayerBlock blockCompo = _player.GetCompo<PlayerBlock>();
                 if (blockCompo.IsBlocking && _enemyDetectionCompo.TryGetTargetEnemyNoInput(out Agent target))
@@ -161,7 +185,8 @@ namespace PJH.Runtime.Players
             Vector3 input = _player.PlayerInput.Input;
             if (input == Vector3.zero && !_attackCompo.IsInBattle) return;
             Transform cameraTrm = Camera.main.transform;
-            if (input != Vector3.zero && (IsRunning))
+
+            if (!_animatorCompo.IsRootMotion && input != Vector3.zero && (IsRunning))
             {
                 var right = cameraTrm.right;
                 right.y = 0;

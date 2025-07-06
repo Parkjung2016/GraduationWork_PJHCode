@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e8599e7d85a49c69d73c963789d8ef8, type: 3}
+  m_Name: ShadowClone_CombatDataList
+  m_EditorClassIdentifier: 
+  combatDataList:
+  - combatDatas:
+    - {fileID: 11400000, guid: 7e022070fa704bd41b5d920a3f4187a4, type: 2}
+    - {fileID: 11400000, guid: 7ca4dfbc065a920498c938da5fd765b1, type: 2}

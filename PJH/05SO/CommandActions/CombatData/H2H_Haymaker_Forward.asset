@@ -66,7 +66,7 @@ MonoBehaviour:
       Data: 4|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -135,7 +135,7 @@ MonoBehaviour:
       Data: 9|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -204,7 +204,7 @@ MonoBehaviour:
       Data: 14|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -273,7 +273,7 @@ MonoBehaviour:
       Data: 19|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -353,16 +353,20 @@ MonoBehaviour:
       _NormalizedTimes:
       - 0.50404114
       - 0.6010286
+      - 0.6624929
+      - 0.6759744
+      - 0.6866177
       - 0.70060927
-      - 0.74194956
       - 0.88938546
       _Callbacks:
       - rid: 738560234674193312
       _Names:
       - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
       - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
-      - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
       - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+      - {fileID: 11400000, guid: a77c97c66f91a71428d2b3dc08a8f38d, type: 2}
+      - {fileID: 11400000, guid: 8c8ade2bd239ee64a82900bcd94638cd, type: 2}
+      - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
     _Clip: {fileID: 1827226128182048838, guid: 4de2d1ab6f25e204ea829263704f91b8, type: 3}
     _NormalizedStartTime: NaN
   damageMultiplier: 2
@@ -393,4 +397,4 @@ MonoBehaviour:
     - rid: 738560234674193312
       type: {class: ParameterSocketType, ns: YTH.Enemies, asm: YTH}
       data:
-        _Value: 0
+        _Value: 1

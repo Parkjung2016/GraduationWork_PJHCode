@@ -19,7 +19,6 @@ namespace PJH.Runtime.Players
         }
 
 
-
         private void HandleEndFullMount()
         {
             PlayerInput.EnablePlayerInput(true);
@@ -28,19 +27,6 @@ namespace PJH.Runtime.Players
         private void HandleFullMount(ITransition obj)
         {
             PlayerInput.EnablePlayerInput(false);
-        }
-
-        private void HandleFinishTimeline(FinishTimeline evt)
-        {
-            ModelTrm.localPosition = Vector3.zero;
-        }
-
-
-        private void HandleReOffsetPlayer(ReOffsetPlayer evt)
-        {
-            Vector3 realPosition = ModelTrm.position;
-            transform.position = realPosition;
-            ModelTrm.localPosition = Vector3.zero;
         }
 
         private void HandleDeath()
@@ -54,10 +40,10 @@ namespace PJH.Runtime.Players
             });
         }
 
-        private void HandleFinisherTimeline(bool isFinishering)
-        {
-            PlayerInput.EnablePlayerInput(!isFinishering);
-        }
+        // private void HandleFinisherTimeline(bool isFinishering)
+        // {
+        //     PlayerInput.EnablePlayerInput(!isFinishering);
+        // }
 
         private void HandleRun(bool isRunning)
         {
@@ -81,6 +67,18 @@ namespace PJH.Runtime.Players
         private void HandleEvasionWhileHitting()
         {
             IsHitting = false;
+        }
+
+        private void HandleFinisher()
+        {
+            PlayerInput.EnablePlayerInput(false);
+            HealthCompo.IsInvincibility = true;
+        }
+
+        private void HandleFinisherEnd()
+        {
+            PlayerInput.EnablePlayerInput(true);
+            HealthCompo.IsInvincibility = false;
         }
     }
 }

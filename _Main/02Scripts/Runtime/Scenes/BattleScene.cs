@@ -17,12 +17,15 @@ namespace Main.Scenes
         [SerializeField] private PoolTypeSO _rewardChestPoolType;
         private PoolManagerSO _poolManager;
         private GameEventChannelSO _uiEventChannel;
+
         private GameEventChannelSO _gameEventChannel;
-        [SerializeField] private PlayableDirector _playableDirector;
+
+        // [SerializeField] private PlayableDirector _playableDirector;
         [SerializeField] private Transform _rewardCehstPointTrm;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Application.targetFrameRate = 60;
 
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
@@ -33,7 +36,6 @@ namespace Main.Scenes
         protected override void Start()
         {
             base.Start();
-            _gameEventChannel.AddListener<EnemyFinisherSequence>(HandleEnemyFinisherSequence);
             _gameEventChannel.AddListener<PlayerDeath>(HandlePlayerDeath);
             _gameEventChannel.AddListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
             _gameEventChannel.AddListener<PlayerStunned>(HandlePlayerStunned);
@@ -43,7 +45,6 @@ namespace Main.Scenes
 
         private void OnDestroy()
         {
-            _gameEventChannel.RemoveListener<EnemyFinisherSequence>(HandleEnemyFinisherSequence);
             _gameEventChannel.RemoveListener<PlayerDeath>(HandlePlayerDeath);
             _gameEventChannel.RemoveListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
             _gameEventChannel.RemoveListener<PlayerStunned>(HandlePlayerStunned);
@@ -111,42 +112,6 @@ namespace Main.Scenes
             });
             seq.AppendInterval(5);
             seq.AppendCallback(() => { SceneManagerEx.LoadScene("Lobby", true); });
-        }
-
-        private void HandleEnemyFinisherSequence(EnemyFinisherSequence evt)
-        {
-            PlayableAsset playableAsset = evt.sequenceAsset;
-            _playableDirector.playableAsset = playableAsset;
-            var timeline = playableAsset as TimelineAsset;
-            foreach (var track in timeline.GetOutputTracks())
-            {
-                if (track.name == "Enemy Animation Track")
-                {
-                    _playableDirector.SetGenericBinding(track, evt.enemyAnimator);
-                    break;
-                }
-            }
-
-            _playableDirector.Play();
-        }
-
-        public void FinishTimelineSignal()
-        {
-            _playableDirector.Stop();
-            FinishTimeline evt = GameEvents.FinishTimeline;
-            _gameEventChannel.RaiseEvent(evt);
-        }
-
-        public void DeadFinisherTargetSignal()
-        {
-            DeadFinisherTarget evt = GameEvents.DeadFinisherTarget;
-            _gameEventChannel.RaiseEvent(evt);
-        }
-
-        public void ReOffsetPlayerSignal()
-        {
-            ReOffsetPlayer evt = GameEvents.ReOffsetPlayer;
-            _gameEventChannel.RaiseEvent(evt);
         }
     }
 }

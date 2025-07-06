@@ -45,7 +45,7 @@ namespace PJH.Runtime.Players
 
         private void Update()
         {
-            if (_isPlayingTimeline) return;
+            // if (_isPlayingTimeline) return;
             Vector3 input = _player.PlayerInput.Input;
 
             var movementCompo = _player.GetCompo<PlayerMovement>();
@@ -68,11 +68,11 @@ namespace PJH.Runtime.Players
 
         private void OnAnimatorMove()
         {
-            if (_isPlayingTimeline)
-            {
-                transform.position = Animancer.rootPosition;
-                return;
-            }
+            // if (_isPlayingTimeline)
+            // {
+            //     transform.position = Animancer.rootPosition;
+            //     return;
+            // }
 
             if (!IsRootMotion) return;
             Vector3 deltaPosition = Animancer.deltaPosition;

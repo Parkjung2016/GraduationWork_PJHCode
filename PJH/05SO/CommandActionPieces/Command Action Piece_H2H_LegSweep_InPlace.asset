@@ -21,10 +21,10 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceSprite: {fileID: -123014715, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
-  actionName: LegSweep
-  actionDisplay: "\uB2E4\uB9AC\uAC78\uAE30"
-  actionDescription: "\uB2E4\uB9AC\uB97C \uAC78\uC5B4 \uC801\uC744 \uB118\uC5B4\uD2B8\uB9B0\uB2E4."
+  pieceIcon: {fileID: 21300000, guid: 1c63acc204800434991dda93dccc1a2a, type: 3}
+  pieceDisplayName: "\uD558\uB2E8 \uC4F8\uAE30"
+  pieceDescription: "\uD558\uB2E8\uC744 \uD718\uB450\uB974\uBA70 \uBC1C\uCC28\uAE30\uB97C
+    \uB0A0\uB9AC\uB294 \uACF5\uACA9\uC785\uB2C8\uB2E4."
   combatData: {fileID: 11400000, guid: 607d5b056c0195d47afd56dc9731a9d8, type: 2}
-  passive: {fileID: 0}
-  overlappingPassives: []
+  _passives: []
+  equipSlotIndex: 0

@@ -57,6 +57,7 @@ namespace PJH.Runtime.Core
             }
             catch (Exception e)
             {
+                Debug.Log(e);
             }
         }
     }

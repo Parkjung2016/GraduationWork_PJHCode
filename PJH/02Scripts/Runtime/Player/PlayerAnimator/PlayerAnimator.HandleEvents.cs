@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using Main.Runtime.Combat.Core;
 
 namespace PJH.Runtime.Players
 {
@@ -80,11 +81,11 @@ namespace PJH.Runtime.Players
             base.HandleApplyDamaged(damage);
         }
 
-        private void HandleFinisherTimeline(bool isFinishering)
-
-        {
-            _isPlayingTimeline = isFinishering;
-        }
+        // private void HandleFinisherTimeline(bool isFinishering)
+        //
+        // {
+        //     _isPlayingTimeline = isFinishering;
+        // }
 
         private void HandleAttack()
         {

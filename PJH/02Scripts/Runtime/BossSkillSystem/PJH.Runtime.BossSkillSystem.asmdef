@@ -1,0 +1,31 @@
+{
+    "name": "BossSkillSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:ff3bfa7911c3ff64f9e9cf390b2e0965",
+        "GUID:5228abf8a78a8a142b7eb25679fb5a3b",
+        "GUID:5ff5028d970048f469e1a9b38c2e5a45",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:ca5b8601c5ebe64409c1d85140356a0c",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:4c25c05f410a3a447a75c3b0909152ef",
+        "GUID:02690e917e4ac78469c6a548a0037ced",
+        "GUID:f9fbcd65fc33f6847b0f124cf7e891b6",
+        "GUID:efa45043feb7e4147a305b73b5cea642",
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a",
+        "GUID:f4059aaf6c60a4a58a177a2609feb769",
+        "GUID:de4e6084e6d474788bb8c799d6b461eb",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:308c623e4493ebb40a9d8177e9a2043b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

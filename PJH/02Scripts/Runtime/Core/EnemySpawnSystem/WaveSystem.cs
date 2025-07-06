@@ -37,8 +37,22 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         private EnemyPartySO _enemyParty;
 
         private List<Agent> _enemyList = new();
+        public List<Agent> EnemyList
+        {
+            get
+            {
+                return _enemyList;
+            }
 
-        private void Awake()
+            set
+            {
+                var evt = GameEvents.ChangeCurrentEnemy;
+                evt.enemyCount = _enemyList.Count;
+                _gameEventChannel.RaiseEvent(evt);
+            }
+        }
+
+private void Awake()
         {
             _currentWave = 1;
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
@@ -68,7 +82,6 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         private void HandleStartWave(StartWave evt)
         {
             _enemyParty = evt.enemyPartySO as EnemyPartySO;
-            Debug.Log(_enemyParty);
             _spawnPoints = evt.spawnPoints;
             _maxWave = ((EnemyPartySO)evt.enemyPartySO).UnitDatas.Count;
             StartWave();
@@ -84,21 +97,28 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             // try
             // {
             EnemyPartySO enemyParty = _enemyParty;
+            if(_enemyParty == null) Debug.LogError($"Enemy Party SO is Null Please Change Null SO");
             List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
             List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
+            if(spawnDatas.Count <= 0) Debug.LogError($"Current SpawnDatas Count is Zero. Please Add Value");
             for (byte i = 0; i < spawnDatas.Count; i++)
             {
-                Debug.Log(spawnDatas[i].spawnAmount);
                 SpawnData spawnData = spawnDatas[i];
+                if(spawnData.spawnAmount <= 0) Debug.LogError($"Current SpawnAmount is Zero Please Add Value");
                 for (byte j = 0; j < spawnData.spawnAmount; j++)
                 {
                     UnitSO unit = spawnData.spawnUnit;
                     Agent enemy = _poolManager.Pop(unit.UnitPoolType) as Agent;
+                    Debug.Log(enemy);
                     int rnd = Random.Range(0, copyOfSpawnPoints.Count);
                     Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
                     enemy.transform.position = spawnPoint.position;
                     _enemyList.Add(enemy);
-                    enemy.HealthCompo.OnDeath += () => { RemoveEnemy(enemy); };
+                    enemy.HealthCompo.OnDeath += () =>
+                    {
+                        Debug.Log(EnemyList.Count);
+                        RemoveEnemy(enemy); 
+                    };
                 }
             }
 

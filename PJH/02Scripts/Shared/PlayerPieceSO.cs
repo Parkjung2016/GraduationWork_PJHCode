@@ -1,4 +1,5 @@
-﻿using Main.Shared;
+﻿using System;
+using Main.Shared;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -17,16 +18,30 @@ namespace PJH.Shared
         [VerticalGroup("Top/Right")] [MultiLineProperty(3)] [LabelText("📖 설명")]
         public string pieceDescription;
 
+        public event Action OnEquipped, OnUnEquipped;
 
         public bool IsCloned { get; private set; }
 
+        private bool _inited;
+
         public virtual void EquipPiece(IPlayer player)
         {
-            Debug.Log($"{name} 장착");
+            if (!_inited)
+            {
+                _inited = true;
+                Init(player);
+            }
+
+            OnEquipped?.Invoke();
+        }
+
+        public virtual void Init(IPlayer player)
+        {
         }
 
         public virtual void UnEquipPiece()
         {
+            OnUnEquipped?.Invoke();
         }
 
         public T Clone<T>() where T : PlayerPieceSO

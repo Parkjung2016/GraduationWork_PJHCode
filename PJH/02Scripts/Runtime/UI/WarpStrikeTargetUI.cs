@@ -1,4 +1,3 @@
-using System;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;

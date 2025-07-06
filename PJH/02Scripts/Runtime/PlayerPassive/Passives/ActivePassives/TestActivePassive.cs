@@ -12,15 +12,7 @@ namespace PJH.Runtime.PlayerPassive.Passives
         public float duration;
         public float damage;
         [field: SerializeField, OdinSerialize] public CooldownPassiveInfo CooldownPassiveInfo { get; set; }
-
-        private Player _player;
-
-        public override void EquipPiece(IPlayer player)
-        {
-            base.EquipPiece(player);
-            _player = player as Player;
-        }
-
+        
         public void ActivePassive()
         {
             Debug.Log("Active");

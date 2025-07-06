@@ -6,6 +6,7 @@ using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using UnityEngine;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -15,14 +16,16 @@ namespace PJH.Runtime.Players
         [SerializeField] private float _detectInterval = 0.05f;
         private Player _player;
 
+        private PlayerEnemyFinisher _enemyFinisherCompo;
         private Agent _finisherTarget;
         private Agent _checkTarget;
         private CancellationTokenSource _cancellationToken;
 
         public void Initialize(Agent agent)
         {
-            _showFinisherTargetUIEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _player = agent as Player;
+            _enemyFinisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            _showFinisherTargetUIEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
         }
 
 
@@ -58,8 +61,11 @@ namespace PJH.Runtime.Players
                     {
                         AgentFinisherable finisherable = _checkTarget.GetCompo<AgentFinisherable>();
                         if (!finisherable) continue;
+                        float dis = Vector3.Distance(finisherable.Agent.transform.position,
+                            _player.transform.position);
+                        bool canFinisher = !_enemyFinisherCompo.IsFinishering && finisherable.CanFinisher() &&
+                                           dis <= 4f;
 
-                        bool canFinisher = finisherable.CanFinisher();
                         evt.isShowUI = canFinisher;
                         if (canFinisher)
                         {

@@ -12,7 +12,6 @@ namespace PJH.Runtime.Players
         public List<CommandActionPieceSO> ExecuteCommandActionPieces { get; private set; } = new();
 
         public int maxActionCount = 5;
-        
 
         public bool TryAddCommandActionPiece(CommandActionPieceSO commandActionPiece)
         {
@@ -33,7 +32,12 @@ namespace PJH.Runtime.Players
 
         public void Equip(IPlayer player)
         {
-            ExecuteCommandActionPieces.ForEach(x => x.EquipPiece(player));
+            for (int i = 0; i < ExecuteCommandActionPieces.Count; i++)
+            {
+                CommandActionPieceSO commandActionPiece = ExecuteCommandActionPieces[i];
+                commandActionPiece.equipSlotIndex = i;
+                commandActionPiece.EquipPiece(player);
+            }
         }
 
         public void UnEquip()

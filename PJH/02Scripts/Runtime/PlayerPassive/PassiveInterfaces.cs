@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace PJH.Runtime.PlayerPassive
 {
-    public delegate void UpdateBuffTimeEventHandler(float remainingCooldownTime, float cooldownTime);
+    public delegate void UpdatePassiveTimeEventHandler(float remainingTime, float time);
 
-    public delegate void UpdateCooldownTimeEventHandler(float remainingCooldownTime, float cooldownTime);
 
     public interface IActivePassive
     {
@@ -22,7 +21,7 @@ namespace PJH.Runtime.PlayerPassive
 
         [ReadOnly] public float remainingCooldownTime;
 
-        [HideInInspector] public UpdateCooldownTimeEventHandler OnUpdateCooldownTime;
+        [HideInInspector] public UpdatePassiveTimeEventHandler OnUpdateCooldownTime;
         [HideInInspector] public Action StartCooldownEvent;
     }
 
@@ -42,7 +41,7 @@ namespace PJH.Runtime.PlayerPassive
         public float buffDuration;
 
         [ReadOnly] public float remainingBuffTime;
-        [HideInInspector] public UpdateBuffTimeEventHandler OnUpdateBuffTime;
+        [HideInInspector] public UpdatePassiveTimeEventHandler OnUpdateBuffTime;
         [HideInInspector] public Action ApplyBuffEvent;
     }
 
@@ -56,5 +55,21 @@ namespace PJH.Runtime.PlayerPassive
     public interface IBuffPassiveUpdateable
     {
         public void UpdateBuff();
+    }
+
+    public class DependPassiveInfo
+    {
+        [LabelText("🔗 종속 슬롯 인덱스(0~2)")] public int dependSlotIndex;
+    }
+
+    public interface IDependSlotPassive
+    {
+        public DependPassiveInfo DependSlotPassiveInfo { get; set; }
+    }
+
+    public interface IDependSlotWeightModifier
+    {
+        public void ChangePassiveValueToWeightModifier();
+        public void ChangePassiveValueToOrigin();
     }
 }

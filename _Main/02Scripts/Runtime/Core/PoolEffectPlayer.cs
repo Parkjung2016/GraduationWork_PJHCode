@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Accessibility;
 using UnityEngine.VFX;
 
 namespace Main.Runtime.Core
@@ -9,10 +10,10 @@ namespace Main.Runtime.Core
     public class PoolEffectPlayer : MonoBehaviour, IPoolable
     {
         [SerializeField] private PoolTypeSO _poolType;
-        [SerializeField] private bool _isLooped;
+        public bool isLooped;
         public PoolTypeSO PoolType => _poolType;
         public GameObject GameObject => gameObject;
-        [SerializeField] protected float _playTime;
+        public float playTime;
 
         protected Pool _myPool;
         protected List<ParticleSystem> _particles;
@@ -23,13 +24,6 @@ namespace Main.Runtime.Core
             _myPool = pool;
             _particles = GetComponentsInChildren<ParticleSystem>().ToList();
             _visualEffects = GetComponentsInChildren<VisualEffect>().ToList();
-
-            if (_particles.Count > 0)
-            {
-                float maxLifeTime = _particles.Select(p => p.main.startLifetime.constant).Max();
-                float maxDurationTime = _particles.Select(p => p.main.duration).Max();
-                _playTime = Mathf.Max(maxLifeTime, maxDurationTime);
-            }
         }
 
         public virtual void ResetItem()
@@ -39,7 +33,7 @@ namespace Main.Runtime.Core
                 _particles.ForEach(p =>
                 {
                     p.Stop();
-                    p.Simulate(0);
+                    // p.Simulate(0);
                 });
             }
             else
@@ -47,7 +41,7 @@ namespace Main.Runtime.Core
                 _visualEffects.ForEach(effect =>
                 {
                     effect.Stop();
-                    effect.Simulate(0);
+                    // effect.Simulate(0);
                 });
             }
         }
@@ -76,8 +70,8 @@ namespace Main.Runtime.Core
                 }
             }
 
-            if (_isLooped) return;
-            DOVirtual.DelayedCall(_playTime, PushEffect);
+            if (isLooped) return;
+            DOVirtual.DelayedCall(playTime, PushEffect);
         }
 
         public void StopEffects()
@@ -103,6 +97,18 @@ namespace Main.Runtime.Core
         public void PushEffect()
         {
             _myPool.Push(this);
+        }
+
+        public void ChangeLifeTime(float value)
+        {
+            if (_particles is { Count: > 0 })
+            {
+                var ps = _particles[0];
+                var main = ps.main;
+                var curve = main.startLifetime;
+                curve.constant = value;
+                main.startLifetime = curve;
+            }
         }
     }
 }

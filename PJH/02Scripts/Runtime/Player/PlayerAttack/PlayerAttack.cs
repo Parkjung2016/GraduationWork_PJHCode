@@ -37,12 +37,8 @@ namespace PJH.Runtime.Players
             OnEnterBattle?.Invoke();
             if (!IsAttacking)
             {
-                if (_cameraViewConfigTokenSource is { IsCancellationRequested: false })
-                {
-                    _cameraViewConfigTokenSource.Cancel();
-                    _cameraViewConfigTokenSource.Dispose();
-                    _cameraViewConfigTokenSource = null;
-                }
+                if (_cameraViewConfigTween != null && _cameraViewConfigTween.IsActive())
+                    _cameraViewConfigTween.Kill();
 
                 var evt = GameEvents.CameraViewConfig;
                 evt.isChangeConfig = true;
@@ -89,28 +85,26 @@ namespace PJH.Runtime.Players
             PlayerBlock blockCompo = _player.GetCompo<PlayerBlock>();
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
-            return _isComboPossible && !_player.IsStunned && !_player.IsHitting &&
-                   _isComboPossible && !movementCompo.IsEvading && !blockCompo.IsBlocking &&
-                   !warpStrikeCompo.Activating;
+            PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
+            return _isComboPossible && !_player.IsStunned && !_player.IsHitting && !movementCompo.IsEvading &&
+                   !blockCompo.IsBlocking &&
+                   !warpStrikeCompo.Activating && !counterAttackCompo.IsCounterAttacking;
         }
 
 
         private void ExitBattleAfterDelay()
         {
-            if (_cameraViewConfigTokenSource is { IsCancellationRequested: false })
-            {
-                _cameraViewConfigTokenSource.Cancel();
-                _cameraViewConfigTokenSource.Dispose();
-                _cameraViewConfigTokenSource = null;
-            }
+            if (_cameraViewConfigTween != null && _cameraViewConfigTween.IsActive()) _cameraViewConfigTween.Kill();
 
-            _cameraViewConfigTokenSource = _player.DelayCallBack(gameObject, _timeToSwitchToIdleAfterCombat, () =>
+            _cameraViewConfigTween = _player.DelayCallBack(_timeToSwitchToIdleAfterCombat, () =>
             {
-                if (IsInBattle) return;
-                var evt = GameEvents.CameraViewConfig;
-                evt.isChangeConfig = false;
-                _cameraViewConfigEventChannel.RaiseEvent(evt);
-                OnExitBattle?.Invoke();
+                if (!IsInBattle)
+                {
+                    var evt = GameEvents.CameraViewConfig;
+                    evt.isChangeConfig = false;
+                    _cameraViewConfigEventChannel.RaiseEvent(evt);
+                    OnExitBattle?.Invoke();
+                }
             });
         }
     }

@@ -6,6 +6,6 @@ namespace PJH.Runtime.Players.FinisherSequence
     [CreateAssetMenu(menuName = "SO/Finisher/Sequence")]
     public class FinisherSequenceSO : ScriptableObject
     {
-        public List<FinisherSequenceDataSO> sequenceDatas = new();
+        public List<FinisherDataSO> sequenceDatas = new();
     }
 }

@@ -15,10 +15,11 @@ namespace PJH.Runtime.Players
         public event Action OnBlockEnd;
         public event Action OnHitFullMountTarget;
         public event Action OnPlayEvasionSound;
-        public event Action OnThrowWeapon;
         public event Action OnTriggerPassiveAfterAttack;
         public event Action OnWarpTargetAndAttack;
         public event Action OnHitCounterAttack;
+        public event Action OnFinisherSequenceShake, OnFinisherSequenceTargetDeath, OnFinisherSequenceFinish;
+        public event Action OnEndRotatingTargetWhileAttack;
         private Player _player;
 
         public override void Initialize(Agent agent)
@@ -72,11 +73,6 @@ namespace PJH.Runtime.Players
             OnPlayEvasionSound?.Invoke();
         }
 
-        private void ThrowWeapon()
-        {
-            OnThrowWeapon?.Invoke();
-        }
-
         private void TriggerPassiveAfterAttack()
         {
             OnTriggerPassiveAfterAttack?.Invoke();
@@ -90,6 +86,26 @@ namespace PJH.Runtime.Players
         private void HitCounterTarget()
         {
             OnHitCounterAttack?.Invoke();
+        }
+
+        private void FinisherSequenceShake()
+        {
+            OnFinisherSequenceShake?.Invoke();
+        }
+
+        private void FinisherSequenceTargetDeath()
+        {
+            OnFinisherSequenceTargetDeath?.Invoke();
+        }
+
+        private void FinisherSequenceFinish()
+        {
+            OnFinisherSequenceFinish?.Invoke();
+        }
+
+        private void EndRotatingTargetWhileAttack()
+        {
+            OnEndRotatingTargetWhileAttack?.Invoke();
         }
     }
 }

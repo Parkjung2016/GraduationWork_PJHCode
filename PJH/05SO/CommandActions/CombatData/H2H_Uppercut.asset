@@ -16,7 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 1827226128182048838, guid: bddedbabc760028458835beaf0dd5533, type: 3}
+    - {fileID: 8993902097722301239, guid: 480960043862af548a46ace168a919a4, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -63,7 +63,7 @@ MonoBehaviour:
       Data: 4|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -132,7 +132,7 @@ MonoBehaviour:
       Data: 9|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -201,7 +201,7 @@ MonoBehaviour:
       Data: 14|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -270,7 +270,7 @@ MonoBehaviour:
       Data: 19|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0.25
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -348,16 +348,22 @@ MonoBehaviour:
     _Speed: 1.5
     _Events:
       _NormalizedTimes:
-      - 0.3924812
+      - 0.38133183
       - 0.4631579
+      - 0.5445026
       - 0.56149733
+      - 0.57707506
+      - 0.59647125
       - 0.912766
       _Callbacks:
       - rid: 738560234674193308
       _Names:
       - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
       - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: a77c97c66f91a71428d2b3dc08a8f38d, type: 2}
       - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+      - {fileID: 11400000, guid: 8c8ade2bd239ee64a82900bcd94638cd, type: 2}
+      - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
     _Clip: {fileID: 8993902097722301239, guid: aa34dce3e1419e1439fac7d41c25304d, type: 3}
     _NormalizedStartTime: NaN
   damageMultiplier: 1.4
@@ -382,7 +388,7 @@ MonoBehaviour:
     freezeFrameDuration: 0.1
     impulseShape: 2
   isManualMove: 1
-  manualMoveSpeed: 2.5
+  manualMoveSpeed: 6
   references:
     version: 2
     RefIds:

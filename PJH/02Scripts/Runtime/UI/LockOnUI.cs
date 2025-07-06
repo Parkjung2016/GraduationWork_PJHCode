@@ -51,9 +51,9 @@ namespace PJH.Runtime.UI
 
         private void HandleShowLockOnUI(ShowLockOnUI evt)
         {
+            _lockOnTarget = evt.lockOnTarget;
             if (!_isLockOn) return;
             gameObject.SetActive(evt.isShowUI);
-            _lockOnTarget = evt.lockOnTarget;
         }
 
         private void LateUpdate()

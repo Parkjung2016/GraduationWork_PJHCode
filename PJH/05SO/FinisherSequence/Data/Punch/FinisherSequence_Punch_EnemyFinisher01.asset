@@ -12,5 +12,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9708ef67c049068f2c997fd2b6e1d2, type: 3}
   m_Name: FinisherSequence_Punch_EnemyFinisher01
   m_EditorClassIdentifier: 
-  sequenceAsset: {fileID: 11400000, guid: e370743e575ddf347b3bfa432f2794aa, type: 2}
-  distanceFromEnemy: 1.6
+  executionAsset: {fileID: 11400000, guid: 04899466c5c1810439d42d79a8283195, type: 2}
+  executedClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 8993902097722301239, guid: 7cac98bb36fec7545a7e7226fd0e12c3, type: 3}
+    _NormalizedStartTime: NaN
+  sequenceDuration: 1
+  lookAtTarget: 0
+  lookAtBone: 7
+  sequenceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  sequenceCameraWayPoints:
+  - {x: 1.48, y: 1.41, z: 0}
+  - {x: 1.11, y: 1.41, z: 1.73}
+  - {x: 2.02, y: 1.41, z: 3.19}
+  references:
+    version: 2
+    RefIds: []

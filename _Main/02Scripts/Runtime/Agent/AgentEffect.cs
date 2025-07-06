@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Magio;
 using Main.Runtime.Core;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Main.Runtime.Agents
 {
@@ -11,12 +14,14 @@ namespace Main.Runtime.Agents
         protected Agent _agent;
         public MagioObjectMaster MagioObjectMaster { get; private set; }
 
-        private Dictionary<string, MagioObjectEffect> _magioObjectEffects;
+        [SerializeField, ReadOnly] private Dictionary<string, MagioObjectEffect> _magioObjectEffects;
 
-        public virtual void Initialize(Agent agent)
+        public virtual async void Initialize(Agent agent)
         {
             _agent = agent;
             MagioObjectMaster = _agent.GetComponentInChildren<MagioObjectMaster>();
+            await UniTask.WaitUntil(() => MagioObjectMaster.didAwake,
+                cancellationToken: gameObject.GetCancellationTokenOnDestroy());
             _magioObjectEffects = new();
             foreach (var magioObjectEffect in MagioObjectMaster.magioObjects)
             {
@@ -67,7 +72,8 @@ namespace Main.Runtime.Agents
         public void StopMagioEffect(string magioObjectName)
         {
             MagioObjectEffect effect = GetMagioObjectEffect(magioObjectName);
-            effect.gameObject.SetActive(false);
+            effect.SetNullifyArea(_agent.transform.position, 5f);
+            DOVirtual.DelayedCall(3f, () => effect.gameObject.SetActive(false));
         }
     }
 }

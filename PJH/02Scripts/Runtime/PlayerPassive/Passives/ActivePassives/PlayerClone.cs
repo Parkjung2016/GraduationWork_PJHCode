@@ -24,7 +24,6 @@ namespace PJH.Runtime.PlayerPassive.Passives
 
         private Pool _pool;
 
-        private int _currentGetDamagedAnimationClipIndex;
 
         public void SetUpPool(Pool pool)
         {
@@ -43,7 +42,6 @@ namespace PJH.Runtime.PlayerPassive.Passives
 
         public void ResetItem()
         {
-            _currentGetDamagedAnimationClipIndex = 0;
             _hitFeedback.StopFeedbacks();
             for (int i = 0; i < _modelMaterials.Length; i++)
             {

@@ -135,7 +135,6 @@ namespace Main.Runtime.Core.StatSystem
             if (_modifyValuePercentByKeys.ContainsKey(key)) return;
             float prevValue = Value;
             _modifiedValuePercent += value;
-            Debug.Log(_modifiedValuePercent);
 
             _modifyValuePercentByKeys.Add(key, value);
 

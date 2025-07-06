@@ -6,10 +6,11 @@ namespace PJH.Trainingscarecrow
 {
     public class TrainingScarecrowHealth : Health
     {
-        public override bool ApplyDamage(GetDamagedInfo getDamagedInfo)
+        protected override bool CanApplyDamage(GetDamagedInfo getDamagedInfo)
         {
+            if (!base.CanApplyDamage(getDamagedInfo)) return false;
             getDamagedInfo.damage = 0;
-            return base.ApplyDamage(getDamagedInfo);
+            return true;
         }
     }
 }

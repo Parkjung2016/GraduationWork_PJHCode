@@ -1,9 +1,11 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Magio;
 using Main.Core;
 using Main.Runtime.Combat;
+using Main.Runtime.Combat.Core;
 using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
 using Main.Shared;
@@ -16,6 +18,7 @@ namespace Main.Runtime.Agents
     public abstract partial class Agent : SerializedMonoBehaviour, IAgent
     {
         public GameObject GameObject => gameObject;
+        public ComponentManager ComponentManager => _componentManager;
         public Transform ModelTrm { get; protected set; }
         public Transform HeadTrm { get; protected set; }
         public Action<HitInfo> OnHitTarget { get; set; }
@@ -27,38 +30,40 @@ namespace Main.Runtime.Agents
         [InfoBox("Agent must have an \"AgentStat\" component", InfoMessageType.Warning)]
         protected StatSO _maxHealthStat;
 
+        protected StatSO _maxShieldStat;
         public StatSO WalkSpeedStat { get; private set; }
         public StatSO RunSpeedStat { get; private set; }
         protected ComponentManager _componentManager;
-
 
         protected virtual void Awake()
         {
             WalkSpeedStat = AddressableManager.Load<StatSO>("WalkSpeedStat");
             RunSpeedStat = AddressableManager.Load<StatSO>("RunSpeedStat");
             _maxHealthStat = AddressableManager.Load<StatSO>("MaxHealthStat");
+            _maxShieldStat = AddressableManager.Load<StatSO>("MaxShieldStat");
             ModelTrm = transform;
             HealthCompo = GetComponent<Health>();
             _componentManager = new ComponentManager();
 
             _componentManager.AddComponentToDictionary(this);
             _componentManager.ComponentInitialize(this);
+            AgentStat statCompo = GetCompo<AgentStat>(true);
+            WalkSpeedStat = statCompo.GetStat(WalkSpeedStat);
+            RunSpeedStat = statCompo.GetStat(RunSpeedStat);
+
             if (HealthCompo)
             {
-                StatSO maxHealthStat = GetCompo<AgentStat>(true).GetStat(_maxHealthStat);
-                HealthCompo.Init(maxHealthStat);
+                _maxHealthStat = statCompo.GetStat(_maxHealthStat);
+                _maxShieldStat = statCompo.GetStat(_maxShieldStat);
+
+                HealthCompo.Init(_maxHealthStat, _maxShieldStat);
                 HealthCompo.OnApplyDamaged += HandleApplyDamaged;
                 HealthCompo.ailmentStat.OnAilmentChanged += HandleAilmentChanged;
             }
 
-            _componentManager.AfterInitialize();
-
-            AgentStat statCompo = GetCompo<AgentStat>(true);
-            WalkSpeedStat = statCompo.GetStat(WalkSpeedStat);
-            RunSpeedStat = statCompo.GetStat(RunSpeedStat);
-            _maxHealthStat = statCompo.GetStat(_maxHealthStat);
             AgentAnimator animatorCompo = GetCompo<AgentAnimator>(true);
             if (animatorCompo != null) animatorCompo.OnEndHitAnimation += HandleEndHitAnimation;
+            _componentManager.AfterInitialize();
         }
 
 
@@ -72,7 +77,7 @@ namespace Main.Runtime.Agents
         {
             if ((newAilment & Ailment.Slow) > 0)
             {
-                float percent = HealthCompo.ailmentStat.GetAilmentValue(Ailment.Slow);
+                float percent = -HealthCompo.ailmentStat.GetAilmentValue(Ailment.Slow);
                 WalkSpeedStat.AddModifyValuePercent("SlowAilment", percent);
                 RunSpeedStat.AddModifyValuePercent("SlowAilment", percent);
             }
@@ -111,24 +116,9 @@ namespace Main.Runtime.Agents
             return _componentManager.TryGetCompo(out compo, isDerived);
         }
 
-        public CancellationTokenSource DelayCallBack(GameObject target, float delay, Action callBack = null)
+        public Tween DelayCallBack(float delay, TweenCallback callBack = null)
         {
-            CancellationTokenSource cts = new();
-            cts.RegisterRaiseCancelOnDestroy(target);
-            UniTask.Create(async () =>
-            {
-                try
-                {
-                    await UniTask.WaitForSeconds(delay, cancellationToken: cts.Token);
-                    callBack?.Invoke();
-                }
-                catch (OperationCanceledException)
-                {
-                }
-            }).Forget();
-
-
-            return cts;
+            return DOVirtual.DelayedCall(delay, callBack);
         }
     }
 }

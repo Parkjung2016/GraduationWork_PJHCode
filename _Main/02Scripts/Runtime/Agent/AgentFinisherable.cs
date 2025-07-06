@@ -14,27 +14,27 @@ namespace Main.Runtime.Agents
     public class AgentFinisherable : MonoBehaviour, IAgentComponent
     {
         public Agent Agent => _agent;
-        public event Action OnSetToFinisherTarget; // 처형됬을때
+        public event Action OnSetToFinisherTarget; // 처형됐을때
 
         [InfoBox("AgentFinisherable must have an \"AgentIK\" component and \"AgentMomentumGauge\" component",
             InfoMessageType.Warning)]
-        private GameEventChannelSO _deadFinisherTargetEventChannel;
+        protected GameEventChannelSO _deadFinisherTargetEventChannel;
 
-        private Collider _collider;
-        private Agent _agent;
-        private AgentMomentumGauge _momentumGaugeCompo;
-        private AgentFullMountable _fullMountableCompo;
+        // private Collider _collider;
+        protected Agent _agent;
+        protected AgentMomentumGauge _momentumGaugeCompo;
+        protected AgentFullMountable _fullMountableCompo;
 
-        public void Initialize(Agent agent)
+        public virtual void Initialize(Agent agent)
         {
             _agent = agent;
-            _collider = _agent.GetComponent<Collider>();
+            // _collider = _agent.GetComponent<Collider>();
             _deadFinisherTargetEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _momentumGaugeCompo = _agent.GetCompo<AgentMomentumGauge>(true);
             _fullMountableCompo = _agent.GetCompo<AgentFullMountable>(true);
         }
 
-        public bool CanFinisher()
+        public virtual bool CanFinisher()
         {
             return _momentumGaugeCompo.CurrentMomentumGauge >= _momentumGaugeCompo.MaxMomentumGauge.Value &&
                    !_fullMountableCompo.IsFullMounted && !_agent.IsKnockDown;
@@ -42,7 +42,7 @@ namespace Main.Runtime.Agents
 
         public void SetToFinisherTarget()
         {
-            _collider.enabled = false;
+            // _collider.enabled = false;
             _deadFinisherTargetEventChannel.AddListener<DeadFinisherTarget>(HandleDeadFinisherTarget);
             OnSetToFinisherTarget?.Invoke();
         }

@@ -1,4 +1,5 @@
 using System;
+using Kinemation.MotionWarping.Runtime.Examples;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
@@ -12,14 +13,16 @@ namespace PJH.Runtime.Players
     public class PlayerEnemyFinisher : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         public bool IsFinishering { get; private set; }
-        public event Action<bool> OnFinisherTimeline;
+        // public event Action<bool> OnFinisherTimeline;
+
         public event Action OnFinisher;
-        public event Action<Transform, float> OnAdjustTimelineModelPosition;
+        public event Action OnFinisherEnd;
+
+        // public event Action<Transform, float> OnAdjustTimelineModelPosition;
         [SerializeField, InlineEditor] private FinisherSequenceSO _finisherSequence;
         private GameEventChannelSO _gameEventChannel;
 
         private Player _player;
-
 
         public void Initialize(Agent agent)
         {
@@ -30,20 +33,20 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             _player.PlayerInput.FinisherEvent += HandleFinisher;
-            _gameEventChannel.AddListener<FinishTimeline>(HandleFinishTimeline);
+            _gameEventChannel.AddListener<FinishEnemyFinisher>(HandleFinishEnemyFinisher);
         }
 
 
         private void OnDestroy()
         {
             _player.PlayerInput.FinisherEvent -= HandleFinisher;
-            _gameEventChannel.RemoveListener<FinishTimeline>(HandleFinishTimeline);
+            _gameEventChannel.RemoveListener<FinishEnemyFinisher>(HandleFinishEnemyFinisher);
         }
 
-        private void HandleFinishTimeline(FinishTimeline evt)
+        private void HandleFinishEnemyFinisher(FinishEnemyFinisher evt)
         {
             IsFinishering = false;
-            OnFinisherTimeline?.Invoke(IsFinishering);
+            OnFinisherEnd?.Invoke();
         }
 
         private void HandleFinisher()
@@ -54,20 +57,27 @@ namespace PJH.Runtime.Players
             if (_player.IsStunned || _player.IsHitting || !finisherTargetDetectionCompo.GetFinisherTarget(
                     out AgentFinisherable target) ||
                 movementCompo.IsEvading) return;
+            FinisherDataSO finisherData = GetFinisherSequenceData(_finisherSequence);
+            AlignComponent alignComponent = target.Agent.GetComponent<AlignComponent>();
+            alignComponent.targetAnim = finisherData.executedClip;
+            alignComponent.motionWarpingAsset = finisherData.executionAsset;
+
+            bool result = _player.WarpingComponent.Interact(alignComponent);
+            if (!result) return;
 
             target.SetToFinisherTarget();
 
-            FinisherSequenceDataSO finisherSequenceData = GetFinisherSequenceData(_finisherSequence);
-            OnAdjustTimelineModelPosition?.Invoke(target.transform, finisherSequenceData.distanceFromEnemy);
+
             IsFinishering = true;
             EnemyFinisherSequence evt = GameEvents.EnemyFinisherSequence;
-            evt.sequenceAsset = finisherSequenceData.sequenceAsset;
-            evt.enemyAnimator = target.Agent.GetCompo<AgentAnimator>(true).Animator;
+            evt.sequenceAsset = finisherData;
+            evt.playerAnimator = _player.GetCompo<PlayerAnimator>().Animator;
+
             _gameEventChannel.RaiseEvent(evt);
-            OnFinisherTimeline?.Invoke(IsFinishering);
+            OnFinisher?.Invoke();
         }
 
-        private FinisherSequenceDataSO GetFinisherSequenceData(FinisherSequenceSO finisherSequence)
+        private FinisherDataSO GetFinisherSequenceData(FinisherSequenceSO finisherSequence)
         {
             return finisherSequence.sequenceDatas.GetRandom();
         }

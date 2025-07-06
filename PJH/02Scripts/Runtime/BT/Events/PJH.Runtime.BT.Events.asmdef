@@ -1,0 +1,17 @@
+{
+    "name": "PJH.Runtime.BT.Events",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4212bc4daf0e8bd48a3d16403b0a342a",
+        "GUID:f9fbcd65fc33f6847b0f124cf7e891b6"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -52,8 +52,8 @@ namespace PJH.Runtime.Core.PlayerCamera
 
         private void HandleShowLockOnUI(ShowLockOnUI evt)
         {
-            if (!_isLockOn) return;
             _lockOnTargetTrm = evt.lockOnTarget?.GameObject.transform;
+            if (!_isLockOn) return;
             if (_lockOnTargetTrm)
             {
                 _cinemachineCamera.Target.TrackingTarget.localPosition = Vector3.up * .9f;

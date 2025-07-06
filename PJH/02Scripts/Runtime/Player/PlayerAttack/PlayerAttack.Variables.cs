@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using DG.Tweening;
 using Main.Runtime.Core.Events;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -32,7 +33,7 @@ namespace PJH.Runtime.Players
 
 
         private Player _player;
-        private CancellationTokenSource _cameraViewConfigTokenSource;
+        private Tween _cameraViewConfigTween;
         private CommandActionData _currentCommandActionData;
         private bool _isComboPossible;
         private int _maxComboCount;

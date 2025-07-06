@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
 
 namespace PJH.Runtime.UI
 {
@@ -50,7 +49,7 @@ namespace PJH.Runtime.UI
         {
             transform.GetChild(0).LookAt(Camera.main.transform);
             if (_interactableTarget == null) return;
-            if (_interactableTarget.UIDisplayTrm)
+            if (_interactableTarget?.UIDisplayTrm)
             {
                 transform.position = _interactableTarget.UIDisplayTrm.position +
                                      _interactableTarget.AdditionalUIDisplayPos;

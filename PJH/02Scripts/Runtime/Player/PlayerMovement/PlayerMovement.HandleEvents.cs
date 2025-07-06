@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using Main.Runtime.Core.Events;
 using UnityEngine;
 
 namespace PJH.Runtime.Players
@@ -32,7 +33,6 @@ namespace PJH.Runtime.Players
             IsEvading = false;
             _currentEvasionDelayTime = Time.time;
             _canEvading = true;
-
             if (IsEvadingWhileHitting)
             {
                 IsEvadingWhileHitting = false;
@@ -45,12 +45,6 @@ namespace PJH.Runtime.Players
 
         private void HandleDeath() => CC.enabled = false;
 
-        private void HandleFinisherTimeline(bool isFinishering)
-        {
-            enabled = !isFinishering;
-            CC.enabled = !isFinishering;
-        }
-
         private void HandleMovement(Vector3 input)
         {
             if (IsRunning) OnRun?.Invoke(input != Vector3.zero);
@@ -58,7 +52,7 @@ namespace PJH.Runtime.Players
 
         private void HandleAnimatorMove(Vector3 deltaPosition, Quaternion deltaRotation)
         {
-            if (!CanMove || !CC.enabled) return;
+            if (!CanMove || !CC.enabled || _player.WarpingComponent.IsActive()) return;
             _player.ModelTrm.rotation = deltaRotation;
             if (_animatorCompo.IsEnabledInputWhileRootMotion) return;
             _velocity = deltaPosition * _rootMotionMultiplierCurve.Value;
@@ -77,9 +71,9 @@ namespace PJH.Runtime.Players
             _currentEvasionDelayTime = Time.time;
         }
 
-        private void HandleEvade()
+        private void HandleEndRotatingTargetWhileAttack()
         {
-            Evasion();
+            _isRotatingTargetWhileAttack = false;
         }
     }
 }

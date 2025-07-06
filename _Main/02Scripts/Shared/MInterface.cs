@@ -23,6 +23,8 @@ namespace Main.Shared
     {
         public GameObject GameObject { get; }
         public Transform ModelTrm { get; }
+        public bool CanApplyPassive { get; set; }
+        public event Action<bool> OnChangedCanApplyPassive;
     }
 
     public interface ICamera

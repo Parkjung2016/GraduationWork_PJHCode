@@ -1,6 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 using Main.Shared;
+using PJH.Shared;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,28 @@ namespace Main.Runtime.Core.Events
         public static readonly ShowDeathUI ShowDeathUI = new ShowDeathUI();
         public static readonly ShowLockOnUI ShowLockOnUI = new ShowLockOnUI();
         public static readonly ShowWarpStrikeTargetUI ShowWarpStrikeTargetUI = new ShowWarpStrikeTargetUI();
+        public static readonly ShowPassiveInfoUI ShowPassiveInfoUI = new ShowPassiveInfoUI();
+
+        public static readonly ShowEvasionWhileHittingInfUI ShowEvasionWhileHittingInfUI =
+            new ShowEvasionWhileHittingInfUI();
+    }
+
+    public enum PassiveInfoType
+    {
+        None,
+        Buff,
+        Cooldown
+    }
+
+    public class ShowEvasionWhileHittingInfUI : GameEvent
+    {
+        public IPlayer player;
+    }
+
+    public class ShowPassiveInfoUI : GameEvent
+    {
+        public PlayerPieceSO passive;
+        public PassiveInfoType passiveInfoType;
     }
 
     public class ShowInteractUI : GameEvent

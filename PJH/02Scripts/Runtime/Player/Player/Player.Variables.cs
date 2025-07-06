@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading;
+using Kinemation.MotionWarping.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Core.StatSystem;
 using MoreMountains.Feedbacks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace PJH.Runtime.Players
 {
@@ -30,16 +32,34 @@ namespace PJH.Runtime.Players
         }
 
         public bool IsAvoidingAttack { get; private set; }
-        private Renderer[] _meshRenderers;
-        private bool _isLockOn;
         public SkinnedMeshRenderer ModelRenderer { get; private set; }
-        [field: SerializeField] public PlayerInputSO PlayerInput { get; private set; }
+        public MotionWarping WarpingComponent { get; private set; }
+        public PlayerInputSO PlayerInput { get; private set; }
+        public event Action<bool> OnChangedCanApplyPassive;
+
+        public bool CanApplyPassive
+        {
+            get => _canApplyPassive;
+            set
+            {
+                _canApplyPassive = value;
+                OnChangedCanApplyPassive?.Invoke(value);
+            }
+        }
+
+
         [SerializeField] private StatSO _stunDurationStat;
         [SerializeField] private MMF_Player _avoidingAttackFeedback;
+        [SerializeField] private GameObject[] _playerUIReferences;
         private GameEventChannelSO _gameEventChannel;
         private PlayerAttack _attackCompo;
 
         private CancellationTokenSource _knockBackTokenSource;
         private CancellationTokenSource _stunTokenSource;
+        private CancellationTokenSource _applySilencePassiveTokenSource;
+
+        private Renderer[] _meshRenderers;
+        private bool _isLockOn;
+        [SerializeField] private bool _canApplyPassive;
     }
 }

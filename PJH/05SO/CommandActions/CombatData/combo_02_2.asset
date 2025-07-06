@@ -66,7 +66,7 @@ MonoBehaviour:
       Data: 4|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -135,7 +135,7 @@ MonoBehaviour:
       Data: 9|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -204,7 +204,7 @@ MonoBehaviour:
       Data: 14|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -273,7 +273,7 @@ MonoBehaviour:
       Data: 19|Animancer.ClipTransition, Kybernetik.Animancer
     - Name: _FadeDuration
       Entry: 4
-      Data: 0
+      Data: 0.03
     - Name: _Speed
       Entry: 4
       Data: 1
@@ -346,23 +346,27 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  getDamagedAnimationClips: []
   attackAnimationClip:
     _FadeDuration: 0.10800001
     _Speed: 1.5
     _Events:
       _NormalizedTimes:
+      - 0.16846897
       - 0.2130786
       - 0.28237584
-      - 0.37384507
+      - 0.36902708
+      - 0.3897615
       - 0.4270786
       - 0.839338
       _Callbacks:
+      - rid: -2
       - rid: 6518945679347024246
       _Names:
+      - {fileID: 11400000, guid: 8c8ade2bd239ee64a82900bcd94638cd, type: 2}
       - {fileID: 11400000, guid: 59129535303cf06479c2ca99462f9875, type: 2}
       - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 212b44a96ca0c7e499769eb1eecf69b8, type: 2}
+      - {fileID: 11400000, guid: a77c97c66f91a71428d2b3dc08a8f38d, type: 2}
       - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
     _Clip: {fileID: 7400000, guid: 12f065017a8b030489616d04eb5d845d, type: 2}
     _NormalizedStartTime: NaN
@@ -391,6 +395,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 6518945679347024246
       type: {class: ParameterSocketType, ns: YTH.Enemies, asm: YTH}
       data:

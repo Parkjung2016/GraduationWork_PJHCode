@@ -25,7 +25,7 @@ namespace Main.Runtime.Agents
         public StatSO GetStat(StatSO stat)
         {
             Debug.Assert(stat != null, "Stats : GetStat - stat cannot be null");
-                return _stats.FirstOrDefault(x => x.statName == stat.statName);
+            return _stats.FirstOrDefault(x => x.statName == stat.statName);
         }
 
         public bool TryGetStat(StatSO stat, out StatSO outStat)
@@ -36,6 +36,14 @@ namespace Main.Runtime.Agents
         }
 
         public void SetBaseValue(StatSO stat, float value) => GetStat(stat).BaseValue = value;
+
+        public void AddBaseValuePercent(StatSO stat, float percent)
+        {
+            StatSO agentStat = GetStat(stat);
+            agentStat.BaseValue *= (1 + percent * .01f);
+        }
+
+        public void AddBaseValue(StatSO stat, float value) => GetStat(stat).BaseValue += value;
         public float GetBaseValue(StatSO stat) => GetStat(stat).BaseValue;
         public float IncreaseBaseValue(StatSO stat, float value) => GetStat(stat).BaseValue += value;
         public void AddValueModifier(StatSO stat, object key, float value) => GetStat(stat).AddModifyValue(key, value);

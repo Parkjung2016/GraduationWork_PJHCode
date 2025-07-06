@@ -9,7 +9,10 @@
         "Main.Runtime.Agent",
         "ControlInput",
         "Main.Runtime.Managers",
-        "UniTask"
+        "UniTask",
+        "PJH.Runtime.Player.FinisherSequence",
+        "Unity.Splines",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

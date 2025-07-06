@@ -106,16 +106,16 @@ public class AilmentStat
         return _ailmentValueDictionary[ailment];
     }
 
-    public void ApplyAilments(Ailment value, float duration, float damage)
+    public void ApplyAilments(Ailment type, float duration, float value)
     {
         Ailment oldValue = currentAilment;
-        currentAilment |= value;
+        currentAilment |= type;
 
         foreach (Ailment ailment in Enum.GetValues(typeof(Ailment)))
         {
-            if ((value & ailment) > 0)
+            if ((type & ailment) > 0)
             {
-                SetAilment(ailment, duration: duration, damage: damage);
+                SetAilment(ailment, duration: duration, value: value);
                 break;
             }
         }
@@ -126,9 +126,9 @@ public class AilmentStat
         }
     }
 
-    private void SetAilment(Ailment ailment, float duration, float damage)
+    private void SetAilment(Ailment type, float duration, float value)
     {
-        _ailmentTimerDictionary[ailment] = duration;
-        _ailmentValueDictionary[ailment] = damage;
+        _ailmentTimerDictionary[type] = duration;
+        _ailmentValueDictionary[type] = value;
     }
 }

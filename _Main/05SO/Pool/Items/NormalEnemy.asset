@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolType: {fileID: 11400000, guid: 4b6c84763f8213a49bd7c3f36d054785, type: 2}
   prefab:
-    m_AssetGUID: 6e8449ccd376caf409573920ef3dcbed
+    m_AssetGUID: 36d0fdd41363335489cf8b7a70226f43
     m_SubObjectName: 
     m_SubObjectGUID: 
     m_SubObjectType: 

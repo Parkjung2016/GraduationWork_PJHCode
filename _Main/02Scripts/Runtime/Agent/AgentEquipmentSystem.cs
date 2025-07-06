@@ -14,11 +14,12 @@ using UnityEditor;
 using UnityEngine;
 
 [assembly: ZLinq.ZLinqDropInAttribute("Main.Runtime.Agents", ZLinq.DropInGenerateTypes.Everything)]
+
 namespace Main.Runtime.Agents
 {
     public class AgentEquipmentSystem : SerializedMonoBehaviour, IAgentComponent, IAfterInitable
     {
-        [SerializeField] public StatSO _powerStat,_increaseMomentumGaugeStat;
+        [SerializeField] public StatSO _powerStat, _increaseMomentumGaugeStat;
         [SerializeField] private EquipmentDatabaseSO equipmentDatabase;
         [SerializeField] private bool _startWithEquipment;
 
@@ -35,13 +36,26 @@ namespace Main.Runtime.Agents
             _increaseMomentumGaugeStat = agent.GetCompo<AgentStat>(true).GetStat(_increaseMomentumGaugeStat);
 
             InitializeSocketCache();
+            EquipmentDataSO emptyWeaponData =
+                equipmentDatabase.equipmentDatas.Find(x => x.equipmentPrefab.GetType() == typeof(EmptyWeapon));
             if (!_startWithEquipment)
             {
-                EquipmentDataSO emptyWeaponData =
-                    equipmentDatabase.equipmentDatas.Find(x => x.equipmentPrefab.GetType() == typeof(EmptyWeapon));
                 foreach (Define.ESocketType socketType in Enum.GetValues(typeof(Define.ESocketType)))
                 {
                     InitEquipment(emptyWeaponData, socketType);
+                }
+            }
+            else
+            {
+                foreach (Define.ESocketType socketType in Enum.GetValues(typeof(Define.ESocketType)))
+                {
+                    if (_startEquipmentDatas.ContainsKey(socketType)) continue;
+                    InitEquipment(emptyWeaponData, socketType);
+                }
+
+                foreach (var pair in _startEquipmentDatas)
+                {
+                    InitEquipment(pair.Value, pair.Key);
                 }
             }
         }
@@ -51,7 +65,6 @@ namespace Main.Runtime.Agents
             if (!_sockets.TryGetValue(socketType, out AgentSocket socket)) return;
 
             Equipment equipment = Instantiate(data.equipmentPrefab);
-
             if (equipment is Weapon weapon)
             {
                 weapon.Equip(_agent, _powerStat, _increaseMomentumGaugeStat);

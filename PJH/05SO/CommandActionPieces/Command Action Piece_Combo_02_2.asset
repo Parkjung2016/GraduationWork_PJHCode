@@ -21,8 +21,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceIcon: {fileID: 0}
-  pieceDisplayName: 
-  pieceDescription: 
+  pieceIcon: {fileID: 21300000, guid: a67e91ccd6c102b41b34ce923ceb4fe1, type: 3}
+  pieceDisplayName: "\uC5B4\uD37C\uCEF7"
+  pieceDescription: "\uC8FC\uBA39\uC744 \uC544\uB798\uC5D0\uC11C \uC704\uB85C \uCE69\uB2C8\uB2E4."
   combatData: {fileID: 11400000, guid: a9154b17ac20da344904a69ae35c1e36, type: 2}
   _passives: []
+  equipSlotIndex: 0

@@ -1,9 +1,8 @@
 ﻿using Main.Runtime.Agents;
-using Main.Runtime.Core;
 
 namespace PJH.Runtime.Players
 {
-    public class PlayerMomentumGauge : AgentMomentumGauge, IAfterInitable
+    public class PlayerMomentumGauge : AgentMomentumGauge
     {
         private Player _player;
 
@@ -13,8 +12,9 @@ namespace PJH.Runtime.Players
             base.Initialize(agent);
         }
 
-        public void AfterInitialize()
+        public override void AfterInitialize()
         {
+            base.AfterInitialize();
             PlayerHealth playerHealth = (_player.HealthCompo as PlayerHealth);
             playerHealth.OnParrying += HandleParrying;
             _player.OnStartStun += HandleStartStun;

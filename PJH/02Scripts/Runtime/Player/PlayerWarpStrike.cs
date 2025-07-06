@@ -34,7 +34,6 @@ namespace PJH.Runtime.Players
         private PlayerCamera _playerCamera;
         private GameEventChannelSO _uiEventChannel;
         private Agent _warpStrikeTarget;
-        private RaycastHit[] _warpStrikeTargets;
         private WarpStrikeAttackInfo _currentWarpStrikeAttackInfo;
 
         private float _power;
@@ -42,7 +41,6 @@ namespace PJH.Runtime.Players
         public void Initialize(Agent agent)
         {
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
-            _warpStrikeTargets = new RaycastHit[10];
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _player = agent as Player;
             _playerCamera = PlayerManager.Instance.PlayerCamera;
@@ -81,45 +79,32 @@ namespace PJH.Runtime.Players
             _player.EnableMeshRenderers(false);
             PlayerAnimator animatorCompo = _player.GetCompo<PlayerAnimator>();
             animatorCompo.Animancer.States[_currentWarpStrikeAttackInfo.attackAnimation].EffectiveSpeed = 0;
-            Vector3 dir = _warpStrikeTarget.HeadTrm.transform.position - transform.position;
-            Ray ray = new Ray(transform.position, dir.normalized);
-            int cnt = Physics.RaycastNonAlloc(ray, _warpStrikeTargets, dir.magnitude, _whatIsWarpStrikeTarget);
-            if (cnt > 0)
+            Vector3 warpPoint = Vector3.Lerp(_player.transform.position, _warpStrikeTarget.transform.position, .95f);
+            warpPoint.y = _player.transform.position.y;
+
+            Tweener moveTweener = _player.transform.DOMove(warpPoint, .4f).SetEase(Ease.InOutQuint);
+            moveTweener.OnComplete(() =>
             {
-                for (int i = 0; i < cnt; i++)
+                _player.GetCompo<PlayerMovement>().CC.enabled = true;
+                _player.EnableMeshRenderers(true);
+
+                GetDamagedInfo info = new()
                 {
-                    if (_warpStrikeTargets[i].transform == _warpStrikeTarget.transform)
-                    {
-                        RaycastHit hitInfo = _warpStrikeTargets[i];
-                        Vector3 warpPoint = Vector3.Lerp(_player.transform.position, hitInfo.point, .95f);
-                        warpPoint.y = _player.transform.position.y;
-
-                        _player.transform.DOMove(warpPoint, .4f).SetEase(Ease.InOutQuint).OnComplete(() =>
-                        {
-                            _player.GetCompo<PlayerMovement>().CC.enabled = true;
-                            _player.EnableMeshRenderers(true);
-
-                            GetDamagedInfo info = new()
-                            {
-                                attacker = _player,
-                                damage = _power,
-                                getDamagedAnimationClip = _currentWarpStrikeAttackInfo.getDamagedAnimationClipInfo,
-                                hitPoint = warpPoint,
-                                increaseMomentumGauge = 0,
-                                isForceAttack = false,
-                                isKnockDown = false,
-                            };
-                            OnHitWarpStrikeTarget?.Invoke();
-                            _warpStrikeTarget.HealthCompo.ApplyDamage(info);
-                            Activating = false;
-                            animatorCompo.Animancer.States[_currentWarpStrikeAttackInfo.attackAnimation]
-                                .EffectiveSpeed = 1;
-                            _player.GetCompo<PlayerAnimationTrigger>().OnEndCombo();
-                        });
-                        break;
-                    }
-                }
-            }
+                    attacker = _player,
+                    damage = _power,
+                    getDamagedAnimationClip = _currentWarpStrikeAttackInfo.getDamagedAnimationClipInfo,
+                    hitPoint = warpPoint,
+                    increaseMomentumGauge = 0,
+                    isForceAttack = false,
+                    isKnockDown = false,
+                };
+                OnHitWarpStrikeTarget?.Invoke();
+                _warpStrikeTarget.HealthCompo.ApplyDamage(info);
+                Activating = false;
+                animatorCompo.Animancer.States[_currentWarpStrikeAttackInfo.attackAnimation]
+                    .EffectiveSpeed = 1;
+                _player.GetCompo<PlayerAnimationTrigger>().OnEndCombo();
+            });
         }
 
         private void Update()
@@ -130,7 +115,6 @@ namespace PJH.Runtime.Players
             {
                 var evt = UIEvents.ShowWarpStrikeTargetUI;
                 evt.isShowUI = true;
-                Debug.Log(target);
                 _warpStrikeTarget = target;
                 evt.target = _warpStrikeTarget;
                 _uiEventChannel.RaiseEvent(evt);

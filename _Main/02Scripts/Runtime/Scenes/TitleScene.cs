@@ -11,8 +11,9 @@ namespace Main.Scenes
         [SerializeField] private Vector2 _cameraAimClampMin, _cameraAimClampMax;
         private CinemachineRotationComposer _cinemachineRotationComposer;
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             _cinemachineRotationComposer = _cinemachineCamera.GetComponent<CinemachineRotationComposer>();
         }
 
@@ -25,7 +26,7 @@ namespace Main.Scenes
 
         private void LateUpdate()
         {
-            if (!_cinemachineCamera.IsLive) return;
+            if (!_cinemachineCamera.IsLive || !_playerInput) return;
 
             Vector2 screenPosition = _cinemachineRotationComposer.Composition.ScreenPosition;
             Vector3 mouseDelta = _playerInput.MouseDelta;

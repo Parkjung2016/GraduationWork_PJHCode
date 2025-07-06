@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Kinemation.MotionWarping.Runtime.Core;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
 using UnityEngine;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -15,12 +16,19 @@ namespace PJH.Runtime.Players
     {
         protected override void Awake()
         {
-            base.Awake();
-            _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
-            base.ModelTrm = transform.Find("Model");
-            _meshRenderers = ModelTrm.GetComponentsInChildren<Renderer>();
-            ModelRenderer = _meshRenderers[0] as SkinnedMeshRenderer;
+            ModelRenderer = transform.Find("Model").GetComponentInChildren<SkinnedMeshRenderer>();
+            PlayerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
+            for (int i = 0; i < _playerUIReferences.Length; i++)
+            {
+                AddressableManager.Instantiate(_playerUIReferences[i].name);
+            }
 
+            base.Awake();
+
+            _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
+            ModelTrm = transform.Find("Model");
+            _meshRenderers = ModelTrm.GetComponentsInChildren<Renderer>();
+            WarpingComponent = GetComponent<MotionWarping>();
             _attackCompo = GetCompo<PlayerAttack>();
             _stunDurationStat = GetCompo<PlayerStat>().GetStat(_stunDurationStat);
             SubscribeEvents();
@@ -94,6 +102,27 @@ namespace PJH.Runtime.Players
             }
         }
 
+        public async void ApplySilencePassive(float duration)
+        {
+            try
+            {
+                if (_applySilencePassiveTokenSource is { IsCancellationRequested: false })
+                {
+                    _applySilencePassiveTokenSource.Cancel();
+                    _applySilencePassiveTokenSource.Dispose();
+                }
+
+                Debug.Log("4");
+                _applySilencePassiveTokenSource = new();
+                _applySilencePassiveTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
+                CanApplyPassive = false;
+                await UniTask.WaitForSeconds(duration, cancellationToken: _applySilencePassiveTokenSource.Token);
+                CanApplyPassive = true;
+            }
+            catch (Exception e)
+            {
+            }
+        }
 
         public async void KnockBack(Vector3 knockBackDir, float knockBackPower, float knockBackDuration)
         {

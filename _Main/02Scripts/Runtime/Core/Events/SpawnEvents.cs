@@ -12,5 +12,6 @@ namespace Main.Runtime.Core.Events
         public PoolTypeSO effectType;
         public Vector3 position;
         public Quaternion rotation;
+        public float lifeTime = 0;
     }
 }

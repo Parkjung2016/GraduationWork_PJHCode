@@ -1,0 +1,4 @@
+{
+	"name": "PJH.Runtime.BT.Conditionals",
+	"references":[ "GUID:4212bc4daf0e8bd48a3d16403b0a342a", "GUID:f9fbcd65fc33f6847b0f124cf7e891b6", "GUID:a88e20ec90497d6429de4f692695fe43", "GUID:ca5b8601c5ebe64409c1d85140356a0c" ]
+}

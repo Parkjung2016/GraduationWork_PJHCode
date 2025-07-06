@@ -33,7 +33,7 @@ namespace Main.Runtime.Agents
         protected virtual void HandleTriggerRagdoll()
         {
             LegsAnimator.enabled = false;
-            RagdollAnimator.User_SwitchFallState(RagdollHandler.EAnimatingMode.Falling);
+            RagdollAnimator.User_SwitchFallState();
         }
     }
 }

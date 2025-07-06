@@ -21,11 +21,10 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  pieceSprite: {fileID: -1287158126, guid: f06a62b081cf3d842a00968cc9d79027, type: 3}
-  actionName: SpinningElbow
-  actionDisplay: "\uC2A4\uD540 \uC5D8\uBCF4"
-  actionDescription: "\uD314\uAFC8\uCE58\uB97C \uBE60\uB974\uAC8C \uD68C\uC804\uC2DC\uCF1C
-    \uACF5\uACA9\uD55C\uB2E4."
+  pieceIcon: {fileID: 21300000, guid: c4e577a5eb4501e4c8c039248bb6034e, type: 3}
+  pieceDisplayName: "\uC2A4\uD53C\uB2DD \uC5D8\uBCF4"
+  pieceDescription: "\uBE60\uB974\uAC8C \uD68C\uC804\uD558\uBA70 \uAC15\uD55C \uD314\uAFC8\uCE58
+    \uACF5\uACA9\uC744 \uB0A0\uB9BD\uB2C8\uB2E4."
   combatData: {fileID: 11400000, guid: 906bfa08ef03182439a38e603bee6586, type: 2}
-  passive: {fileID: 0}
-  overlappingPassives: []
+  _passives: []
+  equipSlotIndex: 0

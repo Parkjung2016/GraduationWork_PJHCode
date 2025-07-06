@@ -60,7 +60,7 @@ namespace Main.Runtime.Agents
                         }
                         catch (Exception e)
                         {
-                            Debug.Log(e.Message);
+                            Debug.Log(e);
                         }
                     }
                 });
