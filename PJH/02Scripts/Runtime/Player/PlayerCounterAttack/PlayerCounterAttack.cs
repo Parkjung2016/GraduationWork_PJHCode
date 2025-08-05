@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Animancer;
 using DG.Tweening;
+using FMODUnity;
 using Main.Runtime.Agents;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core;
@@ -18,6 +19,7 @@ namespace PJH.Runtime.Players
         public event Action OnHitCounterAttackTarget;
         public bool IsCounterAttacking { get; set; }
         [SerializeField] private List<PlayerCounterAttackDataSO> _counterAttackCombatDatas;
+        [SerializeField] private EventReference _counterSound, _targetHitSound;
         [SerializeField] private StatSO _powerStat;
 
         private Player _player;
@@ -30,6 +32,8 @@ namespace PJH.Runtime.Players
 
         public void AfterInitialize()
         {
+            _player.OnStartStun += HandleEndCounterAttack;
+            _player.OnGrabbed += HandleEndCounterAttack;
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnHitCounterAttack += HandleHitCounterAttack;
             animationTriggerCompo.OnEndCounterAttack += HandleEndCounterAttack;
@@ -40,6 +44,9 @@ namespace PJH.Runtime.Players
 
         private void OnDestroy()
         {
+            _player.OnStartStun -= HandleEndCounterAttack;
+            _player.OnGrabbed -= HandleEndCounterAttack;
+            
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnHitCounterAttack -= HandleHitCounterAttack;
             animationTriggerCompo.OnEndCounterAttack -= HandleEndCounterAttack;
@@ -64,6 +71,7 @@ namespace PJH.Runtime.Players
                 getDamagedAnimationClipOnIgnoreDirection = _currentCounterAttackCombatData.getDamagedAnimationClip,
                 hitPoint = _player.transform.position
             };
+            RuntimeManager.PlayOneShot(_targetHitSound, transform.position);
             OnHitCounterAttackTarget?.Invoke();
             target.HealthCompo.ApplyDamage(info);
         }
@@ -76,6 +84,7 @@ namespace PJH.Runtime.Players
             _currentCounterAttackCombatData = _counterAttackCombatDatas[idx];
             OnCounterAttack?.Invoke(_currentCounterAttackCombatData.attackAnimationClip);
             OnCounterAttackWithoutAnimationClip?.Invoke();
+            RuntimeManager.PlayOneShot(_counterSound, transform.position);
             _player.ModelTrm.DOKill();
             Vector3 attackerPosition = _player.HealthCompo.GetDamagedInfo.attacker.transform.position;
             _player.ModelTrm.DOLookAt(attackerPosition, .3f);

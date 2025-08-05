@@ -10,7 +10,7 @@ namespace PJH.Trainingscarecrow
         [SerializeField] private Transform _headTrm;
         [SerializeField] private float _force = 100;
         private Rigidbody _rigidbodyCompo;
-        [field: SerializeField] public Vector3 AdditionalUIDisplayPos { get; private set; }
+        public Transform LockOnUIDisplayTargetTrm { get; }
 
         protected override void Start()
         {
@@ -27,5 +27,6 @@ namespace PJH.Trainingscarecrow
             Vector3 dir = (pos - getDamagedInfo.hitPoint).normalized;
             _rigidbodyCompo.AddForce(dir * _force, ForceMode.Impulse);
         }
+
     }
 }

@@ -13,12 +13,13 @@ namespace Main.Runtime.Agents
     {
         [SerializeField] private List<AnimancerEventAssetSO> _animationEvents;
         public event Action OnAnimationEnd;
+        public event Action OnPlayAttackWhooshSound;
+        public Action OnDisableDamageCollider;
         public event Action<int> OnSetGetDamagedAnimationIndex;
+        public event Action<Define.ESocketType> OnEnableDamageCollider;
         public Action OnTriggerRagdoll;
         public Action OnGetUp;
-        public event Action<Define.ESocketType> OnEnableDamageCollider;
 
-        public Action OnDisableDamageCollider;
 
         private HybridAnimancerComponent _hybridAnimancer;
 
@@ -35,9 +36,11 @@ namespace Main.Runtime.Agents
             MethodInfo[] methods = type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
             type = type.BaseType;
             MethodInfo[] parentMethods = type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+            type = type.BaseType;
+            MethodInfo[] parent2Methods = type.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (var eventAsset in _animationEvents)
             {
-                RegisterEventMethodInfo(methods, parentMethods, eventAsset);
+                RegisterEventMethodInfo(methods, parentMethods, parent2Methods, eventAsset);
                 _hybridAnimancer.Events.AddTo<object>(eventAsset, value =>
                 {
                     if (_eventMethodInfos.TryGetValue(eventAsset, out var methodList))
@@ -60,7 +63,7 @@ namespace Main.Runtime.Agents
                         }
                         catch (Exception e)
                         {
-                            Debug.Log(e);
+                            Debug.LogError($"{_hybridAnimancer.States.Current} : {eventAsset} : {e} : {e.StackTrace}");
                         }
                     }
                 });
@@ -68,6 +71,7 @@ namespace Main.Runtime.Agents
         }
 
         private void RegisterEventMethodInfo(MethodInfo[] methods, MethodInfo[] parentMethods,
+            MethodInfo[] parentMethods2,
             AnimancerEventAssetSO eventAsset)
         {
             MethodInfo method;
@@ -79,6 +83,9 @@ namespace Main.Runtime.Agents
                 if (method == null)
                     method = parentMethods.FirstOrDefault(method =>
                         method.Name == methodName && method.GetParameters().Length == 1);
+                if (method == null)
+                    method = parentMethods2.FirstOrDefault(method =>
+                        method.Name == methodName && method.GetParameters().Length == 1);
                 if (method != null)
                     _eventMethodInfos.Add(eventAsset, new List<MethodInfo>() { method });
             }
@@ -87,6 +94,9 @@ namespace Main.Runtime.Agents
                 method.Name == methodName && method.GetParameters().Length == 0);
             if (method == null)
                 method = parentMethods.FirstOrDefault(method =>
+                    method.Name == methodName && method.GetParameters().Length == 0);
+            if (method == null)
+                method = parentMethods2.FirstOrDefault(method =>
                     method.Name == methodName && method.GetParameters().Length == 0);
             if (method != null)
             {
@@ -97,12 +107,12 @@ namespace Main.Runtime.Agents
             }
         }
 
-        private void EnableDamageCollider(Define.ESocketType socketType)
+        protected virtual void EnableDamageCollider(Define.ESocketType socketType)
         {
             OnEnableDamageCollider?.Invoke(socketType);
         }
 
-        private void DisableDamageCollider()
+        protected virtual void DisableDamageCollider()
         {
             OnDisableDamageCollider?.Invoke();
         }
@@ -110,6 +120,11 @@ namespace Main.Runtime.Agents
         private void AnimationEnd()
         {
             OnAnimationEnd?.Invoke();
+        }
+
+        private void PlayAttackWhooshSound()
+        {
+            OnPlayAttackWhooshSound?.Invoke();
         }
 
         private void TriggerRagdoll()

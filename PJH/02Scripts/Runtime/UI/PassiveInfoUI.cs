@@ -12,16 +12,14 @@ namespace PJH.Runtime.UI
         private Image _passiveIcon;
         private List<PassiveInfoType> _infoTypes = new();
 
-        private PassiveInfoProgress _buffProgress, _cooldownProgress;
+        private PassiveInfoProgress _buffProgress;
 
         private void Awake()
         {
             Transform maskTrm = transform.Find("Mask");
             _passiveIcon = maskTrm.Find("Icon").GetComponent<Image>();
             _buffProgress = transform.Find("BuffProgress").GetComponent<PassiveInfoProgress>();
-            _cooldownProgress = transform.Find("CooldownProgress").GetComponent<PassiveInfoProgress>();
             _buffProgress.gameObject.SetActive(false);
-            _cooldownProgress.gameObject.SetActive(false);
         }
 
         public void SetPassiveInfo(PassiveSO passive)
@@ -58,22 +56,6 @@ namespace PJH.Runtime.UI
                                 Destroy(gameObject);
                                 RemovePassiveInfoType(PassiveInfoType.Buff,
                                     ref buffPassive.BuffPassiveInfo.OnUpdateBuffTime);
-                            });
-                    }
-
-                    break;
-                }
-                case PassiveInfoType.Cooldown:
-                {
-                    if (_currentPassive is ICooldownPassive cooldownPassive)
-                    {
-                        _cooldownProgress.StartProgress(ref cooldownPassive.CooldownPassiveInfo.OnUpdateCooldownTime,
-                            _infoTypes,
-                            () =>
-                            {
-                                Destroy(gameObject);
-                                RemovePassiveInfoType(PassiveInfoType.Buff,
-                                    ref cooldownPassive.CooldownPassiveInfo.OnUpdateCooldownTime);
                             });
                     }
 

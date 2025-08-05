@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 #endif
 using UnityEngine;
-
+using Debug = Main.Core.Debug;
 
 [CreateAssetMenu(menuName = "SO/Pool/Manager")]
 public class PoolManagerSO : ScriptableObject
@@ -19,6 +19,7 @@ public class PoolManagerSO : ScriptableObject
 
     private Dictionary<string, Pool> _pools;
     private Transform _rootTrm;
+
     public IEnumerator InitializePool(Transform root)
     {
         _rootTrm = root;
@@ -36,7 +37,7 @@ public class PoolManagerSO : ScriptableObject
             Debug.Log(item);
 
             IPoolable poolable = handle.Result.GetComponent<IPoolable>();
-            Debug.Assert(poolable != null, $"PoolItem does not have IPoolable {handle.Result.name}");
+            UnityEngine.Debug.Assert(poolable != null, $"PoolItem does not have IPoolable {handle.Result.name}");
 
             var pool = new Pool(poolable, _rootTrm, item.initCount);
             _pools.Add(item.poolType.typeName, pool);

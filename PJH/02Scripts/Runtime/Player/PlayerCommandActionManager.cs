@@ -5,7 +5,7 @@ using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Core;
 using UnityEngine;
-using BIS.Shared.Interface;
+using Cysharp.Threading.Tasks;
 
 namespace PJH.Runtime.Players
 {
@@ -19,30 +19,38 @@ namespace PJH.Runtime.Players
 
 
         [SerializeField] private List<CommandActionData> _commandActions = new();
+        [SerializeField] private float _changeDelay;
 
         private Player _player;
         private int _currentUsingCommandActionDataIndex;
         private CurrentEquipComboSO _currentEquipComboSO;
+        private bool _canChangeCommand;
 
         public void Initialize(Agent agent)
         {
+            _canChangeCommand = true;
             _player = agent as Player;
         }
 
         private void Start()
         {
             _currentEquipComboSO = AddressableManager.Load<CurrentEquipComboSO>("CurrentEquipComboSO");
+            _currentEquipComboSO.ResetSO();
+            CommandActionData ActionData = new CommandActionData();
+            for (short j = 0; j < 3; ++j)
+            {
+                if (_currentEquipComboSO.CurrentEquipCommandSOs[0].CommandActionPieceSOs[j] == null)
+                    break;
+                ActionData.TryAddCommandActionPiece(_currentEquipComboSO.CurrentEquipCommandSOs[0]
+                    .CommandActionPieceSOs[j]);
+            }
+
+            ChangeCommandAction(0, ActionData);
+
             for (short i = 0; i < 3; ++i)
             {
-                CommandActionData ActionData = new CommandActionData();
-                for (short j = 0; j < 3; ++j)
-                {
-                    if (_currentEquipComboSO.CurrentEquipCommandSOs[i].CommandActionPieceSOs[j] == null)
-                        break;
-                    ActionData.TryAddCommandActionPiece(_currentEquipComboSO.CurrentEquipCommandSOs[i].CommandActionPieceSOs[j]);
-                }
-
-                ChangeCommandAction(i, ActionData);
+                _currentEquipComboSO.CurrentEquipCommandSOs[0].CommandActionPieceSOs[i] =
+                    _commandActions[0].ExecuteCommandActionPieces[i];
             }
         }
 
@@ -67,21 +75,28 @@ namespace PJH.Runtime.Players
 
         private void HandleCommandAction(int index)
         {
+            if (!_canChangeCommand) return;
             if (_currentUsingCommandActionDataIndex == index) return;
             PlayerAttack attackCompo = _player.GetCompo<PlayerAttack>();
             if (attackCompo.IsAttacking) return;
             if (_commandActions.Count < index + 1) return;
             CommandActionData commandActionData = _commandActions[index];
             if (commandActionData == null) return;
-
+            if (commandActionData.ExecuteCommandActionPieces.Count == 0) return;
             IsUsingCommandAction = true;
             _currentUsingCommandActionDataIndex = index;
 
-            if (commandActionData.ExecuteCommandActionPieces.Count > 0)
-            {
-                OnUseCommandAction?.Invoke(commandActionData);
-                OnUseCommandActionIndex?.Invoke(index);
-            }
+            OnUseCommandAction?.Invoke(commandActionData);
+            OnUseCommandActionIndex?.Invoke(index);
+
+            DelayChangeCommand();
+        }
+
+        private async void DelayChangeCommand()
+        {
+            _canChangeCommand = false;
+            await UniTask.WaitForSeconds(_changeDelay, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+            _canChangeCommand = true;
         }
 
         public void ChangeCommandAction(int index, CommandActionData commandActionData)
@@ -90,6 +105,7 @@ namespace PJH.Runtime.Players
             foreach (var commandActionPiece in commandActionData.ExecuteCommandActionPieces)
             {
                 CommandActionPieceSO copyCommandActionPiece = commandActionPiece;
+                if (copyCommandActionPiece == null) continue;
                 if (!commandActionPiece.name.Contains("(Clone)"))
                     copyCommandActionPiece = Instantiate(commandActionPiece);
                 copyCommandActionData.ExecuteCommandActionPieces.Add(copyCommandActionPiece);
@@ -109,6 +125,5 @@ namespace PJH.Runtime.Players
                 OnUseCommandActionIndex?.Invoke(index);
             }
         }
-
     }
 }

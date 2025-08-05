@@ -8,7 +8,6 @@ using Main.Runtime.Core.Events;
 using Main.Shared;
 using UnityEngine;
 using ZLinq;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BIS.Data;
+using DG.Tweening;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
+using Opsive.BehaviorDesigner;
+using Opsive.BehaviorDesigner.Runtime;
 using UnityEngine;
 using UnityEngine.AI;
+using YTH.Enemies;
 using Debug = UnityEngine.Debug;
 using Random = UnityEngine.Random;
 
@@ -15,6 +19,8 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 {
     public class WaveSystem : MonoBehaviour
     {
+        private readonly string _fadeAmountValue = "_FadeAmount";
+        
         public event Action<byte> OnChangedCurrentWaveAction;
 
         public byte CurrentWave
@@ -37,34 +43,31 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         private EnemyPartySO _enemyParty;
 
         private List<Agent> _enemyList = new();
-        public List<Agent> EnemyList
-        {
-            get
-            {
-                return _enemyList;
-            }
+        public List<Agent> EnemyList => _enemyList;
 
-            set
-            {
-                var evt = GameEvents.ChangeCurrentEnemy;
-                evt.enemyCount = _enemyList.Count;
-                _gameEventChannel.RaiseEvent(evt);
-            }
+        public EnemyPartySO PartySO
+        {
+            get => _enemyParty;
+            set => _enemyParty = value;
+        }
+        
+        public GameObject[] SpawnPoints
+        {
+            get => _spawnPoints;
+            set => _spawnPoints = value;
         }
 
-private void Awake()
+        private void Awake()
         {
             _currentWave = 1;
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
-
             _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
-            _gameEventChannel.AddListener<StartWave>(HandleStartWave);
+            
             _gameEventChannel.AddListener<ClearWave>(HandleClearWave);
         }
 
         private void OnDestroy()
         {
-            _gameEventChannel.RemoveListener<StartWave>(HandleStartWave);
             _gameEventChannel.RemoveListener<ClearWave>(HandleClearWave);
         }
 
@@ -79,89 +82,75 @@ private void Awake()
         //     _gameEventChannel.RaiseEvent(GameEvents.StartWave);
         // }
 
-        private void HandleStartWave(StartWave evt)
+        public List<Agent> SpawnEnemies()
         {
-            _enemyParty = evt.enemyPartySO as EnemyPartySO;
-            _spawnPoints = evt.spawnPoints;
-            _maxWave = ((EnemyPartySO)evt.enemyPartySO).UnitDatas.Count;
-            StartWave();
-        }
-
-        public void StartWave()
-        {
-            SpawnEnemies();
-        }
-
-        private void SpawnEnemies()
-        {
-            // try
-            // {
+            List<Agent> spawnList = new();
             EnemyPartySO enemyParty = _enemyParty;
             if(_enemyParty == null) Debug.LogError($"Enemy Party SO is Null Please Change Null SO");
-            List<SpawnData> spawnDatas = enemyParty.UnitDatas[CurrentWave - 1].spawnData;
-            List<GameObject> copyOfSpawnPoints = _spawnPoints.ToList();
+            Debug.Log(_enemyParty.name);
+            List<SpawnData> spawnDatas = enemyParty.UnitDatas[0].spawnData;
+            Debug.Log(spawnDatas);
+            List<GameObject> copyOfSpawnPoints;
             if(spawnDatas.Count <= 0) Debug.LogError($"Current SpawnDatas Count is Zero. Please Add Value");
+            copyOfSpawnPoints = _spawnPoints.ToList();
             for (byte i = 0; i < spawnDatas.Count; i++)
             {
                 SpawnData spawnData = spawnDatas[i];
                 if(spawnData.spawnAmount <= 0) Debug.LogError($"Current SpawnAmount is Zero Please Add Value");
                 for (byte j = 0; j < spawnData.spawnAmount; j++)
                 {
+                    if (copyOfSpawnPoints.Count <= 0)
+                    {
+                        copyOfSpawnPoints = _spawnPoints.ToList();
+                    }
+                    
                     UnitSO unit = spawnData.spawnUnit;
+
+                    if (_poolManager == null)
+                    {
+                        _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
+                        _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
+                    }
+                    
                     Agent enemy = _poolManager.Pop(unit.UnitPoolType) as Agent;
-                    Debug.Log(enemy);
+                    enemy.GetComponent<BaseEnemy>().GetCompo<EnemyMovement>().SetAiPath(false);
                     int rnd = Random.Range(0, copyOfSpawnPoints.Count);
                     Transform spawnPoint = copyOfSpawnPoints[rnd].transform;
+                    copyOfSpawnPoints.Remove(spawnPoint.gameObject);
                     enemy.transform.position = spawnPoint.position;
+                    enemy.GetComponent<BehaviorTree>().enabled = false;
+                    
+                    spawnList.Add(enemy);
                     _enemyList.Add(enemy);
-                    enemy.HealthCompo.OnDeath += () =>
-                    {
-                        Debug.Log(EnemyList.Count);
-                        RemoveEnemy(enemy); 
-                    };
                 }
             }
 
             StartCombatEvent evt = GameEvents.StartCombat;
             _gameEventChannel.RaiseEvent(evt);
-            // }
-            // catch(Exception e)
-            // {
-            //     Debug.LogError($"SpawnEnemies is failed, reason is : {e}");
-            //     Debug.LogError("Please Fix this exception.");
-            // }
+
+            return spawnList;
         }
 
-        // private int[] DivideSpawnCount(int spawnCount, int spawnPoint)
+        // private void RemoveEnemy(Agent enemy)
         // {
-        //     int[] spawnCountArray = new int[spawnPoint];
-        //     if (spawnCount % spawnPoint == 0)
-        //     {   
-        //         
+        //     if (_enemyList.Remove(enemy))
+        //     {
+        //         if (_enemyList.Count == 0)
+        //         {
+        //             if (CurrentWave >= _maxWave)
+        //             {
+        //                 CurrentWave = 1;
+        //                 var evt = GameEvents.FinishAllWave;
+        //                 _gameEventChannel.RaiseEvent(evt);
+        //             }
+        //             else
+        //             {
+        //                 CurrentWave++;
+        //                 var evt = GameEvents.ClearWave;
+        //                 _gameEventChannel.RaiseEvent(evt);
+        //             }
+        //         }
         //     }
-        //     return spawnCount % spawnPoint == 0 ? new int[spawnCount / spawnPoint];
         // }
-
-        private void RemoveEnemy(Agent enemy)
-        {
-            if (_enemyList.Remove(enemy))
-            {
-                if (_enemyList.Count == 0)
-                {
-                    if (CurrentWave >= _maxWave)
-                    {
-                        CurrentWave = 1;
-                        var evt = GameEvents.FinishAllWave;
-                        _gameEventChannel.RaiseEvent(evt);
-                    }
-                    else
-                    {
-                        CurrentWave++;
-                        var evt = GameEvents.ClearWave;
-                        _gameEventChannel.RaiseEvent(evt);
-                    }
-                }
-            }
-        }
     }
 }

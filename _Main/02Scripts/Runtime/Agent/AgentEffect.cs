@@ -13,13 +13,14 @@ namespace Main.Runtime.Agents
     {
         protected Agent _agent;
         public MagioObjectMaster MagioObjectMaster { get; private set; }
-
+        public DistanceFade DistanceFade { get; private set; }
         [SerializeField, ReadOnly] private Dictionary<string, MagioObjectEffect> _magioObjectEffects;
 
         public virtual async void Initialize(Agent agent)
         {
             _agent = agent;
             MagioObjectMaster = _agent.GetComponentInChildren<MagioObjectMaster>();
+            DistanceFade = _agent.GetComponentInChildren<DistanceFade>();
             await UniTask.WaitUntil(() => MagioObjectMaster.didAwake,
                 cancellationToken: gameObject.GetCancellationTokenOnDestroy());
             _magioObjectEffects = new();

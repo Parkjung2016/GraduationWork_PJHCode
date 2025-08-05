@@ -26,13 +26,13 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             _player.OnStartStun += HandleBlockEnd;
+            _player.OnGrabbed += HandleBlockEnd;
             _player.PlayerInput.BlockEvent += HandleBlock;
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
             _player.GetCompo<PlayerAttack>().OnAttack += HandleBlockEnd;
             _player.GetCompo<PlayerAnimationTrigger>().OnBlockEnd += HandleBlockEnd;
             _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd += HandleBlockEnd;
             _player.GetCompo<PlayerCounterAttack>().OnCounterAttackWithoutAnimationClip += HandleBlockEnd;
-
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             movementCompo.OnEvasion += HandleBlockEnd;
             movementCompo.OnEvasionWhileHitting += HandleBlockEnd;
@@ -41,6 +41,7 @@ namespace PJH.Runtime.Players
         private void OnDestroy()
         {
             _player.OnStartStun -= HandleBlockEnd;
+            _player.OnGrabbed -= HandleBlockEnd;
 
             _player.PlayerInput.BlockEvent -= HandleBlock;
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
@@ -73,10 +74,12 @@ namespace PJH.Runtime.Players
                 if (stateInfo.IsTag("Blocking")) return;
             }
 
+            if (_player.IsGrabbed) return;
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
 
             PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
-            if (counterAttackCompo.IsCounterAttacking || movementCompo.IsEvading || _player.IsStunned ||
+            if (counterAttackCompo.IsCounterAttacking || movementCompo.IsEvading ||
+                _player.IsStunned ||
                 isPressedBlockKey && _player.IsHitting) return;
             if (isPressedBlockKey)
             {

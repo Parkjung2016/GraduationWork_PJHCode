@@ -82,9 +82,9 @@ namespace PJH.Runtime.PlayerPassive.Passives
 
         public override void UnEquipPiece()
         {
-            base.UnEquipPiece();
             (_player.HealthCompo as PlayerHealth).SetGetDamagedInfoBeforeApplyDamagedEvent -=
                 HandleSetGetDamagedInfoBeforeApplyDamagedEvent;
+            base.UnEquipPiece();
         }
 
 

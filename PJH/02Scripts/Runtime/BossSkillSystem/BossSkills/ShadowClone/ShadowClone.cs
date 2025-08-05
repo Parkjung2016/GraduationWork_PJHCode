@@ -1,11 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Animancer;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using INab.Dissolve;
+using Main.Core;
 using Main.Runtime.Agents;
+using Main.Runtime.Characters.StateMachine;
+using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Opsive.BehaviorDesigner.Runtime;
 using PJH.Runtime.Players;
 using UnityEngine;
+using YTH.Boss;
 
 namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
 {
@@ -19,22 +26,36 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
     {
         [field: SerializeField] public PoolTypeSO PoolType { get; set; }
         [SerializeField] private Dictionary<MoveDirection, ClipTransition> _avoidAnimations;
-        public GameObject GameObject => gameObject;
         public BehaviorTree BT { get; private set; }
         private Pool _pool;
         private Player _player;
+        private Dissolver _dissolver;
+
+        private GameEventChannelSO _gameEventChannel;
 
         public void SetUpPool(Pool pool)
         {
+            _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _pool = pool;
+            _dissolver = GetComponent<Dissolver>();
+            _dissolver.materials.Add(GetComponentInChildren<SkinnedMeshRenderer>().material);
             BT = GetComponent<BehaviorTree>();
             ShadowCloneAnimationTrigger animationTriggerCompo = GetCompo<ShadowCloneAnimationTrigger>();
             animationTriggerCompo.OnComboPossible += HandleComboPossible;
             animationTriggerCompo.OnLookPlayer += LookPlayer;
+            _gameEventChannel.AddListener<DestroyDeadEnemy>(ReturnPool);
+        }
+
+        private void ReturnPool(DestroyDeadEnemy obj)
+        {
+            _pool.Push(this);
         }
 
         public void ResetItem()
         {
+            GetCompo<AgentWeaponManager>().CurrentWeapon.gameObject.SetActive(true);
+            GetCompo<ShadowCloneStateSystem>().ChangeState(null, true);
+            _dissolver.Reset();
             _player = PlayerManager.Instance.Player as Player;
         }
 
@@ -44,6 +65,7 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
             ShadowCloneAnimationTrigger animationTriggerCompo = GetCompo<ShadowCloneAnimationTrigger>();
             animationTriggerCompo.OnComboPossible -= HandleComboPossible;
             animationTriggerCompo.OnLookPlayer -= LookPlayer;
+            _gameEventChannel.RemoveListener<DestroyDeadEnemy>(ReturnPool);
         }
 
         private void HandleComboPossible()
@@ -72,9 +94,23 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
             BT.SetVariableValue("LifeTime", lifeTime);
         }
 
-        public void Disappear()
+        public async void Disappear()
         {
-            _pool.Push(this);
+            try
+            {
+                BT.StopBehavior();
+                GetCompo<ShadowCloneMovement>().SetCanMove(false);
+                _dissolver.Dissolve();
+                GetCompo<AgentWeaponManager>().CurrentWeapon.gameObject.SetActive(false);
+                await UniTask.WaitForSeconds(_dissolver.duration + .5f,
+                    cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+
+                _pool.Push(this);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

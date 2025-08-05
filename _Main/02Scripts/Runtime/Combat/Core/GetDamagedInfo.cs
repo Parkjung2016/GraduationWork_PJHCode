@@ -1,4 +1,5 @@
-﻿using Animancer;
+﻿using System;
+using Animancer;
 using Main.Shared;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Main.Runtime.Combat.Core
     public struct GetDamagedInfo
     {
         public Vector3 hitPoint;
+        public Vector3 normal;
         public float damage;
         public float increaseMomentumGauge;
         public GetDamagedAnimationClipInfo getDamagedAnimationClip;

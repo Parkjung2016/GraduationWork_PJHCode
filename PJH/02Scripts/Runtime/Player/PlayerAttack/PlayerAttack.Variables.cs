@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using DG.Tweening;
 using Main.Runtime.Core.Events;
 using Sirenix.OdinInspector;
@@ -21,6 +20,7 @@ namespace PJH.Runtime.Players
         }
 
         public event Action OnAttack;
+        public event Action<CommandActionPieceSO> OnUseCommandActionPiece;
         public event Action OnEnterBattle;
         public event Action OnExitBattle;
         [field: SerializeField, ReadOnly] public bool IsInBattle { get; private set; }

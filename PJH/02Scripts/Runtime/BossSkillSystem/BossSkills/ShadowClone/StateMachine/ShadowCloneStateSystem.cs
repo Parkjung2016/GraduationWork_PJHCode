@@ -54,19 +54,19 @@ namespace Main.Runtime.Characters.StateMachine
             ChangeState(nextState);
         }
 
-        public void ChangeState(ShadowCloneStateSO nextState, bool isForceTransition = false)
+        public async void ChangeState(ShadowCloneStateSO nextState, bool isForceTransition = false)
         {
             if (nextState)
             {
                 if (CurrentState.Value && !isForceTransition && _transitionBlacklist.ContainsKey(CurrentState.Value) &&
                     _transitionBlacklist[CurrentState.Value].Contains(nextState)) return;
                 CurrentState.Value = null;
-                Debug.Log(CurrentState.Value);
+                await UniTask.DelayFrame(2, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
                 CurrentState.Value = nextState;
             }
             else
             {
-                Debug.LogError($"Cannot change to state {nextState}, it does not exist.");
+                CurrentState.Value = null;
             }
         }
     }

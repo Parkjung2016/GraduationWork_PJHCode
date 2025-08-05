@@ -2,12 +2,12 @@ using System.Collections;
 using Main.Core;
 using Main.Runtime.Manager;
 using UnityEngine;
+using Debug = Main.Core.Debug;
 
 public class PoolManagerMono : MonoBehaviour
 {
     private PoolManagerSO _poolManager;
     private bool _isSpawned;
-
 
 
     private IEnumerator Start()
@@ -25,7 +25,8 @@ public class PoolManagerMono : MonoBehaviour
             yield return _poolManager.InitializePool(transform);
             DontDestroyOnLoad(gameObject);
         }
-        UnityEngine.Debug.Log("풀링 완료");
+
+        Debug.Log("풀링 완료");
     }
 
 

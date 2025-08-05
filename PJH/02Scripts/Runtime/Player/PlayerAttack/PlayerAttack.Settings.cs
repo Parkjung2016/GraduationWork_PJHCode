@@ -5,9 +5,11 @@
         private void SubscribeEvents()
         {
             _player.OnStartStun += HandleEndCombo;
+            _player.OnGrabbed += HandleEndCombo;
+
             _player.PlayerInput.AttackEvent += HandleAttack;
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
-            
+
             var animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnComboPossible += HandleComboPossible;
             animationTriggerCompo.OnEndCombo += HandleEndCombo;
@@ -29,6 +31,7 @@
         private void UnSubscribeEvents()
         {
             _player.OnStartStun -= HandleEndCombo;
+            _player.OnGrabbed -= HandleEndCombo;
 
             _player.PlayerInput.AttackEvent -= HandleAttack;
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;

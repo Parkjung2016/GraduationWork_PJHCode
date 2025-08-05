@@ -13,24 +13,7 @@ MonoBehaviour:
   m_Name: FullMountAnimation_EmptyWeapon
   m_EditorClassIdentifier: 
   key: {fileID: 11400000, guid: 2985ee3c23a7b3c45ad9f6cdfd596c5a, type: 2}
-  fullMountAttackAnimation:
-    _FadeDuration: 0.25
-    _Speed: 1
-    _Events:
-      _NormalizedTimes:
-      - 0.3262762
-      - 0.38919666
-      - 0.5761773
-      - 0.6634349
-      - 0.94598335
-      _Callbacks: []
-      _Names:
-      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
-      - {fileID: 11400000, guid: 62aeca9f632a3a045ba6412bf0c763ef, type: 2}
-      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
-      - {fileID: 11400000, guid: 62aeca9f632a3a045ba6412bf0c763ef, type: 2}
-    _Clip: {fileID: 8993902097722301239, guid: 242d5c186345cbb458588899d06252b0, type: 3}
-    _NormalizedStartTime: NaN
+  fullMountMotionWarping: {fileID: 11400000, guid: a16b43dc424f8974a89af717fc9a36cc, type: 2}
   fullMountedAnimation:
     _FadeDuration: 0.25
     _Speed: 1
@@ -40,15 +23,6 @@ MonoBehaviour:
       _Callbacks: []
       _Names: []
     _Clip: {fileID: 8993902097722301239, guid: e38e349981ed6504c9d43094238f88eb, type: 3}
-    _NormalizedStartTime: NaN
-  fullMountEndAnimation:
-    _FadeDuration: 0.25
-    _Speed: 1
-    _Events:
-      _NormalizedTimes: []
-      _Callbacks: []
-      _Names: []
-    _Clip: {fileID: 8993902097722301239, guid: 02f5d40a48b2b1b4e87a64ef4eccabaf, type: 3}
     _NormalizedStartTime: NaN
   references:
     version: 2

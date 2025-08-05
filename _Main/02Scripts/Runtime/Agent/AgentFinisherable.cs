@@ -25,6 +25,7 @@ namespace Main.Runtime.Agents
         protected AgentMomentumGauge _momentumGaugeCompo;
         protected AgentFullMountable _fullMountableCompo;
 
+
         public virtual void Initialize(Agent agent)
         {
             _agent = agent;
@@ -42,8 +43,9 @@ namespace Main.Runtime.Agents
 
         public void SetToFinisherTarget()
         {
-            // _collider.enabled = false;
             _deadFinisherTargetEventChannel.AddListener<DeadFinisherTarget>(HandleDeadFinisherTarget);
+            _agent.GetCompo<AgentIK>(true).LegsAnimator.User_FadeToDisabled(0f);
+            _agent.GetCompo<AgentAnimator>(true).Animator.applyRootMotion = true;
             OnSetToFinisherTarget?.Invoke();
         }
 

@@ -37,7 +37,11 @@ namespace PJH.Runtime.Players
             if (!_fullMountTarget)
                 return false;
             if (_fullMountTarget.IsKnockDown)
-                target = _fullMountTarget;
+            {
+                float distance = Vector3.Distance(_fullMountTarget.transform.position, _player.transform.position);
+                if (distance <= 4f)
+                    target = _fullMountTarget;
+            }
 
             return target != null;
         }

@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a5c236ac0d4e699fc489695c867c02, type: 3}
+  m_Name: GrabAndAttackPlayerSkill
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  tryGrabAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes:
+      - 0.48184437
+      - 0.7688266
+      _Callbacks: []
+      _Names:
+      - {fileID: 11400000, guid: d02072eab08137d45915cc88baea5fb0, type: 2}
+    _Clip: {fileID: 7400000, guid: 111ce1416b9aab742a2e9804907725bb, type: 2}
+    _NormalizedStartTime: NaN
+  attackerMotionWarpingAsset: {fileID: 11400000, guid: 52d8563c262f7c740873767a55f3415c, type: 2}
+  grabAndAttackVictimAnimationClip:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 8993902097722301239, guid: 48a98c4647511d542bf51d28cd880c75, type: 3}
+    _NormalizedStartTime: NaN
+  tryGrabEvent: {fileID: 11400000, guid: d02072eab08137d45915cc88baea5fb0, type: 2}
+  grabSound:
+    Guid:
+      Data1: -698219191
+      Data2: 1099600061
+      Data3: 1019151780
+      Data4: 1963380726
+    Path: event:/SFX/BossSkill/GrabPlayer
+  hitSound:
+    Guid:
+      Data1: -1256606246
+      Data2: 1226259776
+      Data3: -603438700
+      Data4: -132925969
+    Path: event:/SFX/Punch/Punch_Impact
+  grabDistance: 1.3
+  attackPowerMultiplier: 1
+  references:
+    version: 2
+    RefIds: []

@@ -1,6 +1,7 @@
 using System;
 using Animancer;
 using Main.Runtime.Combat.Core;
+using Main.Runtime.Core.StatSystem;
 using Main.Shared;
 using MoreMountains.Feedbacks;
 using Unity.Cinemachine;
@@ -21,17 +22,23 @@ namespace Main.Runtime.Combat
 
         private IAgent _owner;
 
-        private float _power;
-        private float _increaseMomentumGauge;
+        private StatSO _power;
+        private StatSO _increaseMomentumGauge;
 
-        public void Init(IAgent owner, float power, float increaseMomentumGauge)
+        private float _powerMultiplier;
+        private float _increaseMomentumGaugeMultiplier;
+
+        public void Init(IAgent owner, StatSO power, StatSO increaseMomentumGauge, float powerMultiplier,
+            float increaseMomentumGaugeMultiplier)
         {
             _hitFeedback = transform.Find("HitTargetFeedback").GetComponent<MMF_Player>();
             _impulseSource = _hitFeedback.GetComponent<CinemachineImpulseSource>();
             _owner = owner;
             _power = power;
+            _powerMultiplier = powerMultiplier;
             _increaseMomentumGauge = increaseMomentumGauge;
-            Physics.IgnoreCollision(_colliderCompo, _owner.GameObject.GetComponent<Collider>());
+            _increaseMomentumGaugeMultiplier = increaseMomentumGaugeMultiplier;
+            _colliderCompo.excludeLayers = owner.GameObject.layer;
         }
 
         private void Awake()
@@ -56,14 +63,21 @@ namespace Main.Runtime.Combat
             if (other.gameObject.layer == _owner.GameObject.layer) return;
             if (other.TryGetComponent(out IDamageable damageable))
             {
-                float increaseMomentumGauge = _increaseMomentumGauge * _combatData.increaseMomentumGaugeMultiplier;
+                float increaseMomentumGauge =
+                    _increaseMomentumGauge.Value * _combatData.increaseMomentumGaugeMultiplier *
+                    _increaseMomentumGaugeMultiplier;
                 int getDamagedAnimationIndex = _combatData.currentGetDamagedAnimationClipIndex;
+                IAgent hitTarget = other.GetComponent<IAgent>();
                 GetDamagedAnimationClipInfo getDamagedAnimationClip =
                     _combatData.getDamagedAnimationClips[getDamagedAnimationIndex];
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+                Vector3 normal = (transform.position - hitPoint).normalized;
+                float damage = _combatData.damageMultiplier * _power.Value * _powerMultiplier;
                 GetDamagedInfo getDamagedInfo = new()
                 {
-                    hitPoint = transform.position,
-                    damage = _combatData.damageMultiplier * _power,
+                    hitPoint = hitPoint,
+                    normal = normal,
+                    damage = damage,
                     increaseMomentumGauge = increaseMomentumGauge,
                     attacker = _owner as MonoBehaviour,
                     isForceAttack = _combatData.isForceAttack,
@@ -72,7 +86,6 @@ namespace Main.Runtime.Combat
                     getUpAnimationClip = _combatData.getUpAnimationClip,
                     getDamagedAnimationClip = getDamagedAnimationClip
                 };
-                IAgent hitTarget = (damageable as MonoBehaviour).GetComponent<IAgent>();
                 HitInfo hitInfo = new()
                 {
                     hitTarget = hitTarget

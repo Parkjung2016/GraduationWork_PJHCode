@@ -69,6 +69,9 @@ namespace PJH.Runtime.Core.PlayerCamera
             _gameEventChannel.AddListener<FinishEnemyFinisher>(HandleFinishTimeline);
             _gameEventChannel.AddListener<ChangeCameraFOV>(HandleChangeCameraFOV);
             _gameEventChannel.AddListener<ChangeCameraUpdate>(HandleChangeCameraUpdate);
+            _gameEventChannel.AddListener<EnableCameraMovement>(HandleEnableCameraMovement);
+
+            HandleCameraInvertInput(GameEvents.CameraInvertInput);
         }
 
         private void OnDestroy()
@@ -79,6 +82,12 @@ namespace PJH.Runtime.Core.PlayerCamera
             _gameEventChannel.RemoveListener<FinishEnemyFinisher>(HandleFinishTimeline);
             _gameEventChannel.RemoveListener<ChangeCameraFOV>(HandleChangeCameraFOV);
             _gameEventChannel.RemoveListener<ChangeCameraUpdate>(HandleChangeCameraUpdate);
+            _gameEventChannel.RemoveListener<EnableCameraMovement>(HandleEnableCameraMovement);
+        }
+
+        private void HandleEnableCameraMovement(EnableCameraMovement evt)
+        {
+            enabled = evt.enableCameraMovmement;
         }
 
         private void HandleChangeCameraUpdate(ChangeCameraUpdate evt)

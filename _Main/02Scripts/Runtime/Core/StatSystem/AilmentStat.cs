@@ -126,6 +126,18 @@ public class AilmentStat
         }
     }
 
+    public void ClearAilment()
+    {
+        Ailment oldAilment = currentAilment;
+        currentAilment = Ailment.None;
+        foreach (Ailment ailment in Enum.GetValues(typeof(Ailment)))
+        {
+            _dotTimers[ailment] = 0;
+        }
+
+        OnAilmentChanged?.Invoke(oldAilment, currentAilment);
+    }
+
     private void SetAilment(Ailment type, float duration, float value)
     {
         _ailmentTimerDictionary[type] = duration;

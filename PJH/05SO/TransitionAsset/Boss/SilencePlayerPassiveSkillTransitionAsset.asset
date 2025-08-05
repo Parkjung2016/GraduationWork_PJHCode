@@ -21,13 +21,13 @@ MonoBehaviour:
       type: {class: ClipTransition, ns: Animancer, asm: Kybernetik.Animancer}
       data:
         _FadeDuration: 0.25
-        _Speed: 0.35
+        _Speed: 1
         _Events:
           _NormalizedTimes:
-          - 0.4987758
-          - NaN
+          - 0.16709293
+          - 0.61551577
           _Callbacks: []
           _Names:
           - {fileID: 11400000, guid: 495fe0fce0b032442a3195f75deeada2, type: 2}
-        _Clip: {fileID: 7400000, guid: c99225e6e83cbea4b9cb74ae0a7b6509, type: 2}
+        _Clip: {fileID: -1127549396137376381, guid: 618c3268f8388054fa10801cd6c03072, type: 3}
         _NormalizedStartTime: NaN

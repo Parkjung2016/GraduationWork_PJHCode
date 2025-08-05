@@ -19,7 +19,10 @@ namespace PJH.Runtime.BT.Actions
 
         public override void OnStart()
         {
-            _movementCompo.MoveStop(false);
+            base.OnStart();
+
+            _movementCompo.SetCanMove(true);
+            _movementCompo.SetRVOControllerLocked(false);
             _currentMoveUpdateTime = 0;
             _movementCompo.SetDestination(_player.transform.position);
         }
@@ -39,7 +42,7 @@ namespace PJH.Runtime.BT.Actions
 
         public override void OnEnd()
         {
-            _movementCompo.MoveStop(true);
+            _movementCompo.SetCanMove(false);
         }
     }
 }

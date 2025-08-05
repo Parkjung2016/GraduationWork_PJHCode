@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using Kinemation.MotionWarping.Runtime.Examples;
 using Main.Core;
 using Main.Runtime.Agents;
@@ -7,6 +8,8 @@ using Main.Runtime.Core.Events;
 using PJH.Runtime.Players.FinisherSequence;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using ZLinq;
+using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -20,6 +23,7 @@ namespace PJH.Runtime.Players
 
         // public event Action<Transform, float> OnAdjustTimelineModelPosition;
         [SerializeField, InlineEditor] private FinisherSequenceSO _finisherSequence;
+        [SerializeField] private LayerMask _whatIsObstacle;
         private GameEventChannelSO _gameEventChannel;
 
         private Player _player;
@@ -33,9 +37,9 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             _player.PlayerInput.FinisherEvent += HandleFinisher;
+
             _gameEventChannel.AddListener<FinishEnemyFinisher>(HandleFinishEnemyFinisher);
         }
-
 
         private void OnDestroy()
         {
@@ -61,25 +65,49 @@ namespace PJH.Runtime.Players
             AlignComponent alignComponent = target.Agent.GetComponent<AlignComponent>();
             alignComponent.targetAnim = finisherData.executedClip;
             alignComponent.motionWarpingAsset = finisherData.executionAsset;
-
-            bool result = _player.WarpingComponent.Interact(alignComponent);
-            if (!result) return;
-
             target.SetToFinisherTarget();
 
+            target.Agent.transform.DOLookAt(_player.transform.position, .1f);
+            _player.ModelTrm.DOLookAt(target.Agent.transform.position, .2f, AxisConstraint.Y).OnComplete(() =>
+            {
+                _player.WarpingComponent.Interact(alignComponent);
+                EnemyFinisherSequence evt = GameEvents.EnemyFinisherSequence;
+                evt.sequenceAsset = finisherData;
 
-            IsFinishering = true;
-            EnemyFinisherSequence evt = GameEvents.EnemyFinisherSequence;
-            evt.sequenceAsset = finisherData;
-            evt.playerAnimator = _player.GetCompo<PlayerAnimator>().Animator;
+                AgentAnimator animatorComp = target.Agent.GetCompo<AgentAnimator>(true);
+                animatorComp.lockedTransitionAnimation = true;
+                evt.targetAnimator = animatorComp.Animator;
 
-            _gameEventChannel.RaiseEvent(evt);
-            OnFinisher?.Invoke();
+                animatorComp = _player.GetCompo<AgentAnimator>(true);
+                animatorComp.lockedTransitionAnimation = true;
+                evt.playerAnimator = animatorComp.Animator;
+
+                IsFinishering = true;
+                _gameEventChannel.RaiseEvent(evt);
+                OnFinisher?.Invoke();
+                _player.WarpingComponent.OnAnimationFinished += HandleAnimationFinished;
+            });
+        }
+
+        private void HandleAnimationFinished()
+        {
+            _player.WarpingComponent.OnAnimationFinished -= HandleAnimationFinished;
+            _player.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
         }
 
         private FinisherDataSO GetFinisherSequenceData(FinisherSequenceSO finisherSequence)
         {
-            return finisherSequence.sequenceDatas.GetRandom();
+            Vector3 playerPosition = _player.transform.position;
+            var filteredList = finisherSequence.sequenceDatas
+                .GroupBy(data => data.spaceToExecute)
+                .Where(data =>
+                {
+                    Debug.Log(data.Key);
+                    if (data.Key == 0) return true;
+                    bool result = Physics.CheckSphere(playerPosition, data.Key, _whatIsObstacle);
+                    return !result;
+                }).OrderByDescending(data => data.Key).FirstOrDefault().ToList();
+            return filteredList.GetRandom();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Main.Shared
     public interface ILockOnAble
     {
         public GameObject GameObject { get; }
-        public Vector3 AdditionalUIDisplayPos { get; }
+        public Transform LockOnUIDisplayTargetTrm { get; }
     }
 
     public interface IScene

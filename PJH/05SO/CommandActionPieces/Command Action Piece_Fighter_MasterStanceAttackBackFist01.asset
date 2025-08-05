@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fd0cd96b94044098d1a5c34977fbaef, type: 3}
+  m_Name: Command Action Piece_Fighter_MasterStanceAttackBackFist01
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  pieceIcon: {fileID: 21300000, guid: 397b101686755d14cab6ddadd4a11b7c, type: 3}
+  pieceDisplayName: "\uBC18\uB3D9\uAD8C1"
+  pieceDescription: "\uBAB8\uC744 \uD2C0\uBA70 \uC8FC\uBA39\uC744 \uD718\uB458\uB7EC
+    \uD0C0\uACA9\uD569\uB2C8\uB2E4."
+  combatData: {fileID: 11400000, guid: 38f4b329da37ec54f9d7a5c0204acdd6, type: 2}
+  _passives: []
+  equipSlotIndex: 0

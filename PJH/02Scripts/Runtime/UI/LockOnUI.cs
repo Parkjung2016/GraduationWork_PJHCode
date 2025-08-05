@@ -26,7 +26,10 @@ namespace PJH.Runtime.UI
         {
             Player player = PlayerManager.Instance.Player as Player;
             player.OnLockOn += HandleLockOn;
-            HandleLockOn(player.IsLockOn);
+            PlayerEnemyFinisher finisherCompo = player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisher += HandleFinisher;
+            finisherCompo.OnFinisherEnd += HandleFinisherEnd;
+            _isLockOn = player.IsLockOn;
             _uiEventChannel.AddListener<ShowLockOnUI>(HandleShowLockOnUI);
         }
 
@@ -35,32 +38,48 @@ namespace PJH.Runtime.UI
             if (PlayerManager.Instance)
             {
                 Agent player = PlayerManager.Instance.Player;
-                if (player != null)
+                if (player)
+                {
                     (player as Player).OnLockOn -= HandleLockOn;
+                    PlayerEnemyFinisher finisherCompo = player.GetCompo<PlayerEnemyFinisher>();
+                    finisherCompo.OnFinisher -= HandleFinisher;
+                    finisherCompo.OnFinisherEnd -= HandleFinisherEnd;
+                }
             }
 
             _uiEventChannel.RemoveListener<ShowLockOnUI>(HandleShowLockOnUI);
+        }
+
+        private void HandleFinisherEnd()
+        {
+            gameObject.SetActive(true);
+        }
+
+        private void HandleFinisher()
+        {
+            gameObject.SetActive(false);
         }
 
         private void HandleLockOn(bool isLockOn)
         {
             _isLockOn = isLockOn;
             if (_lockOnTarget != null)
-                gameObject.SetActive(isLockOn);
+                transform.GetChild(0).gameObject.SetActive(isLockOn);
         }
 
         private void HandleShowLockOnUI(ShowLockOnUI evt)
         {
             _lockOnTarget = evt.lockOnTarget;
             if (!_isLockOn) return;
-            gameObject.SetActive(evt.isShowUI);
+            transform.GetChild(0).gameObject.SetActive(evt.isShowUI);
         }
 
         private void LateUpdate()
         {
+            if (!transform.GetChild(0).gameObject.activeSelf) return;
             transform.GetChild(0).LookAt(Camera.main.transform);
             if (_lockOnTarget == null) return;
-            transform.position = _lockOnTarget.GameObject.transform.position + _lockOnTarget.AdditionalUIDisplayPos;
+            transform.position = _lockOnTarget.LockOnUIDisplayTargetTrm.position;
         }
     }
 }

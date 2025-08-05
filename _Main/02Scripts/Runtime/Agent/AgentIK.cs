@@ -1,4 +1,6 @@
-﻿using FIMSpace.FProceduralAnimation;
+﻿using System;
+using Cysharp.Threading.Tasks;
+using FIMSpace.FProceduralAnimation;
 using Main.Runtime.Core;
 using UnityEngine;
 
@@ -30,10 +32,20 @@ namespace Main.Runtime.Agents
             animationTriggerCompo.OnTriggerRagdoll -= HandleTriggerRagdoll;
         }
 
-        protected virtual void HandleTriggerRagdoll()
+        protected virtual async void HandleTriggerRagdoll()
         {
-            LegsAnimator.enabled = false;
-            RagdollAnimator.User_SwitchFallState();
+            try
+            {
+                LegsAnimator.enabled = false;
+                RagdollAnimator.Settings.StoreCalibrationPose();
+                RagdollAnimator.User_SwitchFallState(RagdollHandler.EAnimatingMode.Falling);
+                await UniTask.WaitForSeconds(.1f, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                _agent.GetCompo<AgentAnimator>(true).Animator.enabled = false;
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
     }
 }

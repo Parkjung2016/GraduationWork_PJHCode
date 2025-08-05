@@ -1,6 +1,7 @@
 ﻿using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Pathfinding;
+using Pathfinding.RVO;
 using UnityEngine;
 
 namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
@@ -9,6 +10,7 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
     {
         private ShadowClone _shadowClone;
         public AIPath AIPathCompo { get; private set; }
+        public RVOController RvoControllerCompo { get; private set; }
 
         public bool IsArrived => AIPathCompo.reachedDestination;
 
@@ -17,6 +19,7 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
         {
             _shadowClone = agent as ShadowClone;
             AIPathCompo = _shadowClone.GetComponent<AIPath>();
+            RvoControllerCompo = _shadowClone.GetComponent<RVOController>();
         }
 
         public void AfterInitialize()
@@ -46,6 +49,7 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
             AIPathCompo.destination = targetPosition;
         }
 
-        public void MoveStop(bool isStopped) => AIPathCompo.isStopped=isStopped;
+        public void SetCanMove(bool canMove) => AIPathCompo.canMove=canMove;
+        public void SetRVOControllerLocked(bool locked) => RvoControllerCompo.locked=locked;
     }
 }

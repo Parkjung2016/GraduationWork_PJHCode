@@ -27,8 +27,10 @@ namespace PJH.Runtime.BT.Actions
 
         public override void OnStart()
         {
+            base.OnStart();
             _angle = 0;
-            _movementCompo.MoveStop(false);
+            _movementCompo.SetCanMove(true);
+            _movementCompo.SetRVOControllerLocked(false);
             UpdateValue();
         }
 
@@ -76,8 +78,7 @@ namespace PJH.Runtime.BT.Actions
 
         public override void OnEnd()
         {
-            _movementCompo.MoveStop(true);
-            
+            _movementCompo.SetCanMove(false);
         }
     }
 }

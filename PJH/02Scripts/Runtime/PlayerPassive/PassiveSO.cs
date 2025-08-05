@@ -79,7 +79,7 @@ namespace PJH.Runtime.PlayerPassive
         };
 
         [field: SerializeField]
-        [field: LabelText("���")]
+        [field: LabelText("등급")]
         [field: EnumToggleButtons]
         public PassiveRankType RankType { get; private set; }
 
@@ -122,8 +122,8 @@ namespace PJH.Runtime.PlayerPassive
                 player.OnChangedCanApplyPassive += HandleChangedCanApplyPassive;
                 if (this is IModifierStatPassive modifierStatPassive)
                 {
-                    modifierStatPassive.ModifierStatInfo.RemoveModifierEvent += HandleRemoveModifierEvent;
-                    modifierStatPassive.ModifierStatInfo.AddModifierEvent += HandleAddModifierEvent;
+                    modifierStatPassive.ModifierStatInfo.RemoveModifierEvent = HandleRemoveModifierEvent;
+                    modifierStatPassive.ModifierStatInfo.AddModifierEvent = HandleAddModifierEvent;
                 }
             }
         }
@@ -152,8 +152,8 @@ namespace PJH.Runtime.PlayerPassive
                 (_player as IPlayer).OnChangedCanApplyPassive -= HandleChangedCanApplyPassive;
                 if (this is IModifierStatPassive modifierStatPassive)
                 {
-                    modifierStatPassive.ModifierStatInfo.RemoveModifierEvent -= HandleRemoveModifierEvent;
                     modifierStatPassive.ModifierStatInfo.AddModifierEvent -= HandleAddModifierEvent;
+                    // modifierStatPassive.ModifierStatInfo.RemoveModifierEvent -= HandleRemoveModifierEvent;
                 }
             }
         }

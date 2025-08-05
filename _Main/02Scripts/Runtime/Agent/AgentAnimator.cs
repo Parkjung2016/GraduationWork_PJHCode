@@ -15,6 +15,8 @@ namespace Main.Runtime.Agents
     {
         public event Action OnEndHitAnimation;
         public event Action OnKnockDown;
+
+        public bool lockedTransitionAnimation;
         [SerializeField] private bool _useRagdollOnDeath;
 
         [SerializeField, HideIf("_useRagdollOnDeath")]
@@ -48,7 +50,7 @@ namespace Main.Runtime.Agents
 
         protected virtual void OnDestroy()
         {
-            if (_knockDownToken != null && !_knockDownToken.IsCancellationRequested)
+            if (_knockDownToken is { IsCancellationRequested: false })
             {
                 _knockDownToken.Cancel();
                 _knockDownToken.Dispose();
@@ -77,8 +79,8 @@ namespace Main.Runtime.Agents
                 {
                     state.Speed = _effectiveAnimationSpeed;
                 }
+
                 _hybridAnimancer.Controller.Speed = _effectiveAnimationSpeed;
-                
             }
             else
             {
@@ -95,27 +97,28 @@ namespace Main.Runtime.Agents
         private void HandleTriggerRagdoll()
         {
             _effectiveAnimationSpeed = 1.0f;
-            Animator.enabled = false;
         }
 
-        protected virtual void HandleFullMounted(ITransition animationClip)
+        protected virtual void HandleFullMounted()
         {
-            if (_knockDownToken != null && !_knockDownToken.IsCancellationRequested)
-            {
-                _knockDownToken.Cancel();
-                _knockDownToken.Dispose();
-            }
-
-            PlayAnimationClip(animationClip,
-                async () =>
-                {
-                    // await UniTask.WaitForSeconds(.35f, cancellationToken: this.GetCancellationTokenOnDestroy());
-                    PlayGetUpAnimation();
-                }, false);
+            // if (_knockDownToken != null && !_knockDownToken.IsCancellationRequested)
+            // {
+            //     _knockDownToken.Cancel();
+            //     _knockDownToken.Dispose();
+            // }
+            //
+            // PlayAnimationClip(animationClip,
+            //     async () =>
+            //     {
+            //         await UniTask.WaitForSeconds(.35f, cancellationToken: this.GetCancellationTokenOnDestroy());
+            //         PlayGetUpAnimation();
+            //     }, false);
         }
 
         protected virtual void HandleDeath()
         {
+            if (lockedTransitionAnimation) return;
+
             if (!_useRagdollOnDeath)
             {
                 _hybridAnimancer.Play(_deathAnimationClip);
@@ -129,7 +132,8 @@ namespace Main.Runtime.Agents
 
         protected virtual void HandleApplyDamaged(float damage)
         {
-            if (_knockDownToken != null && !_knockDownToken.IsCancellationRequested)
+            if (lockedTransitionAnimation) return;
+            if (_knockDownToken is { IsCancellationRequested: false })
             {
                 _knockDownToken.Cancel();
                 _knockDownToken.Dispose();
@@ -144,24 +148,25 @@ namespace Main.Runtime.Agents
             else if (getDamagedInfo.getDamagedAnimationClip != null)
             {
                 _agent.IsKnockDown = getDamagedInfo.isKnockDown;
-                Vector3 hitPoint = _agent.HealthCompo.GetDamagedInfo.attacker.transform.position;
-                Vector3 agentPosition = _agent.transform.position;
-                agentPosition.y = hitPoint.y;
+                Vector3 hitPoint = getDamagedInfo.hitPoint;
 
-                Vector3 hitDirection = (hitPoint - agentPosition).normalized;
+                Vector3 forward = _agent.transform.forward;
+                Vector3 right = _agent.transform.right;
+                Vector3 position = _agent.transform.position;
 
-                Vector3 forward = _agent.ModelTrm.forward;
+                Vector3 toHit = (hitPoint - position).normalized;
 
-                float angleHitFrom = Vector3.SignedAngle(forward, hitDirection, Vector3.up);
+                float forwardDot = Vector3.Dot(forward, toHit);
+                float rightDot = Vector3.Dot(right, toHit);
 
-                if (angleHitFrom > -45 && angleHitFrom <= 45)
+                if (forwardDot > 0.7f)
                     getDamagedAnimationClip = getDamagedInfo.getDamagedAnimationClip[Define.EDirection.Front];
-                else if (angleHitFrom > 45 && angleHitFrom <= 135)
-                    getDamagedAnimationClip = getDamagedInfo.getDamagedAnimationClip[Define.EDirection.Right];
-                else if (angleHitFrom > -135 && angleHitFrom <= -45)
-                    getDamagedAnimationClip = getDamagedInfo.getDamagedAnimationClip[Define.EDirection.Left];
-                else
+                else if (forwardDot < -0.7f)
                     getDamagedAnimationClip = getDamagedInfo.getDamagedAnimationClip[Define.EDirection.Back];
+                else if (rightDot > 0)
+                    getDamagedAnimationClip = getDamagedInfo.getDamagedAnimationClip[Define.EDirection.Right];
+                else
+                    getDamagedAnimationClip = getDamagedInfo.getDamagedAnimationClip[Define.EDirection.Left];
             }
 
             if (getDamagedAnimationClip != null)
@@ -187,8 +192,9 @@ namespace Main.Runtime.Agents
 
                                 PlayGetUpAnimation();
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
+                                // ignored
                             }
                         }
                         else
@@ -199,7 +205,7 @@ namespace Main.Runtime.Agents
             }
         }
 
-        protected virtual void PlayGetUpAnimation()
+        public virtual void PlayGetUpAnimation()
         {
             GetDamagedInfo getDamagedInfo = _agent.HealthCompo.GetDamagedInfo;
 
@@ -211,10 +217,11 @@ namespace Main.Runtime.Agents
             });
         }
 
-        public void PlayAnimationClip(ITransition clip, Action EndCallBack = null,
+        public AnimancerState PlayAnimationClip(ITransition clip, Action EndCallBack = null,
             bool playControllerOnEnd = true)
         {
-            if (clip == null) return;
+            if (lockedTransitionAnimation) return null;
+            if (clip == null) return null;
             AnimancerState state = _hybridAnimancer.Play(clip, clip.FadeDuration, mode: FadeMode.FromStart);
             state.Speed *= _effectiveAnimationSpeed;
             state.Events(this).OnEnd ??= () =>
@@ -224,6 +231,7 @@ namespace Main.Runtime.Agents
                 if (playControllerOnEnd)
                     _hybridAnimancer.PlayController();
             };
+            return state;
         }
     }
 }

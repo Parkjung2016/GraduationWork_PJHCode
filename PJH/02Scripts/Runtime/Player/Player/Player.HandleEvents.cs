@@ -1,6 +1,7 @@
-﻿using Animancer;
-using DG.Tweening;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Main.Runtime.Core.Events;
+using Main.Runtime.Manager;
 using UnityEngine;
 
 namespace PJH.Runtime.Players
@@ -24,20 +25,24 @@ namespace PJH.Runtime.Players
             PlayerInput.EnablePlayerInput(true);
         }
 
-        private void HandleFullMount(ITransition obj)
+        private void HandleFullMount()
         {
             PlayerInput.EnablePlayerInput(false);
         }
 
-        private void HandleDeath()
+        private async void HandleDeath()
         {
-            DOVirtual.DelayedCall(1.6f, () =>
+            try
             {
+                _componentManager.EnableComponents(false);
+                Managers.FMODManager.SetGameSoundVolume(0, 1f);
+                await UniTask.WaitForSeconds(1.6f, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
                 var evt = GameEvents.PlayerDeath;
                 _gameEventChannel.RaiseEvent(evt);
-                PlayerInput.EnablePlayerInput(false);
-                _componentManager.EnableComponents(false);
-            });
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         // private void HandleFinisherTimeline(bool isFinishering)
@@ -80,5 +85,11 @@ namespace PJH.Runtime.Players
             PlayerInput.EnablePlayerInput(true);
             HealthCompo.IsInvincibility = false;
         }
+
+        private void HandleEndGrabbed()
+        {
+            IsHitting = false;
+        }
+        
     }
 }

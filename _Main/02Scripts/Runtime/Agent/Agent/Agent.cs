@@ -2,6 +2,8 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using FMODUnity;
+using Kinemation.MotionWarping.Runtime.Core;
 using Magio;
 using Main.Core;
 using Main.Runtime.Combat;
@@ -22,6 +24,7 @@ namespace Main.Runtime.Agents
         public Transform ModelTrm { get; protected set; }
         public Transform HeadTrm { get; protected set; }
         public Action<HitInfo> OnHitTarget { get; set; }
+        public MotionWarping WarpingComponent { get; private set; }
 
         public Health HealthCompo { get; private set; }
         public bool IsHitting { get; protected set; }
@@ -37,6 +40,7 @@ namespace Main.Runtime.Agents
 
         protected virtual void Awake()
         {
+            WarpingComponent = GetComponent<MotionWarping>();
             WalkSpeedStat = AddressableManager.Load<StatSO>("WalkSpeedStat");
             RunSpeedStat = AddressableManager.Load<StatSO>("RunSpeedStat");
             _maxHealthStat = AddressableManager.Load<StatSO>("MaxHealthStat");

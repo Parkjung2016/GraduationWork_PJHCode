@@ -31,6 +31,11 @@ namespace PJH.Runtime.BT.Actions
 
         public override void OnStart()
         {
+            base.OnStart();
+            ShadowCloneMovement movementCompo = _shadowClone.GetCompo<ShadowCloneMovement>();
+            movementCompo.SetCanMove(true);
+            movementCompo.AIPathCompo.SetPath(null);
+            movementCompo.SetRVOControllerLocked(true);
             _animationEnd = false;
             _curComboCnt = 0;
             _combatData = null;
@@ -60,7 +65,13 @@ namespace PJH.Runtime.BT.Actions
             _shadowClone.LookPlayer();
             _shadowClone.GetCompo<AgentWeaponManager>().CurrentCombatData = _combatData;
             _animator.PlayAnimationClip(_combatData.attackAnimationClip, () => { _animationEnd = true; });
-            _shadowClone.GetCompo<ShadowCloneMovement>().MoveStop(false);
+        }
+
+        public override void OnEnd()
+        {
+            ShadowCloneMovement movementCompo = _shadowClone.GetCompo<ShadowCloneMovement>();
+            movementCompo.SetCanMove(false);
+            movementCompo.SetRVOControllerLocked(false);
         }
     }
 }

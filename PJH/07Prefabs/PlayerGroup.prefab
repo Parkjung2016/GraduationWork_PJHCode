@@ -108,7 +108,7 @@ Transform:
   m_GameObject: {fileID: 137354047432764483}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 190.08513, y: -3.2746632, z: 181.48138}
+  m_LocalPosition: {x: 189.53564, y: -3.2746632, z: 181.88922}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -206,7 +206,7 @@ MonoBehaviour:
     AmplitudeGain: 1
     FrequencyGain: 1
     Duration: 1
-    m_NoiseOffsets: {x: 0, y: 0, z: 0}
+    m_NoiseOffsets: {x: 218.26443, y: 37.400604, z: 794.66724}
 --- !u!114 &5130638699095921085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,6 +522,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _finisherSequence: {fileID: 11400000, guid: 7e1fbaaa4431c334f83cefb210e7b313, type: 2}
+  _whatIsObstacle:
+    serializedVersion: 2
+    m_Bits: 3
 --- !u!114 &9047093213388167584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1191,6 +1194,526 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   compatibilitySettingOverrides: []
+--- !u!1 &888991579812150961
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 929796076155988940}
+  - component: {fileID: 4545429388217856860}
+  m_Layer: 0
+  m_Name: OnEnemyDeathFeedbackPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &929796076155988940
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888991579812150961}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 15405350080989175}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4545429388217856860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888991579812150961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Feedbacks: []
+  InitializationMode: 2
+  AutoInitialization: 1
+  SafeMode: 3
+  Direction: 0
+  AutoChangeDirectionOnEnd: 0
+  AutoPlayOnStart: 0
+  AutoPlayOnEnable: 0
+  ForceTimescaleMode: 0
+  ForcedTimescaleMode: 1
+  DurationMultiplier: 1
+  TimescaleMultiplier: 1
+  RandomizeDuration: 0
+  RandomDurationMultiplier: {x: 0.5, y: 1.5}
+  DisplayFullDurationDetails: 0
+  PlayerTimescaleMode: 1
+  OnlyPlayIfWithinRange: 0
+  RangeCenter: {fileID: 0}
+  RangeDistance: 5
+  UseRangeFalloff: 0
+  RangeFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  RemapRangeFalloff: {x: 0, y: 1}
+  IgnoreRangeEvents: 0
+  CooldownDuration: 0
+  InitialDelay: 0
+  CanPlay: 1
+  CanPlayWhileAlreadyPlaying: 1
+  ChanceToPlay: 100
+  FeedbacksIntensity: 1
+  Events:
+    TriggerMMFeedbacksEvents: 0
+    TriggerUnityEvents: 1
+    OnPlay:
+      m_PersistentCalls:
+        m_Calls: []
+    OnPause:
+      m_PersistentCalls:
+        m_Calls: []
+    OnStop:
+      m_PersistentCalls:
+        m_Calls: []
+    OnResume:
+      m_PersistentCalls:
+        m_Calls: []
+    OnChangeDirection:
+      m_PersistentCalls:
+        m_Calls: []
+    OnComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnRestoreInitialValues:
+      m_PersistentCalls:
+        m_Calls: []
+    OnSkipToTheEnd:
+      m_PersistentCalls:
+        m_Calls: []
+    OnInitializationComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    OnEnable:
+      m_PersistentCalls:
+        m_Calls: []
+    OnDisable:
+      m_PersistentCalls:
+        m_Calls: []
+  DebugActive: 0
+  InScriptDrivenPause: 0
+  FeedbacksList:
+  - rid: 7351569644716032155
+  - rid: 7351569644716032156
+  - rid: 7351569644716032157
+  KeepPlayModeChanges: 0
+  PerformanceMode: 0
+  RestoreInitialValuesOnDisable: 0
+  StopFeedbacksOnDisable: 0
+  PlayCount: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 7351569644716032155
+      type: {class: MMF_TimescaleModifier, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: 915382175
+        Label: Timescale Modifier
+        OriginalLabel: Timescale Modifier
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: Automatic Shaker Setup
+        Owner: {fileID: 4545429388217856860}
+        DebugActive: 0
+        Mode: 1
+        TimeScale: 0.5
+        TimeScaleDuration: 0.4
+        ResetTimescaleOnStop: 1
+        TimeScaleLerp: 0
+        TimescaleLerpMode: 0
+        TimeScaleLerpSpeed: 1
+        TimescaleLerpCurve:
+          MMTweenDefinitionType: 1
+          MMTweenCurve: 4
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+          ConditionPropertyName: 
+          EnumConditionPropertyName: TimescaleLerpMode
+          EnumConditions: 0001000000000000000000000000000000000000000000000000000000000000
+        TimescaleLerpDuration: 1
+        TimeScaleLerpOnReset: 0
+        TimescaleLerpCurveOnReset:
+          MMTweenDefinitionType: 1
+          MMTweenCurve: 4
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+          ConditionPropertyName: 
+          EnumConditionPropertyName: TimescaleLerpMode
+          EnumConditions: 0001000000000000000000000000000000000000000000000000000000000000
+        TimescaleLerpDurationOnReset: 1
+    - rid: 7351569644716032156
+      type: {class: MMF_Pause, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: 1360974258
+        Label: Pause
+        OriginalLabel: Pause
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: 
+        Owner: {fileID: 4545429388217856860}
+        DebugActive: 0
+        PauseDuration: 1
+        RandomizePauseDuration: 0
+        MinPauseDuration: 1
+        MaxPauseDuration: 3
+        RandomizeOnEachPlay: 1
+        ScriptDriven: 0
+        AutoResume: 0
+        AutoResumeAfter: 0.25
+    - rid: 7351569644716032157
+      type: {class: MMF_TimescaleModifier, ns: MoreMountains.Feedbacks, asm: MoreMountains.Tools}
+      data:
+        Active: 1
+        UniqueID: -1950020047
+        Label: Timescale Modifier
+        OriginalLabel: Timescale Modifier
+        ChannelMode: 0
+        Channel: 0
+        MMChannelDefinition: {fileID: 0}
+        Chance: 100
+        Timing:
+          TimescaleMode: 0
+          ExcludeFromHoldingPauses: 0
+          ContributeToTotalDuration: 1
+          InitialDelay: 0
+          CooldownDuration: 0
+          InterruptsOnStop: 1
+          NumberOfRepeats: 0
+          RepeatForever: 0
+          DelayBetweenRepeats: 1
+          PlayCount: 0
+          LimitPlayCount: 0
+          MaxPlayCount: 3
+          SetPlayCountToZeroOnReset: 0
+          MMFeedbacksDirectionCondition: 0
+          PlayDirection: 0
+          ConstantIntensity: 0
+          UseIntensityInterval: 0
+          IntensityIntervalMin: 0
+          IntensityIntervalMax: 0
+          Sequence: {fileID: 0}
+          TrackID: 0
+          Quantized: 0
+          TargetBPM: 120
+        AutomatedTargetAcquisition:
+          Mode: 0
+          ChildIndex: 0
+        RandomizeOutput: 0
+        RandomMultiplier: {x: 0.8, y: 1}
+        RandomizeDuration: 0
+        RandomDurationMultiplier: {x: 0.5, y: 2}
+        UseRange: 0
+        RangeDistance: 5
+        UseRangeFalloff: 0
+        RangeFalloff:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        RemapRangeFalloff: {x: 0, y: 1}
+        AutomaticShakerSetupButton:
+          ButtonText: Automatic Shaker Setup
+        Owner: {fileID: 4545429388217856860}
+        DebugActive: 0
+        Mode: 1
+        TimeScale: 1
+        TimeScaleDuration: 0.4
+        ResetTimescaleOnStop: 1
+        TimeScaleLerp: 0
+        TimescaleLerpMode: 0
+        TimeScaleLerpSpeed: 1
+        TimescaleLerpCurve:
+          MMTweenDefinitionType: 1
+          MMTweenCurve: 4
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+          ConditionPropertyName: 
+          EnumConditionPropertyName: TimescaleLerpMode
+          EnumConditions: 0001000000000000000000000000000000000000000000000000000000000000
+        TimescaleLerpDuration: 1
+        TimeScaleLerpOnReset: 0
+        TimescaleLerpCurveOnReset:
+          MMTweenDefinitionType: 1
+          MMTweenCurve: 4
+          Curve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 0
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          Initialized: 0
+          ConditionPropertyName: 
+          EnumConditionPropertyName: TimescaleLerpMode
+          EnumConditions: 0001000000000000000000000000000000000000000000000000000000000000
+        TimescaleLerpDurationOnReset: 1
 --- !u!1 &1071548796796981511
 GameObject:
   m_ObjectHideFlags: 0
@@ -1227,6 +1750,7 @@ Transform:
   - {fileID: 6459710141168022514}
   - {fileID: 5390957342386635985}
   - {fileID: 1693130696445194328}
+  - {fileID: 929796076155988940}
   m_Father: {fileID: 8175340045149277555}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7651460885491583881
@@ -1306,6 +1830,7 @@ MonoBehaviour:
     maxActionCount: 5
   - <ExecuteCommandActionPieces>k__BackingField: []
     maxActionCount: 5
+  _changeDelay: 0.2
 --- !u!1 &1407260495487220601
 GameObject:
   m_ObjectHideFlags: 0
@@ -2591,45 +3116,45 @@ MonoBehaviour:
   - m_EditModeType: 1
     m_Knots:
     - Position:
-        x: 1.4350891
-        y: 1.0496631
+        x: 1.48
+        y: 1.41
         z: 0
       TangentIn:
         x: 0
         y: 0
-        z: -1.2218405
+        z: -1.3429664
       TangentOut:
         x: 0
         y: 0
-        z: 1.2218405
+        z: 1.3429664
       Rotation:
         value:
-          x: 0.0047573545
-          y: 0.4010655
-          z: 0.05875572
-          w: 0.9141507
+          x: -0.1789378
+          y: 0.03451732
+          z: 0.9654561
+          w: -0.18623714
     - Position:
-        x: 2.3890839
-        y: 1.1266632
-        z: 1.5879974
+        x: 1.11
+        y: 1.41
+        z: 1.73
       TangentIn:
         x: 0
         y: 0
-        z: -0.6858729
+        z: -0.53923047
       TangentOut:
         x: 0
         y: 0
-        z: 0.6858729
+        z: 0.53923047
       Rotation:
         value:
-          x: -0.020108817
-          y: -0.015225963
-          z: 0.07925624
-          w: 0.9965352
+          x: -0.0015318583
+          y: 0.08373236
+          z: -0.018228708
+          w: 0.99632037
     - Position:
-        x: 1.2970886
-        y: 1.2046628
-        z: 4.1100006
+        x: 2.02
+        y: 1.41
+        z: 3.19
       TangentIn:
         x: 0
         y: 0
@@ -2640,10 +3165,10 @@ MonoBehaviour:
         z: 0
       Rotation:
         value:
-          x: -0.107351586
-          y: -4.711516e-10
-          z: 0.10791602
-          w: 0.988347
+          x: -0.12284348
+          y: -9.475055e-10
+          z: 0.13702823
+          w: 0.9829206
     m_MetaData:
     - Mode: 2
       Tension: 0.5
@@ -2738,7 +3263,7 @@ Transform:
   m_GameObject: {fileID: 1715519164188313344}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 189.91513, y: -3.9346633, z: 183.61139}
+  m_LocalPosition: {x: 189.36565, y: -3.9346633, z: 184.01923}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3772,7 +4297,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2361538808392724268}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3784,7 +4309,7 @@ Transform:
   - {fileID: 8649559180869376107}
   - {fileID: 843941924881889806}
   m_Father: {fileID: 8175340045149277555}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -49.26, z: 0}
 --- !u!95 &7781950418454494640
 Animator:
   serializedVersion: 7
@@ -3801,7 +4326,7 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 1
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -3819,6 +4344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d577f0c55048d3a8123054528352e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lockedTransitionAnimation: 0
   _useRagdollOnDeath: 0
   _deathAnimationClip:
     _FadeDuration: 0.25
@@ -3871,6 +4397,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bca272892a8444944a3784e0b080d420, type: 2}
   - {fileID: 11400000, guid: 3efdc712d54bd3f46bf00f8ec2a77169, type: 2}
   - {fileID: 11400000, guid: 8c8ade2bd239ee64a82900bcd94638cd, type: 2}
+  - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+  - {fileID: 11400000, guid: 8ec93745b8695bd4cb7ecb5cd1f63c9e, type: 2}
+  - {fileID: 11400000, guid: 1a6d4015cacc53e4ab72391723f48629, type: 2}
+  - {fileID: 11400000, guid: 766b6fabee47ca344a323a1b0e811f8a, type: 2}
+  - {fileID: 11400000, guid: 06b0a31c8a875854eb3f10a2037ce1cd, type: 2}
+  - {fileID: 11400000, guid: d725c2b4b1a73c64499baa9817ae79f1, type: 2}
+  - {fileID: 11400000, guid: 59cac42b8b4eddb4491862eaa1876786, type: 2}
 --- !u!114 &4302159274869492854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3912,7 +4445,7 @@ MonoBehaviour:
   SendOnMovingGlue: 1
   SendOnStopping: 0
   StepEventOnLanding: 0
-  StepInfoReceiver: {fileID: 0}
+  StepInfoReceiver: {fileID: 2970740255043663853}
   ExtraPelvisOffset: {x: 0, y: 0, z: 0}
   ReposeGluingAfter: 0
   GlueOnlyOnIdle: 0
@@ -4340,9 +4873,9 @@ MonoBehaviour:
   _Editor_OnValidateTrigger: 1
   _EditorAllowAutoUpdateFeetParams: 1
   _EditorCategory: 2
-  _EditorSetupCategory: 0
-  _EditorMotionCategory: 2
-  _EditorExtraCategory: 2
+  _EditorSetupCategory: 1
+  _EditorMotionCategory: 3
+  _EditorExtraCategory: 0
   setupPose:
     MainHipsPose:
       SourceTransform: {fileID: 8487687009388823836}
@@ -4394,7 +4927,7 @@ MonoBehaviour:
   finalScaleReferenceSqrt: 0.1
   customScaleReferenceValue: 0.5
   DelayedInitialization: 0
-  Calibrate: 1
+  Calibrate: 0
   AnimatePhysics: 0
   UnscaledDeltaTime: 0
   DisableIfInvisible: {fileID: 0}
@@ -4701,10 +5234,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 163d2c8446aa6ae42a718abaa805b8f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _EditorDrawSetup: 1
+  _EditorDrawSetup: 0
   Leaning:
     UpdateMode: 0
-    Calibrate: 1
+    Calibrate: 0
     SideSwayPower: 1
     ClampSideSway: 25
     ForwardSwayPower: 0.5
@@ -4969,6 +5502,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5762728403552817752}
+  - component: {fileID: 5943206351904773591}
   m_Layer: 0
   m_Name: FinisherCameraLookat
   m_TagString: Untagged
@@ -4984,13 +5518,33 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2810184383658507527}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.058086652, y: 0, z: 0, w: 0.9983116}
-  m_LocalPosition: {x: 0, y: 0.68, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 188.55247, y: -4.5275764, z: 185.11818}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5413989264606190064}
-  m_LocalEulerAnglesHint: {x: -6.66, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1818360608 &5943206351904773591
+PositionConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2810184383658507527}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 189.10196, y: -4.5275764, z: 184.71034}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 7655421728034624702}
+    weight: 1
 --- !u!1 &2909199187580096067
 GameObject:
   m_ObjectHideFlags: 0
@@ -5517,7 +6071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9134403068d948218ee6ad633095d9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <AutoDecreaseMomentumGaugeTime>k__BackingField: 2
+  <AutoDecreaseMomentumGaugeTime>k__BackingField: 3
   <DecreaseMomentumGaugeOneFrame>k__BackingField: 0.05
   _maxMomentumGauge: {fileID: 11400000, guid: 331ae21f9e62de44ea4faf9e7861a57d, type: 2}
   _decreaseMomentumGaugePerTick: 4
@@ -6162,6 +6716,7 @@ GameObject:
   - component: {fileID: 8699736520564281603}
   - component: {fileID: 7170226173883476649}
   - component: {fileID: 6067184373780245886}
+  - component: {fileID: 6535923468119180995}
   m_Layer: 0
   m_Name: FinisherCamera
   m_TagString: Untagged
@@ -6177,8 +6732,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4488022826520974000}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.04178256, y: -0.9221064, z: 0.007400011, w: 0.38460293}
-  m_LocalPosition: {x: 190.41222, y: -4.28, z: 188.84138}
+  m_LocalRotation: {x: 0.017480966, y: -0.9599214, z: 0.061493333, w: 0.27288085}
+  m_LocalPosition: {x: 190.4044, y: -4.074663, z: 188.11224}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6241,7 +6796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SplineSettings:
     Spline: {fileID: 2766997750540767908}
-    Position: 1
+    Position: 0.92
     Units: 1
   SplineOffset: {x: 0, y: 0, z: 0}
   CameraRotation: 3
@@ -6252,15 +6807,19 @@ MonoBehaviour:
   AutomaticDolly:
     Enabled: 0
     Method:
-      rid: -2
+      rid: 5699786324407746719
   m_LegacyPosition: -1
   m_LegacyUnits: 0
   m_LegacySpline: {fileID: 0}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 5699786324407746719
+      type: {class: SplineAutoDolly/NearestPointToTarget, ns: Unity.Cinemachine, asm: Unity.Cinemachine}
+      data:
+        PositionOffset: 0
+        SearchResolution: 4
+        SearchIteration: 2
 --- !u!114 &8699736520564281603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6313,7 +6872,7 @@ MonoBehaviour:
     AmplitudeGain: 1
     FrequencyGain: 1
     Duration: 1
-    m_NoiseOffsets: {x: 0, y: 0, z: 0}
+    m_NoiseOffsets: {x: 388.67258, y: 741.52325, z: 698.3535}
 --- !u!114 &6067184373780245886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6326,6 +6885,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f7cd6f930c1db447b756e911f767b21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6535923468119180995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4488022826520974000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe43d662878a7c43bcd44d43c9e2094, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollideAgainst:
+    serializedVersion: 2
+    m_Bits: 65793
+  IgnoreTag: 
+  TransparentLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  MinimumDistanceFromTarget: 0.3
+  AvoidObstacles:
+    Enabled: 1
+    DistanceLimit: 0
+    MinimumOcclusionTime: 0
+    CameraRadius: 0.4
+    UseFollowTarget:
+      Enabled: 0
+      YOffset: 0
+    Strategy: 0
+    MaximumEffort: 4
+    SmoothingTime: 0
+    Damping: 0.4
+    DampingWhenOccluded: 0.2
+  ShotQualityEvaluation:
+    Enabled: 0
+    OptimalDistance: 10
+    NearLimit: 5
+    FarLimit: 30
+    MaxQualityBoost: 0.2
 --- !u!1 &4501562024055671288
 GameObject:
   m_ObjectHideFlags: 0
@@ -7742,6 +8340,7 @@ GameObject:
   - component: {fileID: 8107554580993345305}
   - component: {fileID: 6480898800052943133}
   - component: {fileID: 6858442271994473010}
+  - component: {fileID: 1008682403312992626}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -7758,7 +8357,7 @@ Transform:
   m_GameObject: {fileID: 4677931865260910016}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 189.11513, y: -5.484663, z: 184.73138}
+  m_LocalPosition: {x: 188.56564, y: -5.484663, z: 185.13922}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7895,6 +8494,33 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   warpPhases: []
+  _rotationTrm: {fileID: 1730850160319968402}
+--- !u!114 &1008682403312992626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4677931865260910016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cce7418bf5c1f1f4b85e97a5470f0bd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motionWarpingAsset: {fileID: 0}
+  targetAnim:
+    _FadeDuration: 0.25
+    _Speed: 1
+    _Events:
+      _NormalizedTimes: []
+      _Callbacks: []
+      _Names: []
+    _Clip: {fileID: 0}
+    _NormalizedStartTime: NaN
+  _rotationTrm: {fileID: 1730850160319968402}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &4694891344247306702
 GameObject:
   m_ObjectHideFlags: 0
@@ -8567,7 +9193,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     boolValue: 0
-    floatValue: 0.57
+    floatValue: 1.05
     gradientValue:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
@@ -8633,7 +9259,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     boolValue: 0
-    floatValue: 0.55
+    floatValue: 3
     gradientValue:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
@@ -8803,7 +9429,7 @@ GameObject:
   - component: {fileID: 970291414259135011}
   - component: {fileID: 1321379058163673706}
   - component: {fileID: 6259244301727293665}
-  m_Layer: 1
+  m_Layer: 2
   m_Name: AstarObstacle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8840,7 +9466,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -8861,7 +9487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   version: 1073741824
-  uniqueID: 5293310880894130139
+  uniqueID: 2811443898147701105
   updateError: 0.05
   checkTime: 0.2
 --- !u!1 &5664537581106962230
@@ -10320,6 +10946,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e149b2e1bbeb2a14cbc026644d4c6ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playCharacterFallingOnGroundSound:
+    Guid:
+      Data1: 1148911792
+      Data2: 1084979872
+      Data3: 731115180
+      Data4: 1706573932
+    Path: event:/SFX/FinisherSequence/CharacterFallingOnGround
+  _playNeckGrabbingSound:
+    Guid:
+      Data1: 2146099451
+      Data2: 1081750849
+      Data3: 16346029
+      Data4: -1111552508
+    Path: event:/SFX/FinisherSequence/NeckGrabbing
+  _playNeckGrabSound:
+    Guid:
+      Data1: 141349789
+      Data2: 1325186523
+      Data3: 462026368
+      Data4: 1351452623
+    Path: event:/SFX/FinisherSequence/NeckGrab
+  _playArmGrabSound:
+    Guid:
+      Data1: -1227812092
+      Data2: 1336481217
+      Data3: 1944700074
+      Data4: -638911275
+    Path: event:/SFX/FinisherSequence/ArmGrab
+  _playArmBreakSound:
+    Guid:
+      Data1: 1179484143
+      Data2: 1325302360
+      Data3: -634489413
+      Data4: -783621632
+    Path: event:/SFX/FinisherSequence/ArmBreak
 --- !u!1 &6154279778813701373
 GameObject:
   m_ObjectHideFlags: 0
@@ -12277,7 +12938,7 @@ MonoBehaviour:
   _acceleration: 20
   _deceleration: 10
   _evasionDelay: 0.1
-  _evasionWhileHittingDelay: 25
+  _evasionWhileHittingDelay: 15
   _animationAfterEvasion:
     _FadeDuration: 0.25
     _Speed: 1
@@ -12341,7 +13002,14 @@ MonoBehaviour:
       Data2: 1096102570
       Data3: -1362184782
       Data4: -1149805417
-    Path: event:/SFX/Evasion/Whoosh
+    Path: event:/SFX/Evasion/Evasion
+  _evasionWhileHitting:
+    Guid:
+      Data1: 892555587
+      Data2: 1110947015
+      Data3: -340764523
+      Data4: 1565307223
+    Path: event:/SFX/Evasion/EvasionWhileHitting
 --- !u!1 &6666933895866751258
 GameObject:
   m_ObjectHideFlags: 0
@@ -12835,8 +13503,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7096929695966438017}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 189.36565, y: -3.9346633, z: 184.01923}
+  m_LocalRotation: {x: -0.07071018, y: 0.25655073, z: 0.01882295, w: 0.963757}
+  m_LocalPosition: {x: -82.62964, y: 4.244629, z: -38.272682}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12875,10 +13543,10 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 150
+  far clip plane: 500
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -12919,7 +13587,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -13045,7 +13713,7 @@ GameObject:
   - component: {fileID: 628005070258855535}
   - component: {fileID: 6707166713973991425}
   - component: {fileID: 7737727786756374915}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DistanceFade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13305,6 +13973,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74f2f62d4be3df546b52ef649e8dfa9c, type: 2}
   - {fileID: 11400000, guid: 30c6924299636c442804e1e2d9454b7c, type: 2}
   - {fileID: 11400000, guid: e5c38a990d54f0b43a816eb142b8141c, type: 2}
+  _counterSound:
+    Guid:
+      Data1: 1660100571
+      Data2: 1151171949
+      Data3: -875975500
+      Data4: -258515016
+    Path: event:/SFX/Punch/Punch_Counter
+  _targetHitSound:
+    Guid:
+      Data1: -1868259250
+      Data2: 1105070994
+      Data3: -109393997
+      Data4: -1702835690
+    Path: event:/SFX/Punch/Punch_CounterHit
   _powerStat: {fileID: 11400000, guid: 5b03a8897c7231d41990c8cbc8365e31, type: 2}
 --- !u!1 &8441063573210705083
 GameObject:
@@ -13492,6 +14174,7 @@ MonoBehaviour:
   _increaseMomentumGaugeStat: {fileID: 11400000, guid: dc7d7debef329614194340451cfea602, type: 2}
   equipmentDatabase: {fileID: 11400000, guid: 0cd04d286d55839409876d2207a7195d, type: 2}
   _startWithEquipment: 0
+  _tutorialPlayer: 0
 --- !u!1 &8721116085917981966
 GameObject:
   m_ObjectHideFlags: 0

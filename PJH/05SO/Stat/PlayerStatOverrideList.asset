@@ -27,7 +27,7 @@ MonoBehaviour:
     _overrideValue: 60.047935
   - _stat: {fileID: 11400000, guid: 5b03a8897c7231d41990c8cbc8365e31, type: 2}
     _isUseOverride: 1
-    _overrideValue: 18.60465
+    _overrideValue: 20.256414
   - _stat: {fileID: 11400000, guid: b336f6bc1f735334193775906a0f3cd8, type: 2}
     _isUseOverride: 1
     _overrideValue: 0.99453557
@@ -36,10 +36,10 @@ MonoBehaviour:
     _overrideValue: 9.953847
   - _stat: {fileID: 11400000, guid: ecaa411f055a44245863d3dc471611d4, type: 2}
     _isUseOverride: 1
-    _overrideValue: 1.9616613
+    _overrideValue: 3.9540231
   - _stat: {fileID: 11400000, guid: dc7d7debef329614194340451cfea602, type: 2}
     _isUseOverride: 1
-    _overrideValue: 4.010989
+    _overrideValue: 7.230768
   - _stat: {fileID: 11400000, guid: 8a370d30c923fd14097e9ed7df249932, type: 2}
     _isUseOverride: 1
     _overrideValue: 100

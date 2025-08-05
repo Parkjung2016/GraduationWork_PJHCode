@@ -21,8 +21,6 @@
             _player.OnEndStun += HandleEndStun;
             OnEndHitAnimation += DisableRootMotion;
 
-            PlayerFullMount fullMountCompo = _player.GetCompo<PlayerFullMount>();
-            fullMountCompo.OnFullMount += HandleFullMount;
             _player.GetCompo<PlayerWarpStrike>().OnWarpStrikeAttack += HandleWarpStrikeAttack;
 
             _player.GetCompo<PlayerCounterAttack>().OnCounterAttack += HandleCounterAttack;
@@ -50,8 +48,6 @@
             // _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline -= HandleFinisherTimeline;
             OnEndHitAnimation -= DisableRootMotion;
 
-            PlayerFullMount fullMountCompo = _player.GetCompo<PlayerFullMount>();
-            fullMountCompo.OnFullMount -= HandleFullMount;
             _player.GetCompo<PlayerWarpStrike>().OnWarpStrikeAttack -= HandleWarpStrikeAttack;
 
             _player.GetCompo<PlayerCounterAttack>().OnCounterAttack -= HandleCounterAttack;

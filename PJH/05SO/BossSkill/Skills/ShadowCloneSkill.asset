@@ -23,5 +23,12 @@ MonoBehaviour:
     SerializationNodes: []
   shadowClonePoolType: {fileID: 11400000, guid: 63096da300d58c1429d9c0d50be3f14d, type: 2}
   poolManager: {fileID: 11400000, guid: 7ba9d63098020b64699d6f2375075fea, type: 2}
-  lifeTime: 30
+  spawnShadowCloneSound:
+    Guid:
+      Data1: -661205944
+      Data2: 1115491369
+      Data3: 1700028053
+      Data4: 762716158
+    Path: event:/SFX/BossSkill/SpawnShadowClone
+  lifeTime: 20
   cloneCount: 2

@@ -1,4 +1,5 @@
 ﻿using Main.Runtime.Agents;
+using Main.Runtime.Core.Events;
 
 namespace PJH.Runtime.Players
 {
@@ -6,6 +7,7 @@ namespace PJH.Runtime.Players
     {
         private void SubscribeEvents()
         {
+            OnEndGrabbed += HandleEndGrabbed;
             PlayerInput.LockOnToggleEvent += HandleLockOnToggle;
             PlayerMovement movementCompo = GetCompo<PlayerMovement>();
             movementCompo.OnRun += HandleRun;
@@ -21,8 +23,9 @@ namespace PJH.Runtime.Players
 
         private void UnSubscribeEvents()
         {
-            PlayerInput.LockOnToggleEvent -= HandleLockOnToggle;
+            OnEndGrabbed -= HandleEndGrabbed;
 
+            PlayerInput.LockOnToggleEvent -= HandleLockOnToggle;
             PlayerMovement movementCompo = GetCompo<PlayerMovement>();
             movementCompo.OnRun -= HandleRun;
             movementCompo.OnEvasionWhileHitting -= HandleEvasionWhileHitting;
@@ -35,7 +38,6 @@ namespace PJH.Runtime.Players
             GetCompo<AgentMomentumGauge>(true).OnMomentumGaugeFull -= HandleMomentumGaugeFull;
 
             HealthCompo.OnDeath -= HandleDeath;
-
         }
     }
 }

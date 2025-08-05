@@ -1,6 +1,4 @@
-﻿using Animancer;
-using Main.Runtime.Core.Events;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PJH.Runtime.Players
 {
@@ -18,26 +16,17 @@ namespace PJH.Runtime.Players
             IsKnockBack = true;
         }
 
-        private void HandleFullMount(ITransition obj)
-        {
-            CC.enabled = false;
-        }
-
-        private void HandleEndFullMount()
-        {
-            CC.enabled = true;
-        }
-
         private void HandleEndEvasion()
         {
-            IsEvading = false;
-            _currentEvasionDelayTime = Time.time;
-            _canEvading = true;
             if (IsEvadingWhileHitting)
             {
                 IsEvadingWhileHitting = false;
                 OnEvasionEndWhileHitting?.Invoke();
             }
+
+            IsEvading = false;
+            _currentEvasionDelayTime = Time.time;
+            _canEvading = true;
 
             if (IsManualMove)
                 EndManualMove();

@@ -13,6 +13,7 @@ namespace Main.Runtime.Core.Events
         public static readonly ShakeInven ShakeInven = new ShakeInven();
         public static readonly ClearTutorial ClearTutorial = new ClearTutorial();
         public static readonly StartTutorial StartTutorial = new StartTutorial();
+        public static readonly ShowDaialogue ShowDaialogue = new ShowDaialogue();
         public static readonly ChangeCurrentEnemy ChangeCurrentEnemy = new ChangeCurrentEnemy();
     }
 
@@ -55,4 +56,8 @@ namespace Main.Runtime.Core.Events
 
     public class ClearTutorial : GameEvent { }
     public class StartTutorial : GameEvent { }
+    public class ShowDaialogue : GameEvent
+    {
+        public int index;
+    }
 }

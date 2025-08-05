@@ -11,14 +11,18 @@ namespace PJH.Runtime.Players
         public Action OnEndFullMount;
         public Action OnEnableInputWhileRootMotion;
         public event Action OnComboPossible;
-        public event Action OnPlayAttackWhooshSound;
         public event Action OnBlockEnd;
         public event Action OnHitFullMountTarget;
         public event Action OnPlayEvasionSound;
         public event Action OnTriggerPassiveAfterAttack;
         public event Action OnWarpTargetAndAttack;
         public event Action OnHitCounterAttack;
-        public event Action OnFinisherSequenceShake, OnFinisherSequenceTargetDeath, OnFinisherSequenceFinish;
+        public event Action OnPlayPunchImpactSound;
+        public event Action<float> OnFinisherSequenceShake;
+        public event Action OnFinisherSequenceTargetDeath, OnFinisherSequenceFinish;
+        public event Action OnStopNeckGrabbingSound, OnPlayNeckGrabbingSound, OnPlayNeckGrabSound;
+        public event Action OnPlayCharacterFallingOnGroundSound;
+        public event Action OnPlayArmGrabSound, OnPlayArmBreakSound;
         public event Action OnEndRotatingTargetWhileAttack;
         private Player _player;
 
@@ -41,11 +45,6 @@ namespace PJH.Runtime.Players
         private void EndCombo()
         {
             OnEndCombo?.Invoke();
-        }
-
-        private void PlayAttackWhooshSound()
-        {
-            OnPlayAttackWhooshSound?.Invoke();
         }
 
         private void BlockEnd()
@@ -88,9 +87,56 @@ namespace PJH.Runtime.Players
             OnHitCounterAttack?.Invoke();
         }
 
+        private void EndRotatingTargetWhileAttack()
+        {
+            OnEndRotatingTargetWhileAttack?.Invoke();
+        }
+
+        private void PlayPunchImpactSound()
+        {
+            OnPlayPunchImpactSound?.Invoke();
+        }
+
+        #region FinisherSequence
+
+        private void StopNeckGrabbingSound()
+        {
+            OnStopNeckGrabbingSound?.Invoke();
+        }
+
+        private void PlayNeckGrabbingSound()
+        {
+            OnPlayNeckGrabbingSound?.Invoke();
+        }
+
+        private void PlayNeckGrabSound()
+        {
+            OnPlayNeckGrabSound?.Invoke();
+        }
+
+        private void PlayCharacterFallingOnGroundSound()
+        {
+            OnPlayCharacterFallingOnGroundSound?.Invoke();
+        }
+
+        private void PlayArmGrabSound()
+        {
+            OnPlayArmGrabSound?.Invoke();
+        }
+
+        private void PlayArmBreakSound()
+        {
+            OnPlayArmBreakSound?.Invoke();
+        }
+
+        private void FinisherSequenceShake(float impulseForce)
+        {
+            OnFinisherSequenceShake?.Invoke(impulseForce);
+        }
+
         private void FinisherSequenceShake()
         {
-            OnFinisherSequenceShake?.Invoke();
+            OnFinisherSequenceShake?.Invoke(1);
         }
 
         private void FinisherSequenceTargetDeath()
@@ -103,9 +149,6 @@ namespace PJH.Runtime.Players
             OnFinisherSequenceFinish?.Invoke();
         }
 
-        private void EndRotatingTargetWhileAttack()
-        {
-            OnEndRotatingTargetWhileAttack?.Invoke();
-        }
+        #endregion
     }
 }

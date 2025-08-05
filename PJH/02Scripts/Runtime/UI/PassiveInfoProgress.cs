@@ -4,7 +4,6 @@ using Main.Runtime.Core.Events;
 using PJH.Runtime.PlayerPassive;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PJH.Runtime.UI
 {

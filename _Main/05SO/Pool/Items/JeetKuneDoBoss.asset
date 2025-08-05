@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 632946fafd7a57b44908bfaafd94e309, type: 3}
-  m_Name: SeriousePunch
+  m_Name: JeetKuneDoBoss
   m_EditorClassIdentifier: 
-  poolType: {fileID: 11400000, guid: bd763437dc00e7748b8075d3494c32f6, type: 2}
+  poolType: {fileID: 11400000, guid: 3a6a97093f833ab45b0e27f925562d1a, type: 2}
   prefab:
-    m_AssetGUID: bae34dde1e1d6f943be9429ba898281e
+    m_AssetGUID: 52f3b4234684d6e47bbe7056aeb18212
     m_SubObjectName: 
-    m_SubObjectGUID: 
     m_SubObjectType: 
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 1
-  initCount: 5
+  initCount: 4

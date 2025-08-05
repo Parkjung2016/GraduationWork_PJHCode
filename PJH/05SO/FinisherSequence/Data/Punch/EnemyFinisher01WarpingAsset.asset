@@ -10,30 +10,82 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 928e2ecfbd1ec0f469e1838b49a4dda9, type: 3}
-  m_Name: NewWarpingAsset
+  m_Name: EnemyFinisher01WarpingAsset
   m_EditorClassIdentifier: 
   animation:
     _FadeDuration: 0.25
     _Speed: 1
     _Events:
       _NormalizedTimes:
+      - 0.09121061
       - 0.123237565
+      - 0.14593698
+      - 0.18076286
       - 0.19787438
+      - 0.2039801
+      - 0.25373134
       - 0.2725112
-      - 0.3662412
-      - 0.4617069
+      - 0.28026533
+      - 0.35986733
+      - 0.37976784
+      - 0.38640133
+      - 0.45936984
+      - 0.4809287
+      - 0.48922053
+      - 0.56218904
+      - 0.5737977
+      - 0.58208954
+      - 0.79767823
+      - 0.8159204
       - 0.8227409
       - 0.8227409
       - 0.84009826
       - 0.9122516
       - 0.9221854
-      _Callbacks: []
+      _Callbacks:
+      - rid: -2
+      - rid: 15841035899371668
+      - rid: -2
+      - rid: -2
+      - rid: 15841035899371670
+      - rid: -2
+      - rid: -2
+      - rid: 15841035899371672
+      - rid: -2
+      - rid: -2
+      - rid: 15841035899371674
+      - rid: -2
+      - rid: -2
+      - rid: 15841035899371676
+      - rid: -2
+      - rid: -2
+      - rid: 15841035899371678
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: 15841035899371680
+      - rid: 15841035899371682
       _Names:
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
+      - {fileID: 11400000, guid: b6c7c2b7c6f14534f8100534aef693fe, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
       - {fileID: 11400000, guid: 479386d6ba240934a89eddcb0ea8ce44, type: 2}
       - {fileID: 11400000, guid: bca272892a8444944a3784e0b080d420, type: 2}
@@ -1499,9 +1551,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   useLinear:
-    x: 1
-    y: 1
-    z: 1
+    x: 0
+    y: 0
+    z: 0
   useAnimation:
     x: 1
     y: 1
@@ -1523,4 +1575,38 @@ MonoBehaviour:
     totalRootMotion: {x: 0, y: 0, z: 3.6168244}
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 15841035899371668
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371670
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371672
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371674
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371676
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371678
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371680
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1
+    - rid: 15841035899371682
+      type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
+      data:
+        _Value: 1

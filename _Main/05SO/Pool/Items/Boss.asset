@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolType: {fileID: 11400000, guid: 2cbfc853d686a7f45a324746d4e84039, type: 2}
   prefab:
-    m_AssetGUID: 66e586d22776e3c4e9aa9bb498a50f90
+    m_AssetGUID: 3b60dc2ed2c8fec4586845e79b9d8b5e
     m_SubObjectName: 
-    m_SubObjectGUID: 
     m_SubObjectType: 
+    m_SubObjectGUID: 
     m_EditorAssetChanged: 1
-  initCount: 2
+  initCount: 3

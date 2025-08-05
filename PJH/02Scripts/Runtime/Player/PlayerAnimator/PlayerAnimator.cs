@@ -35,7 +35,7 @@ namespace PJH.Runtime.Players
         }
 
 
-        private void EnableRootMotion(bool isEnabled)
+        public void EnableRootMotion(bool isEnabled)
         {
             IsRootMotion = isEnabled;
             if (isEnabled)
@@ -68,11 +68,16 @@ namespace PJH.Runtime.Players
 
         private void OnAnimatorMove()
         {
-            // if (_isPlayingTimeline)
-            // {
-            //     transform.position = Animancer.rootPosition;
-            //     return;
-            // }
+            if (!Animancer.enabled)
+            {
+                PlayerAnimationTrigger animationTrigger = _player.GetCompo<PlayerAnimationTrigger>();
+                if (!animationTrigger.enabled)
+                {
+                    Animator.applyRootMotion = true;
+                    Animator.ApplyBuiltinRootMotion();
+                    return;
+                }
+            }
 
             if (!IsRootMotion) return;
             Vector3 deltaPosition = Animancer.deltaPosition;

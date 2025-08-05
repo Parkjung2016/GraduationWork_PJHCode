@@ -13,10 +13,11 @@ namespace PJH.Runtime.Players.FinisherSequence
     [CreateAssetMenu(menuName = "SO/Finisher/Data")]
     public class FinisherDataSO : ScriptableObject
     {
+        public float spaceToExecute;
         public MotionWarpingAsset executionAsset;
         public ClipTransition executedClip;
-        
-        
+
+
         public float sequenceDuration;
         public FinisherLookAtType lookAtTarget;
         public HumanBodyBones lookAtBone = HumanBodyBones.Spine;

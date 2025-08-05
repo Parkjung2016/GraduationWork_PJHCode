@@ -1,5 +1,4 @@
-﻿using System;
-using Main.Core;
+﻿using Main.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Players;
 using TMPro;

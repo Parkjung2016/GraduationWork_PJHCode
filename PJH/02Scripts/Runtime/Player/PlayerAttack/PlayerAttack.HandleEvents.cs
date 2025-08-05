@@ -1,6 +1,5 @@
 ﻿using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
-using System.Linq;
 
 [assembly: ZLinq.ZLinqDropInAttribute("PJH.Runtime.Players", ZLinq.DropInGenerateTypes.Everything)]
 
@@ -71,6 +70,7 @@ namespace PJH.Runtime.Players
             AgentWeaponManager weaponManagerCompo = _player.GetCompo<AgentWeaponManager>();
             weaponManagerCompo.CurrentCombatData = CurrentCombatData;
             OnAttack?.Invoke();
+            OnUseCommandActionPiece?.Invoke(commandActionPiece);
             _prevComboCount = ComboCount;
             ComboCount = (ComboCount + 1) % _maxComboCount;
         }

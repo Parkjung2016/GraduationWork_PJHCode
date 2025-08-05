@@ -9,6 +9,7 @@ namespace PJH.Runtime.Players
     public class PlayerInteract : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         public event Action<IInteractable> OnInteract;
+        public event Action OnInteractWithoutParameter;
 
         private Player _player;
 
@@ -35,6 +36,7 @@ namespace PJH.Runtime.Players
             if (_player.IsHitting || !interactableObjectDetectionCompo.GetNearTarget(out IInteractable target)) return;
             target.Interact(_player.transform);
             OnInteract?.Invoke(target);
+            OnInteractWithoutParameter?.Invoke();
         }
     }
 }

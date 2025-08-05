@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: FinisherSequenceShakeEvent
   m_EditorClassIdentifier: 
   _EditorComment: 
-  hasParameterMethod: 0
+  hasParameterMethod: 1

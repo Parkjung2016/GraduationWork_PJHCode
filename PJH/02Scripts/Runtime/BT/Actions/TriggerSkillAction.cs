@@ -11,7 +11,6 @@ namespace PJH.Runtime.BT.Actions
         public SharedVariable<BaseEnemy> enemy;
         public BossSkillSO bossSkill;
 
-
         private BossSkillSO _activeBossSkill;
 
         public override void OnStart()

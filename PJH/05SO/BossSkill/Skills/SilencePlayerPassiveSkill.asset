@@ -22,8 +22,22 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   castRadius: 3
-  silenceDuration: 3
-  damage: 10
+  silenceDuration: 5
+  damage: 20
+  silenceEffectSound:
+    Guid:
+      Data1: 1916331268
+      Data2: 1093554560
+      Data3: -1303609693
+      Data4: 1640988594
+    Path: event:/SFX/BossSkill/SilenceEffect
+  hitSound:
+    Guid:
+      Data1: 163181207
+      Data2: 1143787507
+      Data3: -1416263281
+      Data4: 1509591127
+    Path: event:/SFX/BossSkill/SilenceEffectHit
   getDamagedAnimationClip:
     _FadeDuration: 0.25
     _Speed: 1

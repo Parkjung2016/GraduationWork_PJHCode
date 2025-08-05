@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using FMODUnity;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Players;
@@ -12,11 +13,13 @@ namespace PJH.Runtime.BossSkill.BossSkills
         public float castRadius = 3f;
         public float silenceDuration = 3f;
         public float damage = 10;
+        public EventReference silenceEffectSound, hitSound;
         public ClipTransition getDamagedAnimationClip;
         public PoolTypeSO silenceEffectPoolType;
 
         public override void ActivateSkill()
         {
+            RuntimeManager.PlayOneShot(silenceEffectSound, _boss.transform.position);
             var evt = SpawnEvents.SpawnEffect;
             evt.effectType = silenceEffectPoolType;
             evt.position = _boss.transform.position + Vector3.up;
@@ -35,6 +38,8 @@ namespace PJH.Runtime.BossSkill.BossSkills
                     hitPoint = _boss.transform.position,
                     increaseMomentumGauge = 0
                 };
+                RuntimeManager.PlayOneShot(hitSound, _boss.transform.position);
+
                 player.HealthCompo.ApplyDamage(getDamagedInfo);
                 player.ApplySilencePassive(silenceDuration);
             }

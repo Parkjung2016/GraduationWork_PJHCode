@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Threading;
-using Kinemation.MotionWarping.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Core.StatSystem;
 using MoreMountains.Feedbacks;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 namespace PJH.Runtime.Players
 {
@@ -15,8 +13,27 @@ namespace PJH.Runtime.Players
         public event Action OnEndKnockBack;
         public event Action OnStartStun;
         public event Action OnEndStun;
+        public event Action OnGrabbed;
+        public event Action OnEndGrabbed;
         public event Action<bool> OnLockOn;
         public bool IsStunned { get; private set; }
+
+        public bool IsGrabbed
+        {
+            get => _isGrabbed;
+            set
+            {
+                _isGrabbed = value;
+                if (_isGrabbed)
+                {
+                    OnGrabbed?.Invoke();
+                }
+                else
+                {
+                    OnEndGrabbed?.Invoke();
+                }
+            }
+        }
 
         public bool IsLockOn
         {
@@ -33,7 +50,6 @@ namespace PJH.Runtime.Players
 
         public bool IsAvoidingAttack { get; private set; }
         public SkinnedMeshRenderer ModelRenderer { get; private set; }
-        public MotionWarping WarpingComponent { get; private set; }
         public PlayerInputSO PlayerInput { get; private set; }
         public event Action<bool> OnChangedCanApplyPassive;
 
@@ -47,7 +63,6 @@ namespace PJH.Runtime.Players
             }
         }
 
-
         [SerializeField] private StatSO _stunDurationStat;
         [SerializeField] private MMF_Player _avoidingAttackFeedback;
         [SerializeField] private GameObject[] _playerUIReferences;
@@ -59,6 +74,7 @@ namespace PJH.Runtime.Players
         private CancellationTokenSource _applySilencePassiveTokenSource;
 
         private Renderer[] _meshRenderers;
+        private bool _isGrabbed;
         private bool _isLockOn;
         [SerializeField] private bool _canApplyPassive;
     }

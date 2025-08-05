@@ -1049,8 +1049,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _showFeedbackPlayer: {fileID: 5519549132547162504}
-  _deathTMP: {fileID: 0}
-  _deathTexts: []
+  _deathTMP: {fileID: 8063013170367477159}
+  _deathTexts:
+  - "\uC784\uBB34\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4."
+  - "\uC804\uD22C \uBD88\uB2A5"
+  - "\uC5EC\uAE30\uAE4C\uC9C0\uAC00 \uD55C\uACC4\uC600\uB358 \uAC83 \uAC19\uC2B5\uB2C8\uB2E4."
 --- !u!1 &8119085376335142881
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1066,7 @@ GameObject:
   - component: {fileID: 584048676249066136}
   - component: {fileID: 8063013170367477159}
   m_Layer: 5
-  m_Name: Heart Count
+  m_Name: DeathText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

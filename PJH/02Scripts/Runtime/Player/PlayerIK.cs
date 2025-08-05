@@ -43,7 +43,9 @@ namespace PJH.Runtime.Players
             animationTriggerCompo.OnEndCombo += HandleEndCombo;
             animationTriggerCompo.OnBlockEnd += HandleEndCombo;
 
-            // _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline += HandleFinisherTimeline;
+            PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisher += HandleFinisher;
+            finisherCompo.OnFinisherEnd += HandleFinisherEnd;
             LookAnimator.SwitchLooking(false);
         }
 
@@ -65,7 +67,23 @@ namespace PJH.Runtime.Players
             animationTriggerCompo.OnEndCombo -= HandleEndCombo;
             animationTriggerCompo.OnBlockEnd -= HandleEndCombo;
 
-            // _player.GetCompo<PlayerEnemyFinisher>().OnFinisherTimeline -= HandleFinisherTimeline;
+            PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisher += HandleFinisher;
+            finisherCompo.OnFinisherEnd += HandleFinisherEnd;
+        }
+
+        private void HandleFinisher()
+        {
+            LegsAnimator.User_FadeToDisabled(0);
+            LookAnimator.enabled = false;
+            LeaningAnimator.enabled = false;
+        }
+
+        private void HandleFinisherEnd()
+        {
+            LookAnimator.enabled = true;
+            LeaningAnimator.enabled = true;
+            LegsAnimator.User_FadeEnabled(0);
         }
 
         private void HandleMovement(float velocity)
@@ -121,7 +139,6 @@ namespace PJH.Runtime.Players
         protected override void HandleTriggerRagdoll()
         {
             base.HandleTriggerRagdoll();
-            LegsAnimator.enabled = false;
             LookAnimator.enabled = false;
             LeaningAnimator.enabled = false;
         }

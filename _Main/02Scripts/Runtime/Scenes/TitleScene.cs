@@ -1,4 +1,6 @@
-﻿using Main.Core;
+﻿using Cysharp.Threading.Tasks;
+using Main.Core;
+using Main.Runtime.Manager;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -11,10 +13,15 @@ namespace Main.Scenes
         [SerializeField] private Vector2 _cameraAimClampMin, _cameraAimClampMax;
         private CinemachineRotationComposer _cinemachineRotationComposer;
 
-        protected override void Awake()
+
+        protected override async void Awake()
         {
             base.Awake();
             _cinemachineRotationComposer = _cinemachineCamera.GetComponent<CinemachineRotationComposer>();
+
+            await UniTask.WaitUntil(() => AddressableManager.IsLoaded,
+                cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+            PlayBGM();
         }
 
         protected override void Start()

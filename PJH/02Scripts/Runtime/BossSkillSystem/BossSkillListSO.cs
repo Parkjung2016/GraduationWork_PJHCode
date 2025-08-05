@@ -12,7 +12,7 @@ namespace PJH.Runtime.BossSkill
         [SerializeField] private List<BossSkillSO> _skills;
 
         public BossSkillSO GetSkill(string skillName) =>
-            _skills.AsValueEnumerable().FirstOrDefault(skill => skill.name == skillName);
+            _skills.AsValueEnumerable().FirstOrDefault(skill => skill.name.Contains(skillName));
 
         public void Init(Boss owner) => _skills.ForEach(skill => skill.Init(owner));
 

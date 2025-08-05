@@ -19,43 +19,34 @@ namespace Main.Runtime.Manager
         public static string Music_Bus_Path = Game_Bus_Path + "/Music";
         public static string UI_Bus_Path = Main_Bus_Path + "/UI";
 
-        private VCA _subVCA, _timelineVCA;
+        private VCA _gameSoundVCA;
         private Bus _sfxBus, _musicBus, _uiBus, _mainBus, _gameBus;
 
 
         private EventInstance _beforePlayerDeadSnapshot;
+        private EventInstance _slowTimeSnapshot;
         public EventInstance MusicEventInstance { get; private set; }
 
         public void Init()
         {
-            //_subVCA = RuntimeManager.GetVCA(GameSound_VCA_Path);
-            //_timelineVCA = RuntimeManager.GetVCA(TimelineSound_VCA_Path);
-            //_sfxBus = RuntimeManager.GetBus(SFX_Bus_Path);
-            //_musicBus = RuntimeManager.GetBus(Music_Bus_Path);
-            //_gameBus = RuntimeManager.GetBus(Game_Bus_Path);
-            //_uiBus = RuntimeManager.GetBus(UI_Bus_Path);
-            //_mainBus = RuntimeManager.GetBus(Main_Bus_Path);
-            //_beforePlayerDeadSnapshot = RuntimeManager.CreateInstance("snapshot:/BeforePlayerDeadSnapshot");
+            _gameSoundVCA = RuntimeManager.GetVCA(GameSound_VCA_Path);
+            _sfxBus = RuntimeManager.GetBus(SFX_Bus_Path);
+            _musicBus = RuntimeManager.GetBus(Music_Bus_Path);
+            _gameBus = RuntimeManager.GetBus(Game_Bus_Path);
+            _uiBus = RuntimeManager.GetBus(UI_Bus_Path);
+            _mainBus = RuntimeManager.GetBus(Main_Bus_Path);
+            _beforePlayerDeadSnapshot = RuntimeManager.CreateInstance("snapshot:/BeforePlayerDeadSnapshot");
+            _slowTimeSnapshot = RuntimeManager.CreateInstance("snapshot:/SlowTime");
         }
 
         public void SetGameSoundVolume(float volume, float duration)
         {
-            SetVCAVolume(_subVCA, volume, duration);
+            SetVCAVolume(_gameSoundVCA, volume, duration);
         }
 
         public void SetGameSoundVolume(float volume)
         {
-            SetVCAVolume(_subVCA, volume);
-        }
-
-        public void SetTimelineSoundVolume(float volume, float duration)
-        {
-            SetVCAVolume(_timelineVCA, volume, duration);
-        }
-
-        public void SetTimelineSoundVolume(float volume)
-        {
-            SetVCAVolume(_timelineVCA, volume);
+            SetVCAVolume(_gameSoundVCA, volume);
         }
 
         public void SetBeforePlayerDead(bool isBeforePlayerDead)
@@ -80,9 +71,29 @@ namespace Main.Runtime.Manager
             RuntimeManager.PlayOneShot("event:/UI/TextClick");
         }
 
+        public void PlayTypingSound()
+        {
+            RuntimeManager.PlayOneShot("event:/UI/Typing");
+        }
+
+        public void PlaySound(string path)
+        {
+            RuntimeManager.PlayOneShot(path);
+        }
+
+        public void PlayErrorSound()
+        {
+            RuntimeManager.PlayOneShot("event:/UI/Error");
+        }
+
         public void PlayButtonClickSound()
         {
             RuntimeManager.PlayOneShot("event:/UI/ButtonClick");
+        }
+
+        public void PlayButtonClick2Sound()
+        {
+            RuntimeManager.PlayOneShot("event:/UI/ButtonClick2");
         }
 
         public void ResumeMainSound()
@@ -134,7 +145,6 @@ namespace Main.Runtime.Manager
 
         public void SetMusicVolume(float volume, float duration)
         {
-            Debug.Log(_musicBus);
             SetBusVolume(_musicBus, volume, duration);
         }
 
@@ -151,6 +161,14 @@ namespace Main.Runtime.Manager
         public void SetSFXVolume(float volume)
         {
             SetBusVolume(_sfxBus, volume);
+        }
+
+        public void MainSoundSlow(bool isSlow)
+        {
+            if (isSlow)
+                _slowTimeSnapshot.start();
+            else
+                _slowTimeSnapshot.stop(STOP_MODE.ALLOWFADEOUT);
         }
 
         private void SetBusVolume(Bus bus, float volume, float duration)

@@ -18,5 +18,5 @@ MonoBehaviour:
   _icon: {fileID: 0}
   _baseValue: 0.18756434
   _minValue: 0
-  _maxValue: 3
+  _maxValue: 10
   <IsPercent>k__BackingField: 0

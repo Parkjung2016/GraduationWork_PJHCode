@@ -40,7 +40,7 @@ namespace PJH.Runtime.PlayerPassive.Passives
         private float _power;
 
         private CancellationTokenSource _targetSelectionTokenSource;
-        
+
         public void ActivePassive()
         {
             _player.GetCompo<PlayerAnimationTrigger>().OnTriggerPassiveAfterAttack += HandleTriggerPassiveAfterAttack;
@@ -56,70 +56,62 @@ namespace PJH.Runtime.PlayerPassive.Passives
             try
             {
                 CooldownPassiveInfo.StartCooldownEvent?.Invoke();
-                try
+                if (_targetSelectionTokenSource is { IsCancellationRequested: false })
                 {
-                    if (_targetSelectionTokenSource is { IsCancellationRequested: false })
-                    {
-                        _targetSelectionTokenSource.Cancel();
-                        _targetSelectionTokenSource.Dispose();
-                    }
+                    _targetSelectionTokenSource.Cancel();
+                    _targetSelectionTokenSource.Dispose();
+                }
 
-                    _targetSelectionTokenSource = new();
-                    var changeCameraFOVEvent = GameEvents.ChangeCameraFOV;
-                    changeCameraFOVEvent.ignoreTimeScale = true;
-                    changeCameraFOVEvent.resetFOV = false;
-                    changeCameraFOVEvent.fovValue = cameraFOVWhenSelectingTargeting;
-                    changeCameraFOVEvent.changeDuration = changeCameraFOVDuration;
-                    _gameEventChannel.RaiseEvent(changeCameraFOVEvent);
-                    var changeCameraUpdateEvent = GameEvents.ChangeCameraUpdate;
-                    changeCameraUpdateEvent.updateIgnoreTimeScale = true;
-                    _gameEventChannel.RaiseEvent(changeCameraUpdateEvent);
-                    Sequence seq = DOTween.Sequence();
-                    seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0, changeTimeScaleDuration));
-                    seq.SetUpdate(true);
-                    Managers.VolumeManager.GetVolumeType<RadialBlurVolumeType>().SetValue(.5f, .2f);
-                    _player.HealthCompo.IsInvincibility = true;
-                    await seq.ToUniTask();
-                    _player.GetCompo<PlayerWarpStrike>().EnableWarpStrike(_power, warpStrikeAttackInfos.GetRandom(),
-                        () =>
-                        {
-                            EndTargetSelection(true);
-                            if (_targetSelectionTokenSource is { IsCancellationRequested: false })
-                            {
-                                _targetSelectionTokenSource.Cancel();
-                                _targetSelectionTokenSource.Dispose();
-                            }
-                        });
-                    float elapsed = 0f;
-
-                    while (elapsed < targetSelectionTime)
+                _targetSelectionTokenSource = new();
+                var changeCameraFOVEvent = GameEvents.ChangeCameraFOV;
+                changeCameraFOVEvent.ignoreTimeScale = true;
+                changeCameraFOVEvent.resetFOV = false;
+                changeCameraFOVEvent.fovValue = cameraFOVWhenSelectingTargeting;
+                changeCameraFOVEvent.changeDuration = changeCameraFOVDuration;
+                _gameEventChannel.RaiseEvent(changeCameraFOVEvent);
+                var changeCameraUpdateEvent = GameEvents.ChangeCameraUpdate;
+                changeCameraUpdateEvent.updateIgnoreTimeScale = true;
+                _gameEventChannel.RaiseEvent(changeCameraUpdateEvent);
+                Sequence seq = DOTween.Sequence();
+                seq.Append(DOTween.To(() => Time.timeScale, x => Time.timeScale = x, 0, changeTimeScaleDuration));
+                seq.SetUpdate(true);
+                Managers.VolumeManager.GetVolumeType<RadialBlurVolumeType>().SetValue(.5f, .2f);
+                _player.HealthCompo.IsInvincibility = true;
+                await seq.ToUniTask();
+                
+                _player.GetCompo<PlayerWarpStrike>().EnableWarpStrike(_power, warpStrikeAttackInfos.GetRandom(),
+                    () =>
                     {
-                        if (_targetSelectionTokenSource is { IsCancellationRequested: true })
+                        EndTargetSelection(true);
+                        if (_targetSelectionTokenSource is { IsCancellationRequested: false })
                         {
-                            EndTargetSelection(true);
-                            return;
+                            _targetSelectionTokenSource.Cancel();
+                            _targetSelectionTokenSource.Dispose();
                         }
-                        // TODO 게임 멈췄을 때 조건 추가
-                        // if (TimeManager)
-                        // {
-                        //     await UniTask.Yield(PlayerLoopTiming.Update, _targetSelectionTokenSource.Token);
-                        //     continue;
-                        // }
+                    });
+                float elapsed = 0f;
 
-                        elapsed += Time.unscaledDeltaTime;
-                        await UniTask.Yield(PlayerLoopTiming.Update, _targetSelectionTokenSource.Token);
+                while (elapsed < targetSelectionTime)
+                {
+                    if (_targetSelectionTokenSource is { IsCancellationRequested: true })
+                    {
+                        EndTargetSelection(true);
+                        return;
                     }
 
-                    EndTargetSelection();
-                    _player.GetCompo<PlayerWarpStrike>().DisableWarpStrike();
+                    await UniTask.WaitUntil(() => !Managers.TimeManager.isPaused,
+                        cancellationToken: _targetSelectionTokenSource.Token);
+
+                    elapsed += Time.unscaledDeltaTime;
+                    await UniTask.Yield(PlayerLoopTiming.Update, _targetSelectionTokenSource.Token);
                 }
-                catch (Exception e)
-                {
-                    Debug.Log(e.Message);
-                }
+
+                EndTargetSelection();
+                _player.GetCompo<PlayerWarpStrike>().DisableWarpStrike();
             }
             catch (Exception e)
             {
+                Debug.Log($"{e.Message} , {e.StackTrace}");
             }
         }
 

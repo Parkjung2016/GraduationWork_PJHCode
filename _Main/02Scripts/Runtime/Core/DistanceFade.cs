@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.VFX;
 using ZLinq;
 
 namespace Main.Runtime.Core
@@ -14,26 +15,31 @@ namespace Main.Runtime.Core
 
         private Collider _collider;
 
+        public bool Locked { get; set; }
+
         private void Awake()
         {
             _collider = GetComponent<Collider>();
-            if (!_isRootObject)
-                _renderers = transform.parent.GetComponentsInChildren<Renderer>()
-                    .AsValueEnumerable().Where(x => x.material.HasFloat(FadeAmountHash)).ToArray();
-            else
-                _renderers = transform.GetComponentsInChildren<Renderer>()
-                    .AsValueEnumerable().Where(x => x.material.HasFloat(FadeAmountHash)).ToArray();
+            Transform parentTrm = transform.parent;
+            if (_isRootObject)
+                parentTrm = transform;
+            _renderers = parentTrm.GetComponentsInChildren<Renderer>()
+                .AsValueEnumerable().Where(x => x is not VFXRenderer).Where(x => x.material.HasFloat(FadeAmountHash))
+                .ToArray();
         }
 
         private void LateUpdate()
         {
             float value = 0;
-            Transform mainCameraTrm = Camera.main.transform;
+            if (!Locked)
+            {
+                Transform mainCameraTrm = Camera.main.transform;
 
-            Vector3 closestPoint = _collider.ClosestPoint(mainCameraTrm.transform.position);
-            value = Vector3.Distance(closestPoint, mainCameraTrm.transform.position);
+                Vector3 closestPoint = _collider.ClosestPoint(mainCameraTrm.transform.position);
+                value = Vector3.Distance(closestPoint, mainCameraTrm.transform.position);
 
-            value = Remap(value, _minMaxDistance.y, 0, _minMaxDistance.x, 1);
+                value = Remap(value, _minMaxDistance.y, 0, _minMaxDistance.x, 1);
+            }
 
             for (int i = 0; i < _renderers.Length; i++)
             {

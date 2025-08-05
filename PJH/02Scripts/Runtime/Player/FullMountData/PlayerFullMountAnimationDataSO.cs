@@ -1,4 +1,5 @@
 ﻿using Animancer;
+using Kinemation.MotionWarping.Runtime.Core;
 using Main.Runtime.Equipments.Datas;
 using Sirenix.OdinInspector;
 #if UNITY_EDITOR
@@ -15,7 +16,7 @@ namespace PJH.Runtime.Players
         [OnValueChanged("ChangeAssetName")]
         public EquipmentDataSO key;
 
-        public ClipTransition fullMountAttackAnimation;
+        public MotionWarpingAsset fullMountMotionWarping;
         public ClipTransition fullMountedAnimation;
 
 

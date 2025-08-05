@@ -11,7 +11,6 @@ using Main.Runtime.Manager;
 using PJH.Runtime.Core;
 using PJH.Runtime.Core.PlayerCamera;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace PJH.Runtime.Players
 {

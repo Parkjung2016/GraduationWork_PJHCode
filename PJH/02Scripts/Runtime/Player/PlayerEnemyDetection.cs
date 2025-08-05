@@ -9,7 +9,6 @@ using Main.Shared;
 using UnityEngine;
 using YTH.Shared;
 using ZLinq;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -18,6 +17,7 @@ namespace PJH.Runtime.Players
         public delegate void ChangedTargetEnemyEvent(Agent prevTarget, Agent currentTarget);
 
         public event ChangedTargetEnemyEvent OnChangedTargetEnemy;
+        public event Action<Agent> OnChangedHitTargetEnemy;
 
         [SerializeField] private float _detectionRadius = 5f;
         [SerializeField] private float _detectInterval = 0.05f;
@@ -40,6 +40,7 @@ namespace PJH.Runtime.Players
         {
             _player.GetCompo<PlayerAttack>().OnAttack += HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible += HandleComboPossible;
+            _player.OnHitTarget += HandleHitTarget;
             _player.PlayerInput.ChangeLockOnTargetEvent += HandleChangeLockOnTarget;
             DetectNearTarget().Forget();
         }
@@ -49,9 +50,15 @@ namespace PJH.Runtime.Players
             _cancellationToken?.Cancel();
             _cancellationToken?.Dispose();
 
+            _player.OnHitTarget -= HandleHitTarget;
             _player.GetCompo<PlayerAttack>().OnAttack -= HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible -= HandleComboPossible;
             _player.PlayerInput.ChangeLockOnTargetEvent -= HandleChangeLockOnTarget;
+        }
+
+        private void HandleHitTarget(HitInfo hitInfo)
+        {
+            OnChangedHitTargetEnemy?.Invoke(hitInfo.hitTarget as Agent);
         }
 
         private void HandleChangeLockOnTarget()
@@ -118,7 +125,7 @@ namespace PJH.Runtime.Players
 
             return _detectColliders
                 .Take(count)
-                .Where(c => c && c.gameObject != exclude && (filter?.Invoke(c) ?? true))
+                .Where(c => c && c.CompareTag("Enemy") && c.gameObject != exclude && (filter?.Invoke(c) ?? true))
                 .OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
                 .Select(c => c.GetComponent<Agent>())
                 .FirstOrDefault(a => a);

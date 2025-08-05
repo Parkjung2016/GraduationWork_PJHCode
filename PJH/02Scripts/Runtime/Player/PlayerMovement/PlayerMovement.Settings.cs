@@ -4,6 +4,9 @@
     {
         private void SubscribeEvents()
         {
+            _player.OnStartStun += HandleEndEvasion;
+            _player.OnGrabbed += HandleEndEvasion;
+
             _player.HealthCompo.OnDeath += HandleDeath;
             _player.PlayerInput.RunEvent += HandleRun;
             _player.PlayerInput.EvadeEvent += Evasion;
@@ -20,16 +23,16 @@
             animationTriggerCompo.OnBlockEnd += HandleEndEvasion;
             animationTriggerCompo.OnEndCombo += EndManualMove;
             animationTriggerCompo.OnBlockEnd += HandleBlockEnd;
-            animationTriggerCompo.OnEndFullMount += HandleEndFullMount;
             animationTriggerCompo.OnEndRotatingTargetWhileAttack += HandleEndRotatingTargetWhileAttack;
-            PlayerFullMount fullMountCompo = _player.GetCompo<PlayerFullMount>();
-            fullMountCompo.OnFullMount += HandleFullMount;
 
             _attackCompo.OnAttack += HandleAttack;
         }
 
         private void UnSubscribeEvents()
         {
+            _player.OnStartStun -= HandleEndEvasion;
+            _player.OnGrabbed -= HandleEndEvasion;
+            
             _player.HealthCompo.OnDeath -= HandleDeath;
             _player.PlayerInput.RunEvent -= HandleRun;
             _player.PlayerInput.EvadeEvent -= Evasion;
@@ -47,11 +50,8 @@
             animationTriggerCompo.OnBlockEnd -= HandleEndEvasion;
             animationTriggerCompo.OnEndCombo -= EndManualMove;
             animationTriggerCompo.OnBlockEnd -= HandleBlockEnd;
-            animationTriggerCompo.OnEndFullMount -= HandleEndFullMount;
             animationTriggerCompo.OnEndRotatingTargetWhileAttack -= HandleEndRotatingTargetWhileAttack;
 
-            PlayerFullMount fullMountCompo = _player.GetCompo<PlayerFullMount>();
-            fullMountCompo.OnFullMount -= HandleFullMount;
 
             _attackCompo.OnAttack -= HandleAttack;
         }

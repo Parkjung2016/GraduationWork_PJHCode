@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9708ef67c049068f2c997fd2b6e1d2, type: 3}
   m_Name: FinisherSequence_Punch_EnemyFinisher01
   m_EditorClassIdentifier: 
+  spaceToExecute: 2
   executionAsset: {fileID: 11400000, guid: 04899466c5c1810439d42d79a8283195, type: 2}
   executedClip:
     _FadeDuration: 0.25

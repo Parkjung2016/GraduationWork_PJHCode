@@ -63,7 +63,7 @@ namespace PJH.Runtime.Players
             if (counterAttackComp.IsCounterAttacking) return;
             if ((_canEvading && _currentEvasionDelayTime + _evasionDelay > Time.time) || _player.IsStunned ||
                 IsKnockBack ||
-                IsEvading) return;
+                IsEvading || _player.IsGrabbed) return;
 
             if (_player.IsHitting)
             {
@@ -84,7 +84,7 @@ namespace PJH.Runtime.Players
             if (evasionDir == Vector3.zero)
                 evasionDir = Vector3.back;
             Quaternion targetRot = Quaternion.Euler(0, yawCamera, 0);
-            _player.ModelTrm.DORotateQuaternion(targetRot, .5f);
+            _player.ModelTrm.DORotateQuaternion(targetRot, .5f).SetLink(_player.ModelTrm.gameObject);
 
 
             ClipTransition evasionClip = null;
@@ -97,7 +97,7 @@ namespace PJH.Runtime.Players
         private void Update()
         {
             CheckCooldownEvasionWhileHitting();
-            if (!CC || _player.WarpingComponent.IsActive()) return;
+            if (!CC || _player.WarpingComponent.IsActive() || _player.IsStunned) return;
             ApplyRotation();
             CalculateMove();
             ApplyGravity();
@@ -119,7 +119,7 @@ namespace PJH.Runtime.Players
 
         private void CheckTurn()
         {
-            if (_player.IsStunned || IsManualMove || IsKnockBack || _animatorCompo.IsRootMotion || !IsRunning) return;
+            if (IsManualMove || IsKnockBack || _animatorCompo.IsRootMotion || !IsRunning) return;
             Vector3 input = _player.PlayerInput.Input;
             if (input.sqrMagnitude > 0 && CC.velocity.sqrMagnitude > 1.5f)
             {
@@ -135,7 +135,7 @@ namespace PJH.Runtime.Players
 
         private void CalculateMove()
         {
-            if (_player.IsStunned || IsManualMove || IsKnockBack ||
+            if (IsManualMove || IsKnockBack ||
                 (_animatorCompo.IsRootMotion && !_animatorCompo.IsEnabledInputWhileRootMotion)) return;
             if (!CanMove)
             {
@@ -164,7 +164,7 @@ namespace PJH.Runtime.Players
 
         private void ApplyRotation()
         {
-            if (_player.IsStunned || IsManualMove ||
+            if (IsManualMove ||
                 IsKnockBack || _warpStrikeCompo.Activating) return;
             Quaternion targetRot = Quaternion.identity;
 
@@ -214,8 +214,8 @@ namespace PJH.Runtime.Players
 
         private void CharacterMove()
         {
-            if (_player.IsStunned || (!IsKnockBack && _animatorCompo.IsRootMotion &&
-                                      !_animatorCompo.IsEnabledInputWhileRootMotion) ||
+            if ((!IsKnockBack && _animatorCompo.IsRootMotion &&
+                 !_animatorCompo.IsEnabledInputWhileRootMotion) ||
                 !CanMove || !CC.enabled) return;
             if (IsManualMove)
             {

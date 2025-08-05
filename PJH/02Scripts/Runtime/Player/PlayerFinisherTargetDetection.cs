@@ -6,7 +6,6 @@ using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using UnityEngine;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -31,6 +30,7 @@ namespace PJH.Runtime.Players
 
         public void AfterInitialize()
         {
+            _player.GetCompo<PlayerEnemyDetection>().OnChangedHitTargetEnemy += HandleChangedTargetEnemy;
             _player.GetCompo<PlayerEnemyDetection>().OnChangedTargetEnemy += HandleChangedTargetEnemy;
             DetectTarget().Forget();
         }
@@ -43,6 +43,7 @@ namespace PJH.Runtime.Players
                 _cancellationToken.Dispose();
             }
 
+            _player.GetCompo<PlayerEnemyDetection>().OnChangedHitTargetEnemy -=HandleChangedTargetEnemy;
             _player.GetCompo<PlayerEnemyDetection>().OnChangedTargetEnemy -= HandleChangedTargetEnemy;
         }
 
@@ -59,12 +60,18 @@ namespace PJH.Runtime.Players
                     var evt = UIEvents.ShowFinisherTargetUI;
                     if (_checkTarget)
                     {
+                        if (_checkTarget.HealthCompo.IsDead)
+                        {
+                            _checkTarget = null;
+                            continue;
+                        }
+
                         AgentFinisherable finisherable = _checkTarget.GetCompo<AgentFinisherable>();
                         if (!finisherable) continue;
                         float dis = Vector3.Distance(finisherable.Agent.transform.position,
                             _player.transform.position);
                         bool canFinisher = !_enemyFinisherCompo.IsFinishering && finisherable.CanFinisher() &&
-                                           dis <= 4f;
+                                           dis <= 1.5f;
 
                         evt.isShowUI = canFinisher;
                         if (canFinisher)
@@ -100,6 +107,10 @@ namespace PJH.Runtime.Players
             _checkTarget = currentTarget;
         }
 
+        private void HandleChangedTargetEnemy(Agent target)
+        {
+            _checkTarget = target;
+        }
 
         public bool GetFinisherTarget(out AgentFinisherable target)
         {

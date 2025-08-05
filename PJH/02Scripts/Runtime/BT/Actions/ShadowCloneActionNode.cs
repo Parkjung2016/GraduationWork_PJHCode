@@ -13,6 +13,10 @@ namespace PJH.Runtime.BT.Actions
         public override void OnAwake()
         {
             _shadowClone = gameObject.GetComponent<ShadowClone>();
+        }
+
+        public override void OnStart()
+        {
             _player = PlayerManager.Instance.Player as Player;
         }
     }

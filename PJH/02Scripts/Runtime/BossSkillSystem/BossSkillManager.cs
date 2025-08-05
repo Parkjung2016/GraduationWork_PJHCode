@@ -1,5 +1,10 @@
+using FMODUnity;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
+using Main.Runtime.Core.StatSystem;
+using Main.Runtime.Manager;
+using PJH.Runtime.BossSkill.BossSkills;
+using PJH.Runtime.Players;
 using UnityEngine;
 using YTH.Boss;
 using YTH.Enemies;
@@ -9,6 +14,8 @@ namespace PJH.Runtime.BossSkill
     public class BossSkillManager : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         [SerializeField] private BossSkillListSO _skillList;
+        [SerializeField] private StatSO _powerStat;
+        private Player _player;
         private Boss _boss;
 
         public void Initialize(Agent agent)
@@ -16,16 +23,30 @@ namespace PJH.Runtime.BossSkill
             _boss = agent as Boss;
             _skillList = _skillList.Clone();
             _skillList.Init(_boss);
+            _powerStat = _boss.GetCompo<AgentStat>(true).GetStat(_powerStat);
         }
 
         public void AfterInitialize()
         {
-            _boss.GetCompo<BossAnimationTrigger>().OnSilencePlayerPassive += HandleSilencePlayerPassive;
+            BossAnimationTrigger animationTriggerCompo = _boss.GetCompo<BossAnimationTrigger>();
+            animationTriggerCompo.OnSilencePlayerPassive += HandleSilencePlayerPassive;
+            animationTriggerCompo.OnHitPlayer += HandleHitPlayer;
         }
 
         private void OnDestroy()
         {
-            _boss.GetCompo<BossAnimationTrigger>().OnSilencePlayerPassive -= HandleSilencePlayerPassive;
+            BossAnimationTrigger animationTriggerCompo = _boss.GetCompo<BossAnimationTrigger>();
+            animationTriggerCompo.OnSilencePlayerPassive -= HandleSilencePlayerPassive;
+            animationTriggerCompo.OnHitPlayer -= HandleHitPlayer;
+        }
+
+        private void HandleHitPlayer()
+        {
+            Agent player = PlayerManager.Instance.Player;
+            GrabAndAttackPlayerSkillSO grabSkill = GetSKill("GrabAndAttackPlayerSkill") as GrabAndAttackPlayerSkillSO;
+            RuntimeManager.PlayOneShot(grabSkill.hitSound, player.transform.position);
+            float power = _powerStat.Value * grabSkill.attackPowerMultiplier;
+            player.HealthCompo.ApplyOnlyDamage(power);
         }
 
         private void HandleSilencePlayerPassive()

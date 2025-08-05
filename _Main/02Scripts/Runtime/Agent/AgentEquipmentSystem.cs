@@ -28,6 +28,9 @@ namespace Main.Runtime.Agents
 
         [ReadOnly, SerializeField] Dictionary<Define.ESocketType, AgentSocket> _sockets = new();
         private Agent _agent;
+        [SerializeField] private bool _tutorialPlayer;
+
+        private readonly int socketTypeLength = Enum.GetValues(typeof(Define.ESocketType)).Length;
 
         public void Initialize(Agent agent)
         {
@@ -65,6 +68,7 @@ namespace Main.Runtime.Agents
             if (!_sockets.TryGetValue(socketType, out AgentSocket socket)) return;
 
             Equipment equipment = Instantiate(data.equipmentPrefab);
+
             if (equipment is Weapon weapon)
             {
                 weapon.Equip(_agent, _powerStat, _increaseMomentumGaugeStat);
@@ -74,6 +78,10 @@ namespace Main.Runtime.Agents
 
             socket.ChangeItem(equipment, data.equipmentPosition,
                 data.equipmentRotation);
+            if (_tutorialPlayer)
+            {
+                equipment.transform.localScale = Vector3.one * 100f;
+            }
         }
 
         public void AfterInitialize()
@@ -99,10 +107,10 @@ namespace Main.Runtime.Agents
         private void InitializeSocketCache()
         {
             _sockets.Clear();
-            AgentSocket[] agnSockets = _agent.GetComponentsInChildren<AgentSocket>();
+            AgentSocket[] agentSockets = _agent.GetComponentsInChildren<AgentSocket>();
             foreach (Define.ESocketType socketType in Enum.GetValues(typeof(Define.ESocketType)))
             {
-                AgentSocket socket = agnSockets.FirstOrDefault(socket => socket.socketType == socketType);
+                AgentSocket socket = agentSockets.FirstOrDefault(socket => socket.socketType == socketType);
                 if (socket)
                 {
                     _sockets.Add(socketType, socket);
@@ -201,7 +209,7 @@ namespace Main.Runtime.Agents
                 }
             }
 
-            return checkCount == (int)Define.ESocketType.RightFoot + 1;
+            return checkCount == socketTypeLength;
         }
 
         [GUIColor(0, 1, 0)]

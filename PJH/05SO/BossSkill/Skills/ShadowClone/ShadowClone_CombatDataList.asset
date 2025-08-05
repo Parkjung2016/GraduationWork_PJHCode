@@ -14,5 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatDataList:
   - combatDatas:
-    - {fileID: 11400000, guid: 7e022070fa704bd41b5d920a3f4187a4, type: 2}
-    - {fileID: 11400000, guid: 7ca4dfbc065a920498c938da5fd765b1, type: 2}
+    - {fileID: 11400000, guid: cfef59289010e4a40ad1fade853e7f2d, type: 2}
+  - combatDatas:
+    - {fileID: 11400000, guid: 8b97803df0360784e809bbcb9ff79606, type: 2}
+  - combatDatas:
+    - {fileID: 11400000, guid: 673743175eecd984e9c13110bb7a85c9, type: 2}
+  - combatDatas:
+    - {fileID: 11400000, guid: db5497456fb9e8b418dfc2abba61bec0, type: 2}

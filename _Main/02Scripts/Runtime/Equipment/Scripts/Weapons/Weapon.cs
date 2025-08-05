@@ -60,9 +60,7 @@ namespace Main.Runtime.Equipments.Scripts
             _powerStat = powerStat;
             _increaseMomentumGaugeStat = increaseMomentumGaugeStat;
             _damageCollider = GetComponentInChildren<DamageCollider>();
-            float power = _powerStat.Value * WeaponData.damageMultiplier;
-            float increaseMomentumGauge = _increaseMomentumGaugeStat.Value * WeaponData.increaseMomentumGaugeMultiplier;
-            _damageCollider.Init(owner, power, increaseMomentumGauge);
+            _damageCollider.Init(owner,  _powerStat, _increaseMomentumGaugeStat,WeaponData.damageMultiplier,WeaponData.increaseMomentumGaugeMultiplier);
             _damageCollider.OnDamageTrigger += HandleDamageTrigger;
             if (_rigidbodyCompo)
             {

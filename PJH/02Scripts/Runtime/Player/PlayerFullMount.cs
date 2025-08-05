@@ -1,7 +1,7 @@
 using System;
-using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Kinemation.MotionWarping.Runtime.Examples;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
@@ -13,7 +13,7 @@ namespace PJH.Runtime.Players
 {
     public class PlayerFullMount : MonoBehaviour, IAgentComponent, IAfterInitable
     {
-        public event Action<ITransition> OnFullMount;
+        public event Action OnFullMount;
         public event Action OnHitFullMountTarget;
         public bool IsFullMounting { get; private set; }
         [SerializeField] private StatSO _powerStat;
@@ -51,7 +51,7 @@ namespace PJH.Runtime.Players
 
         private async void HandleEndFullMount()
         {
-            await UniTask.WaitForSeconds(.2f);
+            await UniTask.WaitForSeconds(.2f, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
             IsFullMounting = false;
         }
 
@@ -63,12 +63,12 @@ namespace PJH.Runtime.Players
             OnHitFullMountTarget?.Invoke();
 
             float power = _powerStat.Value;
-            _fullMountTarget.HealthCompo.ApplyOnlyDamage(power);
+            _fullMountTarget.HealthCompo.ApplyOnlyDamageWithOutEvent(power);
         }
 
         private void HandleFullMount()
         {
-            if (_player.IsStunned || _player.IsHitting  ||
+            if (_player.IsStunned || _player.IsHitting ||
                 _movementCompo.IsEvading) return;
             if (_fullMountTargetDetection.GetFullMountTarget(out Agent target))
             {
@@ -78,12 +78,29 @@ namespace PJH.Runtime.Players
                 Vector3 dir = (_player.transform.position - target.transform.position).normalized;
                 dir.y = 0;
                 Quaternion look = Quaternion.LookRotation(dir);
-                _player.ModelTrm.DOLookAt(target.transform.position, .2f, AxisConstraint.Y);
-                target.transform.DORotateQuaternion(look, .2f);
                 FullMountAnimationDataSO fullMountAnimation = _fullMountAnimationDatabase.fullMountAnimationDats[0];
-                OnFullMount?.Invoke(fullMountAnimation.fullMountAttackAnimation);
-                target.GetCompo<AgentFullMountable>().FullMounted(fullMountAnimation.fullMountedAnimation);
+                AlignComponent alignComponent = target.GetComponent<AlignComponent>();
+                alignComponent.targetAnim = fullMountAnimation.fullMountedAnimation;
+                alignComponent.motionWarpingAsset = fullMountAnimation.fullMountMotionWarping;
+
+                Sequence seq = DOTween.Sequence();
+                seq.Append(_player.ModelTrm.DOLookAt(target.transform.position, .2f, AxisConstraint.Y));
+                seq.Join(target.transform.DORotateQuaternion(look, .2f));
+                seq.OnComplete(() =>
+                {
+                    target.GetCompo<AgentFullMountable>().FullMounted();
+                    _player.WarpingComponent.Interact(alignComponent);
+                    _player.WarpingComponent.OnAnimationFinished += HandleFullMountEnd;
+                    OnFullMount?.Invoke();
+                });
             }
+        }
+
+        private void HandleFullMountEnd()
+        {
+            _player.WarpingComponent.OnAnimationFinished -= HandleFullMountEnd;
+            _player.GetCompo<PlayerAnimationTrigger>().OnEndFullMount?.Invoke();
+            _fullMountTarget.GetCompo<AgentAnimator>(true).PlayGetUpAnimation();
         }
     }
 }

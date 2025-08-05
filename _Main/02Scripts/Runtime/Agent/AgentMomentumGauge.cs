@@ -39,7 +39,7 @@ namespace Main.Runtime.Agents
 
         [field: SerializeField] public float AutoDecreaseMomentumGaugeTime { get; private set; } = 2f;
         [field: SerializeField] public float DecreaseMomentumGaugeOneFrame { get; private set; } = 0.05f;
-        
+
 
         public StatSO MaxMomentumGauge => _maxMomentumGauge;
         [SerializeField, Required] private StatSO _maxMomentumGauge;
@@ -85,11 +85,13 @@ namespace Main.Runtime.Agents
                 DisposeTokenSource();
 
                 _checkDecreaseMomentumGaugeTokenSource = new CancellationTokenSource();
-                await UniTask.WaitForSeconds(AutoDecreaseMomentumGaugeTime, cancellationToken: _checkDecreaseMomentumGaugeTokenSource.Token);
+                await UniTask.WaitForSeconds(AutoDecreaseMomentumGaugeTime,
+                    cancellationToken: _checkDecreaseMomentumGaugeTokenSource.Token);
                 StartDecreaseMomentumGauge();
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                // ignored
             }
         }
 
@@ -128,8 +130,9 @@ namespace Main.Runtime.Agents
                     DecreaseMomentumGauge(_decreaseMomentumGaugePerTick);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
+                // ignored
             }
         }
 

@@ -1,9 +1,7 @@
-using Main.Core;
 using Main.Runtime.Characters.StateMachine;
-using Opsive.GraphDesigner.Editor.Elements;
+using Opsive.BehaviorDesigner.Runtime.Tasks.Events;
 using Opsive.GraphDesigner.Runtime;
 using Opsive.GraphDesigner.Runtime.Variables;
-using EventNode = Opsive.BehaviorDesigner.Runtime.Tasks.Events.EventNode;
 
 namespace Main.Runtime.BT.Events
 {
@@ -25,7 +23,6 @@ namespace Main.Runtime.BT.Events
         {
             if (_currentState.Value != matchingHeroState) return;
 
-            Debug.Log(_currentState.Value);
             m_BehaviorTree.StartBranch(this);
         }
     }

@@ -96,10 +96,6 @@ namespace PJH.Runtime.Players
                     cooldownPassiveInfo.StartCooldownEvent += () =>
                     {
                         if (!_player.CanApplyPassive) return;
-                        var evt = UIEvents.ShowPassiveInfoUI;
-                        evt.passive = passive;
-                        evt.passiveInfoType = PassiveInfoType.Cooldown;
-                        _uiEventChannel.RaiseEvent(evt);
 
                         cooldownPassiveInfo.remainingCooldownTime = cooldownPassiveInfo.cooldownTime;
                         cooldownPassiveInfo.OnUpdateCooldownTime?.Invoke(cooldownPassiveInfo.remainingCooldownTime,
@@ -277,7 +273,7 @@ namespace PJH.Runtime.Players
                 }
             }
 
-            other = null;
+            Destroy(other);
             Debug.Log("<color=green>병합 성공</color>");
             OnChangePassive?.Invoke();
             return true;

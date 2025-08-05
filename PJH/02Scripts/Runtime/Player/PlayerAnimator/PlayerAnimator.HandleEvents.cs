@@ -1,5 +1,4 @@
 ﻿using Animancer;
-using Main.Runtime.Combat.Core;
 
 namespace PJH.Runtime.Players
 {
@@ -14,19 +13,6 @@ namespace PJH.Runtime.Players
         private void HandleStartStun()
         {
             SetParam(_isStunnedParam, true);
-        }
-
-        private void HandleFullMount(ITransition animationClip)
-        {
-            EnableRootMotion(true);
-            PlayAnimationClip(animationClip,
-                () =>
-                {
-                    EnableRootMotion(false);
-                    PlayerAnimationTrigger playerAnimationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
-
-                    playerAnimationTriggerCompo.OnEndFullMount?.Invoke();
-                });
         }
 
         private void HandleExitBattle()

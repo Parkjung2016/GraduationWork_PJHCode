@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Main.Core;
 using Main.Runtime.Agents;
@@ -7,12 +6,14 @@ using Main.Runtime.Core.Events;
 using MoreMountains.Feedbacks;
 using TrailsFX;
 using UnityEngine;
+using Debug = Main.Core.Debug;
 
 
 namespace PJH.Runtime.Players
 {
     public struct AttachedToBodyEffectInfo
     {
+        public string key;
         public PoolEffectPlayer effectPlayer;
         public bool applyRotation;
     }
@@ -29,13 +30,15 @@ namespace PJH.Runtime.Players
         private MMF_Player _applyDamagedFeedback, _evasionFeedbackWhileHitting;
         private MMF_Player _counterAttackFeedback, _hitCounterAttackTargetFeedback;
         private MMF_Player _hitWarpStrikeTargetFeedback, _avoidingAttackFeedback;
+        private MMF_Player _onDeathFeedbackPlayer;
 
-        private Dictionary<(HumanBodyBones, string), AttachedToBodyEffectInfo> _effects;
+        private Dictionary<HumanBodyBones, List<AttachedToBodyEffectInfo>> _attachedEffects;
 
         public override void Initialize(Agent agent)
         {
             base.Initialize(agent);
-            _effects = new();
+            _attachedEffects = new();
+            _onDeathFeedbackPlayer = transform.Find("OnEnemyDeathFeedbackPlayer")?.GetComponent<MMF_Player>();
             _counterAttackFeedback = transform.Find("CounterAttackFeedback").GetComponent<MMF_Player>();
             _hitCounterAttackTargetFeedback =
                 transform.Find("HitCounterAttackTargetFeedback").GetComponent<MMF_Player>();
@@ -54,6 +57,8 @@ namespace PJH.Runtime.Players
         public override void AfterInitialize()
         {
             base.AfterInitialize();
+            _gameEventChannel.AddListener<EnemyDead>(HandleEnemyDead);
+
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
 
             _player.OnStartStun += HandleStartStun;
@@ -72,11 +77,17 @@ namespace PJH.Runtime.Players
 
             PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
             warpStrikeCompo.OnHitWarpStrikeTarget += HandleHitWarpStrikeTarget;
+
+            PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisher += HandleFinisher;
+            finisherCompo.OnFinisherEnd += HandleFinisherEnd;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            _gameEventChannel.RemoveListener<EnemyDead>(HandleEnemyDead);
+
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
             _player.OnStartStun -= HandleStartStun;
             _player.OnEndStun -= HandleEndStun;
@@ -96,21 +107,43 @@ namespace PJH.Runtime.Players
 
             PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
             warpStrikeCompo.OnHitWarpStrikeTarget -= HandleHitWarpStrikeTarget;
+
+
+            PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisher += HandleFinisher;
+            finisherCompo.OnFinisherEnd += HandleFinisherEnd;
+        }
+
+        private void HandleEnemyDead(EnemyDead evt)
+        {
+            _onDeathFeedbackPlayer?.PlayFeedbacks();
+        }
+
+        private void HandleFinisher()
+        {
+            DistanceFade.Locked = true;
+        }
+
+        private void HandleFinisherEnd()
+        {
+            DistanceFade.Locked = false;
         }
 
         private void LateUpdate()
         {
-            foreach (var effectPair in _effects)
+            foreach (var effectPair in _attachedEffects)
             {
-                AttachedToBodyEffectInfo info = effectPair.Value;
-                Transform boneTrm = _animatorCompo.Animancer.GetBoneTransform(effectPair.Key.Item1);
-                if (info.applyRotation)
+                foreach (var effectInfo in effectPair.Value)
                 {
-                    info.effectPlayer.transform.SetPositionAndRotation(boneTrm.position, boneTrm.rotation);
-                }
-                else
-                {
-                    info.effectPlayer.transform.position = boneTrm.position;
+                    Transform boneTrm = _animatorCompo.Animancer.GetBoneTransform(effectPair.Key);
+                    if (effectInfo.applyRotation)
+                    {
+                        effectInfo.effectPlayer.transform.SetPositionAndRotation(boneTrm.position, boneTrm.rotation);
+                    }
+                    else
+                    {
+                        effectInfo.effectPlayer.transform.position = boneTrm.position;
+                    }
                 }
             }
         }
@@ -191,25 +224,35 @@ namespace PJH.Runtime.Players
 
         public void StopEffectAttachedToBody(PoolTypeSO poolTypeSO, HumanBodyBones attachedBone)
         {
-            var key = (attachedBone, poolTypeSO.typeName);
-            if (_effects.TryGetValue(key, out AttachedToBodyEffectInfo info))
+            if (_attachedEffects.TryGetValue(attachedBone, out var effectInfos))
             {
-                info.effectPlayer.StopEffects();
-                _effects.Remove(key);
+                Debug.Log(effectInfos.Count);
+
+                int idx = effectInfos.FindIndex(x => x.key == poolTypeSO.typeName);
+                AttachedToBodyEffectInfo effectInfo = effectInfos[idx];
+                effectInfo.effectPlayer.StopEffects();
+                _attachedEffects[attachedBone].RemoveAt(idx);
             }
         }
 
         private PoolEffectPlayer PlayEffectAndAddEffects(PoolTypeSO poolTypeSO, HumanBodyBones attachedBone,
             bool isLooped = true, float playTime = 0.0f, bool applyRotation = true)
         {
+            Debug.Log("wwff");
             PoolEffectPlayer effectPlayer = _poolManager.Pop(poolTypeSO) as PoolEffectPlayer;
-            var key = (attachedBone, poolTypeSO.typeName);
             AttachedToBodyEffectInfo info = new AttachedToBodyEffectInfo
             {
+                key = poolTypeSO.typeName,
                 applyRotation = applyRotation,
                 effectPlayer = effectPlayer
             };
-            _effects.Add(key, info);
+            if (_attachedEffects.ContainsKey(attachedBone))
+            {
+                _attachedEffects[attachedBone].Add(info);
+            }
+            else
+                _attachedEffects.Add(attachedBone, new List<AttachedToBodyEffectInfo> { info });
+
             effectPlayer.PlayEffects();
             return effectPlayer;
         }

@@ -8,8 +8,8 @@ namespace Main.Runtime.Agents
     public class AgentFullMountable : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         public bool IsFullMounted { get; private set; }
-        public event Action<ITransition> OnFullMounted;//시작
-        public event Action OnEndFullMounted;//끝
+        public event Action OnFullMounted; //시작
+        public event Action OnEndFullMounted; //끝
         private Agent _agent;
 
         public void Initialize(Agent agent)
@@ -28,9 +28,9 @@ namespace Main.Runtime.Agents
             IsFullMounted = false;
         }
 
-        public void FullMounted(ITransition fullMountedAnimationClip)
+        public void FullMounted()
         {
-            OnFullMounted?.Invoke(fullMountedAnimationClip);
+            OnFullMounted?.Invoke();
             IsFullMounted = true;
         }
     }

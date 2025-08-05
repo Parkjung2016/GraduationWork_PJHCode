@@ -26,10 +26,12 @@ MonoBehaviour:
     _Speed: 1
     _Events:
       _NormalizedTimes:
+      - 0.20729685
       - 0.27836758
       - 0.5732485
       _Callbacks: []
       _Names:
+      - {fileID: 11400000, guid: c4150ebe6c550694ebc0027236353709, type: 2}
       - {fileID: 11400000, guid: 02b46ee8f3875b44b96c48ee991b5bee, type: 2}
     _Clip: {fileID: 8993902097722301239, guid: 3bef28ee4b92eab4d9e3b3cb866abe48, type: 3}
     _NormalizedStartTime: NaN
@@ -42,6 +44,7 @@ MonoBehaviour:
       _Names: []
     _Clip: {fileID: 8993902097722301239, guid: 86970009b7019874a9b6141ac047e244, type: 3}
     _NormalizedStartTime: 0.3
+  damageMultiplier: 1
   references:
     version: 2
     RefIds: []

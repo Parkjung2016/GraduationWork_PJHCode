@@ -16,7 +16,10 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 1827226128182048838, guid: bddedbabc760028458835beaf0dd5533, type: 3}
+    - {fileID: 8993902097722301239, guid: 163d04ebedc78f34abb8a83a479c9442, type: 3}
+    - {fileID: 8993902097722301239, guid: 67feec0ff43c6554c9d7066e05d3e5b5, type: 3}
+    - {fileID: 8993902097722301239, guid: edc93f8fde05bf345831efd6d86408ae, type: 3}
+    - {fileID: 8993902097722301239, guid: d200c65e2130e29429bdebac186217f8, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -180,7 +183,7 @@ MonoBehaviour:
       Data: 
     - Name: _Clip
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: _NormalizedStartTime
       Entry: 4
       Data: NaN
@@ -249,7 +252,7 @@ MonoBehaviour:
       Data: 
     - Name: _Clip
       Entry: 10
-      Data: 0
+      Data: 2
     - Name: _NormalizedStartTime
       Entry: 4
       Data: NaN
@@ -318,7 +321,7 @@ MonoBehaviour:
       Data: 
     - Name: _Clip
       Entry: 10
-      Data: 0
+      Data: 3
     - Name: _NormalizedStartTime
       Entry: 4
       Data: NaN

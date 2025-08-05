@@ -4,8 +4,10 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Main.Core;
 using Main.Runtime.Core.Events;
+using PJH.Runtime.Players.FinisherSequence;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Splines;
 using Debug = Main.Core.Debug;
 
@@ -17,13 +19,13 @@ namespace PJH.Runtime.Core.PlayerCamera
         private CinemachineSplineDolly _cinemachineSplineDolly;
         private GameEventChannelSO _gameEventChannel;
 
-
-        private CancellationTokenSource _updateLookAtTransformToken;
+        private PositionConstraint _lookAtPositionConstraint;
 
         private void Awake()
         {
             _cinemachineCamera = GetComponent<CinemachineCamera>();
             _cinemachineSplineDolly = GetComponent<CinemachineSplineDolly>();
+            _lookAtPositionConstraint = _cinemachineCamera.Target.TrackingTarget.GetComponent<PositionConstraint>();
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
 
             _gameEventChannel.AddListener<EnemyFinisherSequence>(HandleEnemyFinisherSequence);
@@ -32,12 +34,6 @@ namespace PJH.Runtime.Core.PlayerCamera
 
         private void OnDestroy()
         {
-            if (_updateLookAtTransformToken is { IsCancellationRequested: false })
-            {
-                _updateLookAtTransformToken.Cancel();
-                _updateLookAtTransformToken.Dispose();
-            }
-
             _gameEventChannel.RemoveListener<EnemyFinisherSequence>(HandleEnemyFinisherSequence);
             _gameEventChannel.RemoveListener<FinishEnemyFinisher>(HandleFinishEnemyFinisher);
         }
@@ -49,12 +45,6 @@ namespace PJH.Runtime.Core.PlayerCamera
 
         private void HandleEnemyFinisherSequence(EnemyFinisherSequence evt)
         {
-            if (_updateLookAtTransformToken is { IsCancellationRequested: false })
-            {
-                _updateLookAtTransformToken.Cancel();
-                _updateLookAtTransformToken.Dispose();
-            }
-
             _cinemachineCamera.Priority = 5;
             _cinemachineSplineDolly.enabled = false;
             _cinemachineSplineDolly.Spline.Spline.Clear();
@@ -74,26 +64,25 @@ namespace PJH.Runtime.Core.PlayerCamera
                 .SetEase(evt.sequenceAsset.sequenceCurve);
 
             HumanBodyBones lookAtBone = evt.sequenceAsset.lookAtBone;
-            Transform lookAtTransform = evt.playerAnimator.GetBoneTransform(lookAtBone);
+            Transform lookAtTransform = null;
+            switch (evt.sequenceAsset.lookAtTarget)
+            {
+                case FinisherLookAtType.Attacker:
+                    lookAtTransform = evt.playerAnimator.GetBoneTransform(lookAtBone);
+                    break;
+                case FinisherLookAtType.Victim:
+                    lookAtTransform = evt.targetAnimator.GetBoneTransform(lookAtBone);
+                    break;
+            }
+
             UpdateLookAtTransform(lookAtTransform);
         }
 
-        private async void UpdateLookAtTransform(Transform lookAtTarget)
+        private void UpdateLookAtTransform(Transform lookAtTarget)
         {
-            try
-            {
-                _updateLookAtTransformToken = new CancellationTokenSource();
-                while (true)
-                {
-                    if (_updateLookAtTransformToken.IsCancellationRequested) return;
-                    Transform trackingTrm = _cinemachineCamera.Target.TrackingTarget;
-                    trackingTrm.position = lookAtTarget.position;
-                    await UniTask.Yield(cancellationToken: _updateLookAtTransformToken.Token);
-                }
-            }
-            catch (Exception e)
-            {
-            }
+            ConstraintSource source = _lookAtPositionConstraint.GetSource(0);
+            source.sourceTransform = lookAtTarget;
+            _lookAtPositionConstraint.SetSource(0, source);
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Kinemation.MotionWarping.Runtime.Core;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 using Debug = Main.Core.Debug;
 
@@ -28,7 +28,6 @@ namespace PJH.Runtime.Players
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             ModelTrm = transform.Find("Model");
             _meshRenderers = ModelTrm.GetComponentsInChildren<Renderer>();
-            WarpingComponent = GetComponent<MotionWarping>();
             _attackCompo = GetCompo<PlayerAttack>();
             _stunDurationStat = GetCompo<PlayerStat>().GetStat(_stunDurationStat);
             SubscribeEvents();
@@ -84,18 +83,12 @@ namespace PJH.Runtime.Players
 
                 _stunTokenSource = new CancellationTokenSource();
 
-                try
-                {
-                    HandleEndHitAnimation();
-                    IsStunned = true;
-                    OnStartStun?.Invoke();
-                    await UniTask.WaitForSeconds(_stunDurationStat.Value, cancellationToken: _stunTokenSource.Token);
-                    IsStunned = false;
-                    OnEndStun?.Invoke();
-                }
-                catch (Exception e)
-                {
-                }
+                HandleEndHitAnimation();
+                IsStunned = true;
+                OnStartStun?.Invoke();
+                await UniTask.WaitForSeconds(_stunDurationStat.Value, cancellationToken: _stunTokenSource.Token);
+                IsStunned = false;
+                OnEndStun?.Invoke();
             }
             catch (Exception e)
             {

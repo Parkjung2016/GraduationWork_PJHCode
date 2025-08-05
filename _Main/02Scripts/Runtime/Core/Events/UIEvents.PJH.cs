@@ -16,7 +16,7 @@ namespace Main.Runtime.Core.Events
         public static readonly ShowLockOnUI ShowLockOnUI = new ShowLockOnUI();
         public static readonly ShowWarpStrikeTargetUI ShowWarpStrikeTargetUI = new ShowWarpStrikeTargetUI();
         public static readonly ShowPassiveInfoUI ShowPassiveInfoUI = new ShowPassiveInfoUI();
-
+        public static readonly ShowTextDialogueUI ShowTextDialogueUI = new ShowTextDialogueUI();
         public static readonly ShowEvasionWhileHittingInfUI ShowEvasionWhileHittingInfUI =
             new ShowEvasionWhileHittingInfUI();
     }
@@ -24,10 +24,8 @@ namespace Main.Runtime.Core.Events
     public enum PassiveInfoType
     {
         None,
-        Buff,
-        Cooldown
+        Buff
     }
-
     public class ShowEvasionWhileHittingInfUI : GameEvent
     {
         public IPlayer player;
@@ -69,7 +67,10 @@ namespace Main.Runtime.Core.Events
     {
         public bool isShowUI;
     }
-
+    public class ShowTextDialogueUI : GameEvent
+    {
+        public string dialogueText;
+    }
     public class ShowFinisherTargetUI : GameEvent
     {
         public bool isShowUI;

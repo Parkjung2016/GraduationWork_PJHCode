@@ -86,7 +86,8 @@ namespace PJH.Runtime.Players
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
             PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
-            return _isComboPossible && !_player.IsStunned && !_player.IsHitting && !movementCompo.IsEvading &&
+            return !_player.IsGrabbed && _isComboPossible && !_player.IsStunned && !_player.IsHitting &&
+                   !movementCompo.IsEvading &&
                    !blockCompo.IsBlocking &&
                    !warpStrikeCompo.Activating && !counterAttackCompo.IsCounterAttacking;
         }

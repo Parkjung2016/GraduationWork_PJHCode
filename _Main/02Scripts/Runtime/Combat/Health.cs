@@ -38,6 +38,7 @@ namespace Main.Runtime.Combat
                 if (_currentHealth <= 0 && !IsDead)
                 {
                     IsDead = true;
+                    ailmentStat.ClearAilment();
                     OnDeath?.Invoke();
                 }
             }
@@ -110,29 +111,27 @@ namespace Main.Runtime.Combat
         private void Update()
         {
             ailmentStat.UpdateAilment();
-            if (Input.GetKeyDown(KeyCode.H))
-                ApplyHeal(10);
         }
 
         protected virtual bool CanApplyDamage(GetDamagedInfo getDamagedInfo) => !IsDead && !IsInvincibility;
 
         public virtual bool ApplyDamage(GetDamagedInfo getDamagedInfo)
         {
+            _getDamagedInfo = getDamagedInfo;
             if (!CanApplyDamage(getDamagedInfo)) return false;
 
             if (CurrentShield > 0)
             {
                 CurrentShield -= getDamagedInfo.damage;
-                getDamagedInfo.damage = 0;
+                _getDamagedInfo.damage = 0;
             }
             else
             {
                 GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(getDamagedInfo);
                 if (returnValue.HasValue)
-                    getDamagedInfo = returnValue.Value;
+                    _getDamagedInfo = returnValue.Value;
             }
 
-            _getDamagedInfo = getDamagedInfo;
             OnApplyDamaged?.Invoke(_getDamagedInfo.damage);
             CurrentHealth -= _getDamagedInfo.damage;
             return true;
@@ -143,7 +142,40 @@ namespace Main.Runtime.Combat
             GetDamagedInfo getDamagedInfo = new();
             getDamagedInfo.damage = damage;
             if (!CanApplyDamage(getDamagedInfo)) return false;
-            CurrentHealth -= getDamagedInfo.damage;
+            if (CurrentShield > 0)
+            {
+                CurrentShield -= getDamagedInfo.damage;
+                _getDamagedInfo.damage = 0;
+            }
+            else
+            {
+                GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(getDamagedInfo);
+                if (returnValue.HasValue)
+                    _getDamagedInfo = returnValue.Value;
+            }
+
+            OnApplyDamaged?.Invoke(_getDamagedInfo.damage);
+            CurrentHealth -= _getDamagedInfo.damage;
+            return true;
+        }
+
+        public virtual bool ApplyOnlyDamageWithOutEvent(float damage)
+        {
+            GetDamagedInfo getDamagedInfo = new();
+            getDamagedInfo.damage = damage;
+            if (CurrentShield > 0)
+            {
+                CurrentShield -= getDamagedInfo.damage;
+                _getDamagedInfo.damage = 0;
+            }
+            else
+            {
+                GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(getDamagedInfo);
+                if (returnValue.HasValue)
+                    _getDamagedInfo = returnValue.Value;
+            }
+
+            CurrentHealth -= _getDamagedInfo.damage;
             return true;
         }
 

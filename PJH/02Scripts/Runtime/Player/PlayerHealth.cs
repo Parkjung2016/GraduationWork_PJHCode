@@ -5,6 +5,7 @@ using Main.Runtime.Combat;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Core.StatSystem;
+using Main.Runtime.Manager;
 using Main.Shared;
 using UnityEngine;
 
@@ -34,11 +35,25 @@ namespace PJH.Runtime.Players
             PlayerStat statCompo = _player.GetCompo<PlayerStat>();
             _increaseHealthStatOnFinisher = statCompo.GetStat(_increaseHealthStatOnFinisher);
             _gameEventChannel.AddListener<FinishEnemyFinisher>(HandleFinishTimeline);
+            OnChangedHealth += HandleChangedHealth;
         }
 
         private void OnDestroy()
         {
             _gameEventChannel.RemoveListener<FinishEnemyFinisher>(HandleFinishTimeline);
+            OnChangedHealth -= HandleChangedHealth;
+        }
+
+        private void HandleChangedHealth(float currentHealth, float minHealth, float maxHealth)
+        {
+            if (currentHealth <= maxHealth * 0.25f)
+            {
+                Managers.FMODManager.SetBeforePlayerDead(true);
+            }
+            else
+            {
+                Managers.FMODManager.SetBeforePlayerDead(false);
+            }
         }
 
         private void HandleFinishTimeline(FinishEnemyFinisher evt)
