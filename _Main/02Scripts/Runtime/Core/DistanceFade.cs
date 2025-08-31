@@ -1,11 +1,9 @@
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.VFX;
 using ZLinq;
 
 namespace Main.Runtime.Core
 {
-    [RequireComponent(typeof(BoxCollider))]
     public class DistanceFade : MonoBehaviour
     {
         private readonly int FadeAmountHash = Shader.PropertyToID("_FadeAmount");
@@ -16,6 +14,15 @@ namespace Main.Runtime.Core
         private Collider _collider;
 
         public bool Locked { get; set; }
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!GetComponent<Collider>())
+            {
+                gameObject.AddComponent<BoxCollider>();
+            }
+        }
+#endif
 
         private void Awake()
         {
@@ -28,7 +35,7 @@ namespace Main.Runtime.Core
                 .ToArray();
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             float value = 0;
             if (!Locked)
@@ -41,6 +48,15 @@ namespace Main.Runtime.Core
                 value = Remap(value, _minMaxDistance.y, 0, _minMaxDistance.x, 1);
             }
 
+            for (int i = 0; i < _renderers.Length; i++)
+            {
+                _renderers[i].material
+                    .SetFloat(FadeAmountHash, value);
+            }
+        }
+
+        public void SetFadeAmount(float value)
+        {
             for (int i = 0; i < _renderers.Length; i++)
             {
                 _renderers[i].material

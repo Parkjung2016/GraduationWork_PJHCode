@@ -16,9 +16,11 @@ namespace PJH.Runtime.UI
 
 
         private bool _isLockOn;
+        private GameObject _groupTrm;
 
         private void Awake()
         {
+            _groupTrm = transform.GetChild(0).gameObject;
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
         }
 
@@ -31,6 +33,7 @@ namespace PJH.Runtime.UI
             finisherCompo.OnFinisherEnd += HandleFinisherEnd;
             _isLockOn = player.IsLockOn;
             _uiEventChannel.AddListener<ShowLockOnUI>(HandleShowLockOnUI);
+            _groupTrm.SetActive(false);
         }
 
         private void OnDestroy()
@@ -64,20 +67,22 @@ namespace PJH.Runtime.UI
         {
             _isLockOn = isLockOn;
             if (_lockOnTarget != null)
-                transform.GetChild(0).gameObject.SetActive(isLockOn);
+                _groupTrm.SetActive(isLockOn);
+            else
+                _groupTrm.SetActive(false);
         }
 
         private void HandleShowLockOnUI(ShowLockOnUI evt)
         {
             _lockOnTarget = evt.lockOnTarget;
             if (!_isLockOn) return;
-            transform.GetChild(0).gameObject.SetActive(evt.isShowUI);
+            _groupTrm.gameObject.SetActive(evt.isShowUI);
         }
 
         private void LateUpdate()
         {
-            if (!transform.GetChild(0).gameObject.activeSelf) return;
-            transform.GetChild(0).LookAt(Camera.main.transform);
+            if (!_groupTrm.gameObject.activeSelf) return;
+            _groupTrm.transform.LookAt(Camera.main.transform);
             if (_lockOnTarget == null) return;
             transform.position = _lockOnTarget.LockOnUIDisplayTargetTrm.position;
         }

@@ -17,7 +17,10 @@
             PlayerAnimator animatorCompo = _player.GetCompo<PlayerAnimator>();
             animatorCompo.AnimatorMoveEvent += HandleAnimatorMove;
             animatorCompo.OnEndHitAnimation += EndManualMove;
-
+            
+            PlayerEnemyFinisher enemyFinisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            enemyFinisherCompo.OnFinisherEnd += HandleEndEvasion;
+            
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnEndEvasion += HandleEndEvasion;
             animationTriggerCompo.OnBlockEnd += HandleEndEvasion;
@@ -32,7 +35,7 @@
         {
             _player.OnStartStun -= HandleEndEvasion;
             _player.OnGrabbed -= HandleEndEvasion;
-            
+
             _player.HealthCompo.OnDeath -= HandleDeath;
             _player.PlayerInput.RunEvent -= HandleRun;
             _player.PlayerInput.EvadeEvent -= Evasion;

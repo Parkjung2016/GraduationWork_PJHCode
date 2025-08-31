@@ -51,6 +51,9 @@ namespace PJH.Runtime.Core.PlayerCamera
 
         private Camera _uiCamera;
 
+        public Vector2 CameraVelocity { get; private set; }
+
+
         private void Awake()
         {
             _uiCamera = Camera.main.transform.Find("WorldCanvasCamera").GetComponent<Camera>();
@@ -70,6 +73,7 @@ namespace PJH.Runtime.Core.PlayerCamera
             _gameEventChannel.AddListener<ChangeCameraFOV>(HandleChangeCameraFOV);
             _gameEventChannel.AddListener<ChangeCameraUpdate>(HandleChangeCameraUpdate);
             _gameEventChannel.AddListener<EnableCameraMovement>(HandleEnableCameraMovement);
+            _gameEventChannel.AddListener<EnterNextLevel>(HandleEnterNextLevel);
 
             HandleCameraInvertInput(GameEvents.CameraInvertInput);
         }
@@ -83,6 +87,12 @@ namespace PJH.Runtime.Core.PlayerCamera
             _gameEventChannel.RemoveListener<ChangeCameraFOV>(HandleChangeCameraFOV);
             _gameEventChannel.RemoveListener<ChangeCameraUpdate>(HandleChangeCameraUpdate);
             _gameEventChannel.RemoveListener<EnableCameraMovement>(HandleEnableCameraMovement);
+            _gameEventChannel.RemoveListener<EnterNextLevel>(HandleEnterNextLevel);
+        }
+
+        private void HandleEnterNextLevel(EnterNextLevel evt)
+        {
+            _cinemachineCamera.Target.TrackingTarget.transform.rotation = evt.playerModelTrm.rotation;
         }
 
         private void HandleEnableCameraMovement(EnableCameraMovement evt)
@@ -135,7 +145,6 @@ namespace PJH.Runtime.Core.PlayerCamera
             enabled = false;
         }
 
-
         private void HandleCameraViewConfig(CameraViewConfig evt)
         {
             if (_cameraViewConfigSequence != null && _cameraViewConfigSequence.IsActive())
@@ -171,10 +180,11 @@ namespace PJH.Runtime.Core.PlayerCamera
             _uiCamera.fieldOfView = _cinemachineCamera.Lens.FieldOfView;
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             if (!_updateIgnoreTimeScale && Time.timeScale == 0) return;
             Vector2 look = _lookInput.action.ReadValue<Vector2>();
+            CameraVelocity = look;
             Transform trackingTarget = _cinemachineCamera.Target.TrackingTarget;
             if (_cinemachineCamera.IsLive)
             {

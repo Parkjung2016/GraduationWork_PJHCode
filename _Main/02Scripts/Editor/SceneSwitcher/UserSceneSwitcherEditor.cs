@@ -5,7 +5,7 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityToolbarExtender;
+//using UnityToolbarExtender;
 using OdinMenuTree = Sirenix.OdinInspector.Editor.OdinMenuTree;
 
 namespace PJH
@@ -15,7 +15,7 @@ namespace PJH
     {
         static SceneSwitchRightButton()
         {
-            ToolbarExtender.RightToolbarGUI.Add(OnToolbarGUI);
+            //ToolbarExtender.RightToolbarGUI.Add(OnToolbarGUI);
         }
 
         static void OnToolbarGUI()

@@ -1,6 +1,5 @@
 ﻿using System;
 using Animancer;
-using Cysharp.Threading.Tasks;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.StatSystem;
 using Main.Shared;
@@ -74,20 +73,23 @@ namespace Main.Runtime.Combat
             IsDead = false;
         }
 
-        public virtual void Init(StatSO maxHealthStat, StatSO maxShieldStat)
+        public virtual void Init(IAgent agent, StatSO maxHealthStat, StatSO maxShieldStat)
         {
-            _agent = GetComponent<IAgent>();
+            _agent = agent;
 
             _maxShieldStat = maxShieldStat;
             _maxHealthStat = maxHealthStat;
-            ResetToMaxHealth();
+            if (_maxHealthStat)
+            {
+                ResetToMaxHealth();
+                _maxHealthStat.OnValueChange += HandleMaxHealthChanged;
+            }
+
             IsInitialized = true;
 
             ailmentStat = new AilmentStat();
             ailmentStat.OnAilmentChanged += HandAilmentChangeEvent;
             ailmentStat.OnDotDamage += HandleDotDamageEvent;
-
-            _maxHealthStat.OnValueChange += HandleMaxHealthChanged;
         }
 
 
@@ -104,7 +106,6 @@ namespace Main.Runtime.Combat
         private void HandleMaxHealthChanged(StatSO stat, float current, float prev)
         {
             float healthRatio = CurrentHealth / prev;
-            Debug.Log(healthRatio);
             CurrentHealth = current * healthRatio;
         }
 

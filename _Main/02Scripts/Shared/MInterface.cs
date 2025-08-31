@@ -15,7 +15,8 @@ namespace Main.Shared
     {
         public Transform UIDisplayTrm { get; }
         public Vector3 AdditionalUIDisplayPos { get; }
-        public string Description { get; set; }
+        public bool CanInteract { get; }
+        public string Description { get; }
         public void Interact(Transform Interactor);
     }
 
@@ -37,7 +38,31 @@ namespace Main.Shared
         public Transform LockOnUIDisplayTargetTrm { get; }
     }
 
+    public interface IBattleZoneController
+    {
+        public IBattleZone CurrentBattleZone { get; }
+        public event Action<int> OnChangedRemainingEnemy;
+        public int RemainingEnemy { get; }
+    }
+
+    public interface IBattleZone
+    {
+    }
+
     public interface IScene
     {
+        public void SettingForTimeline();
+        public void SettingForEndTimeline();
+        public void VolumeForTimeline();
+        public void VolumeForEndTimeline();
+    }
+
+    public interface IBattleScene
+    {
+        public delegate void ChangedBattleZoneControllerEvent(IBattleZoneController prevBattleZoneController,
+            IBattleZoneController currentBattleZoneController);
+
+        public event ChangedBattleZoneControllerEvent OnChangedBattleZoneController;
+        public IBattleZoneController CurrentBattleZoneController { get; set; }
     }
 }

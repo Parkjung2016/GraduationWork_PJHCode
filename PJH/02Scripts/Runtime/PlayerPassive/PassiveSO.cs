@@ -113,7 +113,7 @@ namespace PJH.Runtime.PlayerPassive
                     var evt = UIEvents.ShowPassiveInfoUI;
                     evt.passive = this;
                     evt.passiveInfoType = PassiveInfoType.None;
-                    _uiEventChannel.RaiseEvent(evt);
+                     _uiEventChannel.RaiseEvent(evt);
                 }
             }
 

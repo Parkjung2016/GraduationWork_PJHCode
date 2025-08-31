@@ -82,7 +82,11 @@ namespace PJH.Runtime.Players
                                 .FirstOrDefault();
                         if (nearCollider)
                         {
-                            _interactableTarget = nearCollider.GetComponent<IInteractable>();
+                            IInteractable interactable = nearCollider.GetComponent<IInteractable>();
+                            if (interactable.CanInteract)
+                                _interactableTarget = interactable;
+                            else
+                                _interactableTarget = null;
                         }
                         else
                             _interactableTarget = null;

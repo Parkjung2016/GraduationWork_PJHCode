@@ -15,31 +15,31 @@ MonoBehaviour:
   StatOverrides:
   - _stat: {fileID: 11400000, guid: 5ca18d3738acca04381df9132057ba24, type: 2}
     _isUseOverride: 1
-    _overrideValue: 2.6108375
+    _overrideValue: 2.8
   - _stat: {fileID: 11400000, guid: 35f6c51f6927dbd4daab2668c44d5cf9, type: 2}
     _isUseOverride: 1
-    _overrideValue: 4.954023
+    _overrideValue: 15
   - _stat: {fileID: 11400000, guid: fdd4e1ba359898b4d87136f145068560, type: 2}
     _isUseOverride: 1
-    _overrideValue: 269.5503
+    _overrideValue: 100
   - _stat: {fileID: 11400000, guid: 331ae21f9e62de44ea4faf9e7861a57d, type: 2}
     _isUseOverride: 1
-    _overrideValue: 60.047935
+    _overrideValue: 65
   - _stat: {fileID: 11400000, guid: 5b03a8897c7231d41990c8cbc8365e31, type: 2}
     _isUseOverride: 1
-    _overrideValue: 20.256414
+    _overrideValue: 30
   - _stat: {fileID: 11400000, guid: b336f6bc1f735334193775906a0f3cd8, type: 2}
     _isUseOverride: 1
-    _overrideValue: 0.99453557
+    _overrideValue: 1.1
   - _stat: {fileID: 11400000, guid: 94c130df7955a544596f4f6488ddc1ab, type: 2}
     _isUseOverride: 1
-    _overrideValue: 9.953847
+    _overrideValue: 10
   - _stat: {fileID: 11400000, guid: ecaa411f055a44245863d3dc471611d4, type: 2}
     _isUseOverride: 1
-    _overrideValue: 3.9540231
+    _overrideValue: 3
   - _stat: {fileID: 11400000, guid: dc7d7debef329614194340451cfea602, type: 2}
     _isUseOverride: 1
-    _overrideValue: 7.230768
+    _overrideValue: 7
   - _stat: {fileID: 11400000, guid: 8a370d30c923fd14097e9ed7df249932, type: 2}
     _isUseOverride: 1
     _overrideValue: 100

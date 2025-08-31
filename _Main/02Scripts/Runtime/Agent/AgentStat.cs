@@ -3,8 +3,10 @@ using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
 using Sirenix.OdinInspector;
 using System.Linq;
+using Main.Core;
 using UnityEngine;
 using ZLinq;
+using Debug = UnityEngine.Debug;
 
 namespace Main.Runtime.Agents
 {
@@ -19,6 +21,7 @@ namespace Main.Runtime.Agents
         public virtual void Initialize(Agent agent)
         {
             _agent = agent;
+            _statOverrideList = AddressableManager.Load<StatOverrideListSO>(_statOverrideList.name);
             _stats = _statOverrideList.StatOverrides.Select(x => x.CreateStat()).ToArray();
         }
 

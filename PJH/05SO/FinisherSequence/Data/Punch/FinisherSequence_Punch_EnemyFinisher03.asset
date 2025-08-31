@@ -25,7 +25,7 @@ MonoBehaviour:
     _NormalizedStartTime: NaN
   sequenceDuration: 1
   lookAtTarget: 0
-  lookAtBone: 10
+  lookAtBone: 9
   sequenceCurve:
     serializedVersion: 2
     m_Curve:

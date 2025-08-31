@@ -1,0 +1,32 @@
+{
+    "name": "PJH.Runtime.Core.InteractObjects",
+    "rootNamespace": "PJH.Runtime.Core.InteractObjects",
+    "references": [
+        "GUID:308c623e4493ebb40a9d8177e9a2043b",
+        "GUID:fe61c1b3e3c11174190e8d6edf7605df",
+        "GUID:5ff5028d970048f469e1a9b38c2e5a45",
+        "GUID:ca5b8601c5ebe64409c1d85140356a0c",
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:8057891fc0ce59f429c76320e3f807a6",
+        "GUID:ee699b6d22b637f418f28698fdc309c9",
+        "GUID:bc2bccc7fdd309a4a9509427df1b7d94",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:f6cd8915a8323e640bef362b6f5dd974",
+        "GUID:0e6b1f35d8416da46a5e09a445db4184",
+        "GUID:4c36dcf6d8eeb6d44ab73ef966534b46",
+        "GUID:4c25c05f410a3a447a75c3b0909152ef",
+        "GUID:02690e917e4ac78469c6a548a0037ced",
+        "GUID:0c752da273b17c547ae705acf0f2adf2",
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

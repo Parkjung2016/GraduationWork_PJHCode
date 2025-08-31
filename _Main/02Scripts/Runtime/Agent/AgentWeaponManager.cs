@@ -22,7 +22,7 @@ namespace Main.Runtime.Agents
         {
             _agent = agent;
             _equipmentSystemCompo = _agent.GetCompo<AgentEquipmentSystem>();
-            CurrentWeapon = _equipmentSystemCompo.GetSocket(Define.ESocketType.LeftHand).GetItem<Weapon>();
+            CurrentWeapon = _equipmentSystemCompo.GetSocket(Define.ESocketType.RightHand).GetItem<Weapon>();
         }
 
         public virtual void AfterInitialize()

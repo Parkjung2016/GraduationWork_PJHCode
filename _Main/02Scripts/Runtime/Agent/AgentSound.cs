@@ -29,7 +29,7 @@ namespace Main.Runtime.Agents
             _agent.HealthCompo.ailmentStat.OnDotDamage += HandleDotDamageEvent;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnPlayAttackWhooshSound -= HandlePlayAttackWhooshSound;

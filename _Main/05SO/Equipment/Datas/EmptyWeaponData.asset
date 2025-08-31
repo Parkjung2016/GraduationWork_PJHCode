@@ -15,6 +15,8 @@ MonoBehaviour:
   equipmentPrefab: {fileID: 3440142453357514129, guid: 6375263bb3ff4674ca8242935bef531c, type: 3}
   equipmentPosition: {x: 0, y: 0, z: 0}
   equipmentRotation: {x: 0, y: 0, z: 0, w: 0}
+  hitImpactPoolType: {fileID: 11400000, guid: 019f1aba4396d2d4da07a87cf108fe2f, type: 2}
+  hitOtherImpactPoolType: {fileID: 11400000, guid: 9979e377efa677c42a1cfa28887f323a, type: 2}
   attackBlockSound:
     Guid:
       Data1: 494605143
@@ -36,6 +38,13 @@ MonoBehaviour:
       Data3: -603438700
       Data4: -132925969
     Path: event:/SFX/Punch/Punch_Impact
+  hitOtherImpactSound:
+    Guid:
+      Data1: -1378848739
+      Data2: 1145289524
+      Data3: 461074079
+      Data4: -317163746
+    Path: event:/SFX/ImpactWall
   damageMultiplier: 1
   damageMultiplierWhenThrow: 1
   increaseMomentumGaugeMultiplier: 1

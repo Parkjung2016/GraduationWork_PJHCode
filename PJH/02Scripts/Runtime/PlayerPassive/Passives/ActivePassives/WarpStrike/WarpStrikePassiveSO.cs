@@ -7,7 +7,6 @@ using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Main.Runtime.Manager.VolumeTypes;
-using Main.Shared;
 using PJH.Runtime.Players;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;

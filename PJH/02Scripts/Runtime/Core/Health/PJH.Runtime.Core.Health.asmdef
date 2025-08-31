@@ -1,0 +1,14 @@
+{
+    "name": "PJH.Runtime.Core.Health",
+    "rootNamespace": "PJH.Runtime.Core.Health",
+    "references": ["GUID:4c25c05f410a3a447a75c3b0909152ef","GUID:a88e20ec90497d6429de4f692695fe43","GUID:d1af6e3b10ea998489ff83ea4c4dfb0a","GUID:9fc11ab03a9187d45baf4f15474639fe","GUID:02690e917e4ac78469c6a548a0037ced","GUID:308c623e4493ebb40a9d8177e9a2043b"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

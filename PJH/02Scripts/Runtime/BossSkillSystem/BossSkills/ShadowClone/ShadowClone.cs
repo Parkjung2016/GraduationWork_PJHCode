@@ -7,12 +7,12 @@ using INab.Dissolve;
 using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Characters.StateMachine;
+using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Opsive.BehaviorDesigner.Runtime;
 using PJH.Runtime.Players;
 using UnityEngine;
-using YTH.Boss;
 
 namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
 {
@@ -30,13 +30,14 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
         private Pool _pool;
         private Player _player;
         private Dissolver _dissolver;
-
+        private DistanceFade _distanceFadeCompo;
         private GameEventChannelSO _gameEventChannel;
 
         public void SetUpPool(Pool pool)
         {
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _pool = pool;
+            _distanceFadeCompo = transform.Find("DistanceFade").GetComponent<DistanceFade>();
             _dissolver = GetComponent<Dissolver>();
             _dissolver.materials.Add(GetComponentInChildren<SkinnedMeshRenderer>().material);
             BT = GetComponent<BehaviorTree>();
@@ -53,6 +54,7 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
 
         public void ResetItem()
         {
+            _distanceFadeCompo.enabled = true;
             GetCompo<AgentWeaponManager>().CurrentWeapon.gameObject.SetActive(true);
             GetCompo<ShadowCloneStateSystem>().ChangeState(null, true);
             _dissolver.Reset();
@@ -98,6 +100,7 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
         {
             try
             {
+                _distanceFadeCompo.enabled = false;
                 BT.StopBehavior();
                 GetCompo<ShadowCloneMovement>().SetCanMove(false);
                 _dissolver.Dissolve();

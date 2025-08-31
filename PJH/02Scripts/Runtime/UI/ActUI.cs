@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-
 namespace PJH.Runtime.UI
 {
     public class ActUI : MonoBehaviour
@@ -15,12 +14,13 @@ namespace PJH.Runtime.UI
         [SerializeField] private Image _inputKeyImage;
 
         private Transform _displayTargetTrm;
+        private Transform _groupTrm;
 
         private void Awake()
         {
+            _groupTrm = transform.GetChild(0);
             _showActUIEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
-
-            gameObject.SetActive(false);
+            _groupTrm.gameObject.SetActive(false);
             _showActUIEventChannel.AddListener<ShowActUI>(HandleShowActUI);
         }
 
@@ -41,11 +41,12 @@ namespace PJH.Runtime.UI
                 _inputKeyImage.sprite = inputKeyIcon.keyIcon;
             }
 
-            gameObject.SetActive(evt.isShowUI);
+            _groupTrm.gameObject.SetActive(evt.isShowUI);
         }
 
         private void LateUpdate()
         {
+            if (!_groupTrm.gameObject.activeSelf) return;
             transform.GetChild(0).LookAt(Camera.main.transform);
             if (_displayTargetTrm)
             {

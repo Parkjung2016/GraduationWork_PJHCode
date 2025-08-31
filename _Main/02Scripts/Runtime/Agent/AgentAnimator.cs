@@ -39,13 +39,8 @@ namespace Main.Runtime.Agents
             _agent.HealthCompo.OnDeath += HandleDeath;
             _agent.HealthCompo.ailmentStat.OnAilmentChanged += HandleAilmentChanged;
 
-            if (_agent.TryGetCompo<AgentFullMountable>(out var fullMountableCompo))
-            {
-                fullMountableCompo.OnFullMounted += HandleFullMounted;
-            }
-
-            AgentAnimationTrigger agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
-            agentAnimationTriggerCompo.OnTriggerRagdoll += HandleTriggerRagdoll;
+            if (_agent.TryGetCompo(out AgentAnimationTrigger agentAnimationTriggerCompo, true))
+                agentAnimationTriggerCompo.OnTriggerRagdoll += HandleTriggerRagdoll;
         }
 
         protected virtual void OnDestroy()
@@ -60,13 +55,8 @@ namespace Main.Runtime.Agents
             _agent.HealthCompo.OnDeath -= HandleDeath;
             if (_agent.HealthCompo.ailmentStat != null)
                 _agent.HealthCompo.ailmentStat.OnAilmentChanged -= HandleAilmentChanged;
-            if (_agent.TryGetCompo<AgentFullMountable>(out var fullMountableCompo))
-            {
-                fullMountableCompo.OnFullMounted -= HandleFullMounted;
-            }
-
-            AgentAnimationTrigger agentAnimationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
-            agentAnimationTriggerCompo.OnTriggerRagdoll -= HandleTriggerRagdoll;
+            if (_agent.TryGetCompo(out AgentAnimationTrigger agentAnimationTriggerCompo, true))
+                agentAnimationTriggerCompo.OnTriggerRagdoll -= HandleTriggerRagdoll;
         }
 
         private void HandleAilmentChanged(Ailment oldAilment, Ailment newAilment)
@@ -97,22 +87,6 @@ namespace Main.Runtime.Agents
         private void HandleTriggerRagdoll()
         {
             _effectiveAnimationSpeed = 1.0f;
-        }
-
-        protected virtual void HandleFullMounted()
-        {
-            // if (_knockDownToken != null && !_knockDownToken.IsCancellationRequested)
-            // {
-            //     _knockDownToken.Cancel();
-            //     _knockDownToken.Dispose();
-            // }
-            //
-            // PlayAnimationClip(animationClip,
-            //     async () =>
-            //     {
-            //         await UniTask.WaitForSeconds(.35f, cancellationToken: this.GetCancellationTokenOnDestroy());
-            //         PlayGetUpAnimation();
-            //     }, false);
         }
 
         protected virtual void HandleDeath()
@@ -171,6 +145,12 @@ namespace Main.Runtime.Agents
 
             if (getDamagedAnimationClip != null)
             {
+                if (getDamagedInfo.isKnockDown)
+                {
+                    _effectiveAnimationSpeed = 1;
+                    _hybridAnimancer.Controller.Speed = _effectiveAnimationSpeed;
+                }
+
                 PlayAnimationClip(getDamagedAnimationClip,
                     async () =>
                     {
@@ -179,7 +159,7 @@ namespace Main.Runtime.Agents
                             try
                             {
                                 OnKnockDown?.Invoke();
-                                if (_knockDownToken != null && !_knockDownToken.IsCancellationRequested) return;
+                                if (_knockDownToken is { IsCancellationRequested: false }) return;
                                 _knockDownToken = new CancellationTokenSource();
                                 await UniTask.WaitForSeconds(getDamagedInfo.knockDownTime,
                                     cancellationToken: _knockDownToken.Token);
@@ -220,7 +200,7 @@ namespace Main.Runtime.Agents
         public AnimancerState PlayAnimationClip(ITransition clip, Action EndCallBack = null,
             bool playControllerOnEnd = true)
         {
-            if (lockedTransitionAnimation) return null;
+            if (lockedTransitionAnimation || _agent.HealthCompo.IsDead) return null;
             if (clip == null) return null;
             AnimancerState state = _hybridAnimancer.Play(clip, clip.FadeDuration, mode: FadeMode.FromStart);
             state.Speed *= _effectiveAnimationSpeed;

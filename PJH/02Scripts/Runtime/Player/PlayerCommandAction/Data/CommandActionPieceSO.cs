@@ -25,7 +25,6 @@ namespace PJH.Runtime.Players
 
         public IReadOnlyList<PassiveSO> Passives => _passives;
         private GameEventChannelSO _uiEventChannel;
-        public List<PassiveSO> PassivesList => _passives;
         private IPlayer _player;
 
         [ReadOnly] public int equipSlotIndex;
@@ -109,6 +108,7 @@ namespace PJH.Runtime.Players
 
         public override void UnEquipPiece()
         {
+            if (!_inited) return;
             base.UnEquipPiece();
             OnChangePassive -= HandleChangedPassive;
             _passives.ForEach(passive =>
@@ -119,6 +119,18 @@ namespace PJH.Runtime.Players
                         if (equipSlotIndex != dependSlotPassive.DependSlotPassiveInfo.dependSlotIndex)
                             return;
                 }
+
+                if (passive is IBuffPassive buffPassive)
+                {
+                    buffPassive.BuffPassiveInfo.ApplyBuffEvent = null;
+                }
+
+                if (passive is ICooldownPassive cooldownPassive)
+                {
+                    CooldownPassiveInfo cooldownPassiveInfo = cooldownPassive.CooldownPassiveInfo;
+                    cooldownPassiveInfo.StartCooldownEvent = null;
+                }
+
 
                 passive.UnEquipPiece();
             });

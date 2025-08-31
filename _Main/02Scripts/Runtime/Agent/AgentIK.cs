@@ -34,17 +34,27 @@ namespace Main.Runtime.Agents
 
         protected virtual async void HandleTriggerRagdoll()
         {
+            if (LegsAnimator)
+                LegsAnimator.enabled = false;
+            if (!RagdollAnimator)
+            {
+                _agent.GetCompo<AgentAnimator>(true).Animator.enabled = false;
+                return;
+            }
+
             try
             {
-                LegsAnimator.enabled = false;
+                Vector3 agentPos = _agent.transform.position;
+                agentPos.y += .2f;
+                _agent.transform.position = agentPos;
                 RagdollAnimator.Settings.StoreCalibrationPose();
                 RagdollAnimator.User_SwitchFallState(RagdollHandler.EAnimatingMode.Falling);
-                await UniTask.WaitForSeconds(.1f, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                await UniTask.WaitForSeconds(.4f, cancellationToken: gameObject.GetCancellationTokenOnDestroy());
                 _agent.GetCompo<AgentAnimator>(true).Animator.enabled = false;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // ignored
+                Debug.LogError(e);
             }
         }
     }

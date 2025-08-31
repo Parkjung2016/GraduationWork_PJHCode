@@ -8,7 +8,7 @@ namespace PJH.Runtime.Players
 {
     public class PlayerSound : AgentSound
     {
-        [SerializeField] private EventReference _evasionSound, _evasionWhileHitting;
+        [SerializeField] private EventReference _evasionSound, _evasionWhileHittingSound,_useHealItemSound,_grabHealItemSound;
         private Player _player;
 
 
@@ -24,24 +24,39 @@ namespace PJH.Runtime.Players
             _player.GetCompo<PlayerFullMount>().OnHitFullMountTarget += HandleHitFullMountTarget;
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnPlayEvasionSound += HandlePlayEvasionSound;
+            animationTriggerCompo.OnPlayUseHealItemSound += HandlePlayUseHealItemSound;
+            animationTriggerCompo.OnPlayGrabHealItemSound += HandlePlayGrabHealItemSound;
             _player.GetCompo<PlayerMovement>().OnEvasionWhileHitting += HandleEvasionWhileHitting;
             (_player.HealthCompo as PlayerHealth).OnBlockAttack += HandleBlockAttack;
             _player.GetCompo<PlayerInteract>().OnInteractWithoutParameter += HandleInteract;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _player.GetCompo<PlayerFullMount>().OnHitFullMountTarget -= HandleHitFullMountTarget;
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnPlayEvasionSound -= HandlePlayEvasionSound;
+            animationTriggerCompo.OnPlayUseHealItemSound -= HandlePlayUseHealItemSound;
+            animationTriggerCompo.OnPlayGrabHealItemSound -= HandlePlayGrabHealItemSound;
             _player.GetCompo<PlayerMovement>().OnEvasionWhileHitting -= HandleEvasionWhileHitting;
             (_player.HealthCompo as PlayerHealth).OnBlockAttack -= HandleBlockAttack;
             _player.GetCompo<PlayerInteract>().OnInteractWithoutParameter -= HandleInteract;
         }
 
+        private void HandlePlayGrabHealItemSound()
+        {
+            RuntimeManager.PlayOneShot(_grabHealItemSound, Camera.main.transform.position);
+        }
+
+        private void HandlePlayUseHealItemSound()
+        {
+            RuntimeManager.PlayOneShot(_useHealItemSound, Camera.main.transform.position);
+        }
+
         private void HandleEvasionWhileHitting()
         {
-            RuntimeManager.PlayOneShot(_evasionWhileHitting, Camera.main.transform.position);
+            RuntimeManager.PlayOneShot(_evasionWhileHittingSound, Camera.main.transform.position);
         }
 
         private void HandleInteract()

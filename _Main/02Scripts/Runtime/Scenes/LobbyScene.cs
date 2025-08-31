@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PJH.Runtime.Core;
+using UnityEngine;
 
 namespace Main.Scenes
 {
@@ -7,7 +8,10 @@ namespace Main.Scenes
         protected override void Start()
         {
             base.Start();
+            BIS.Manager.Managers.Resource.Load<ComboSynthesisPriceInfoSO>("ComboSynthesisPriceInfo")
+                .ResetIncreaseLevel();
             Application.targetFrameRate = 60;
+            
         }
     }
 }

@@ -1,7 +1,10 @@
+using System;
 using Main.Core;
 using Main.Runtime.Core.Events;
+using Main.Runtime.Manager;
 using Main.Shared;
 using PJH.Runtime.Core.InputKeyIcon;
+using PJH.Runtime.Players;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,18 +21,45 @@ namespace PJH.Runtime.UI
         [SerializeField] private Image _inputKeyImage;
 
         private IInteractable _interactableTarget;
+        private Transform _groupTrm;
 
         private void Awake()
         {
+            _groupTrm = transform.GetChild(0);
             _showInteractUIEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
-            gameObject.SetActive(false);
+            _groupTrm.gameObject.SetActive(false);
             _showInteractUIEventChannel.AddListener<ShowInteractUI>(HandleShowInteractUI);
+        }
+
+        private void Start()
+        {
+            PlayerEnemyFinisher enemyFinisherCompo = PlayerManager.Instance.Player.GetCompo<PlayerEnemyFinisher>();
+            enemyFinisherCompo.OnFinisher += HandleFinisher;
+            enemyFinisherCompo.OnFinisherEnd += HandleFinisherEnd;
         }
 
         private void OnDestroy()
         {
             _showInteractUIEventChannel.RemoveListener<ShowInteractUI>(HandleShowInteractUI);
+
+            PlayerEnemyFinisher enemyFinisherCompo = PlayerManager.Instance.Player?.GetCompo<PlayerEnemyFinisher>();
+            if (enemyFinisherCompo)
+            {
+                enemyFinisherCompo.OnFinisher -= HandleFinisher;
+                enemyFinisherCompo.OnFinisherEnd -= HandleFinisherEnd;
+            }
         }
+
+        private void HandleFinisherEnd()
+        {
+            gameObject.SetActive(true);
+        }
+
+        private void HandleFinisher()
+        {
+            gameObject.SetActive(false);
+        }
+
 
         private void HandleShowInteractUI(ShowInteractUI evt)
         {
@@ -42,11 +72,12 @@ namespace PJH.Runtime.UI
                 _inputKeyImage.sprite = inputKeyIcon.keyIcon;
             }
 
-            gameObject.SetActive(evt.isShowUI);
+            _groupTrm.gameObject.SetActive(evt.isShowUI);
         }
 
         private void LateUpdate()
         {
+            if (!_groupTrm.gameObject.activeSelf) return;
             transform.GetChild(0).LookAt(Camera.main.transform);
             if (_interactableTarget == null) return;
             if (_interactableTarget?.UIDisplayTrm)

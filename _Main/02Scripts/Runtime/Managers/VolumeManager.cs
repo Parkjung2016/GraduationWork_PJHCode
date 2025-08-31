@@ -12,6 +12,8 @@ namespace Main.Runtime.Manager
     {
         Blink,
         Brightness,
+        ChromaticAberration,
+        Frame,
         FinalBlur,
         RadialBlur,
         Saturate,

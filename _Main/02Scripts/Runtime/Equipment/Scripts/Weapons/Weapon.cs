@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using FMODUnity;
 using Main.Core;
 using Main.Runtime.Combat;
+using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Core.StatSystem;
 using Main.Runtime.Equipments.Datas;
@@ -18,7 +20,6 @@ namespace Main.Runtime.Equipments.Scripts
         public event Action OnBreak;
         public WeaponDataSO WeaponData { get; private set; }
         private GameEventChannelSO _hitImpactEffectSpawnChannel;
-        [SerializeField] private PoolTypeSO _hitImpactPoolType;
         private WeaponFracture _fractureCompo;
         private Rigidbody _rigidbodyCompo;
         private Collider _meshCollider;
@@ -52,6 +53,9 @@ namespace Main.Runtime.Equipments.Scripts
 
             _rigidbodyCompo = GetComponent<Rigidbody>();
             _meshCollider = GetComponent<Collider>();
+            _damageCollider = GetComponentInChildren<DamageCollider>();
+            _damageCollider.OnDamageTrigger += HandleDamageTrigger;
+            _damageCollider.OnHitOther += HandleHitOther;
         }
 
         public void Equip(IAgent owner, StatSO powerStat, StatSO increaseMomentumGaugeStat)
@@ -59,9 +63,7 @@ namespace Main.Runtime.Equipments.Scripts
             base.Equip(owner);
             _powerStat = powerStat;
             _increaseMomentumGaugeStat = increaseMomentumGaugeStat;
-            _damageCollider = GetComponentInChildren<DamageCollider>();
-            _damageCollider.Init(owner,  _powerStat, _increaseMomentumGaugeStat,WeaponData.damageMultiplier,WeaponData.increaseMomentumGaugeMultiplier);
-            _damageCollider.OnDamageTrigger += HandleDamageTrigger;
+            _damageCollider.Init(owner, _powerStat, _increaseMomentumGaugeStat);
             if (_rigidbodyCompo)
             {
                 _rigidbodyCompo.isKinematic = true;
@@ -95,17 +97,34 @@ namespace Main.Runtime.Equipments.Scripts
             Destroy(gameObject);
         }
 
+        private void HandleHitOther(Collider other)
+        {
+            RuntimeManager.PlayOneShot(WeaponData.hitOtherImpactSound, transform.position);
+            PoolTypeSO impactPoolType = WeaponData.hitOtherImpactPoolType;
+
+            if (!impactPoolType) return;
+            Vector3 effectPosition = other.ClosestPoint(transform.position);
+            SpawnImpactEffect(impactPoolType, effectPosition);
+        }
+
         private void HandleDamageTrigger(Collider hitTarget, HitInfo hitInfo)
         {
             CurrentDurability -= 1;
 
             _owner.OnHitTarget?.Invoke(hitInfo);
             RuntimeManager.PlayOneShot(WeaponData.hitImpactSound, transform.position);
-            if (!_hitImpactPoolType) return;
+            PoolTypeSO impactPoolType = WeaponData.hitImpactPoolType;
+            if (!impactPoolType) return;
             Vector3 effectPosition = hitTarget.ClosestPoint(transform.position);
+            SpawnImpactEffect(impactPoolType, effectPosition);
+        }
+
+        private void SpawnImpactEffect(PoolTypeSO impactPoolType, Vector3 position)
+        {
+            if (!impactPoolType) return;
             var evt = SpawnEvents.SpawnEffect;
-            evt.effectType = _hitImpactPoolType;
-            evt.position = effectPosition;
+            evt.effectType = impactPoolType;
+            evt.position = position;
             evt.rotation = Quaternion.identity;
             _hitImpactEffectSpawnChannel.RaiseEvent(evt);
         }
@@ -118,6 +137,8 @@ namespace Main.Runtime.Equipments.Scripts
                 Vector3.forward * combatFeedbackData.impulsePower;
             feedback.GetFeedbackOfType<MMF_FreezeFrame>().FreezeFrameDuration =
                 combatFeedbackData.freezeFrameDuration;
+            feedback.GetFeedbackOfType<MMF_BeautifyChromaticAberration_URP>().intensityValue =
+                combatFeedbackData.chromaticAberrationIntensity;
             _damageCollider.TriggerCollider(combatData);
         }
 

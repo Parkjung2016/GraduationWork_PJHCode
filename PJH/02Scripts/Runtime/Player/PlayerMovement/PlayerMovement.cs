@@ -94,7 +94,7 @@ namespace PJH.Runtime.Players
             OnEvasion?.Invoke();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             CheckCooldownEvasionWhileHitting();
             if (!CC || _player.WarpingComponent.IsActive() || _player.IsStunned) return;

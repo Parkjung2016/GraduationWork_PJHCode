@@ -28,6 +28,19 @@ namespace Main.Runtime.Core.Events
         public static readonly EnableCameraMovement EnableCameraMovement = new EnableCameraMovement();
         public static readonly EnterBossRoom EnterBossRoom = new EnterBossRoom();
         public static readonly StartBossBattle StartBossBattle = new StartBossBattle();
+        public static readonly GoToLobby GoToLobby = new GoToLobby();
+        public static readonly ActiveNextSession ActiveNextSession = new ActiveNextSession();
+        public static readonly EnterNextLevel EnterNextLevel = new EnterNextLevel();
+    }
+    public class EnterNextLevel : GameEvent
+    {
+        public Transform playerModelTrm;
+    }
+    public class ActiveNextSession : GameEvent
+    {
+    }
+    public class GoToLobby : GameEvent
+    {
     }
     public class EnemyDead : GameEvent
     {
@@ -67,6 +80,7 @@ namespace Main.Runtime.Core.Events
 
     public class FinishAllWave : GameEvent
     {
+        public MonoBehaviour battleZone;
     }
 
     public class TimeSlowByPlayer : GameEvent

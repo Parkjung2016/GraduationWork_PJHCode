@@ -66,7 +66,7 @@ namespace PJH.Runtime.Core.PlayerCamera
             _cinemachineCamera.Priority = _lockOnTargetTrm ? 3 : -3;
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             if (!_isLockOn || !_lockOnTargetTrm) return;
 

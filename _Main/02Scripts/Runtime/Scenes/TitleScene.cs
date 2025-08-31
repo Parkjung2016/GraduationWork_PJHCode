@@ -1,6 +1,6 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System;
+using Cysharp.Threading.Tasks;
 using Main.Core;
-using Main.Runtime.Manager;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -17,11 +17,18 @@ namespace Main.Scenes
         protected override async void Awake()
         {
             base.Awake();
-            _cinemachineRotationComposer = _cinemachineCamera.GetComponent<CinemachineRotationComposer>();
+            try
+            {
+                _cinemachineRotationComposer = _cinemachineCamera.GetComponent<CinemachineRotationComposer>();
 
-            await UniTask.WaitUntil(() => AddressableManager.IsLoaded,
-                cancellationToken: gameObject.GetCancellationTokenOnDestroy());
-            PlayBGM();
+                await UniTask.WaitUntil(() => AddressableManager.IsLoaded,
+                    cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                PlayBGM();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
 
         protected override void Start()

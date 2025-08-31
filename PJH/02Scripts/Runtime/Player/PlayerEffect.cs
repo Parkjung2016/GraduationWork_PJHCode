@@ -3,10 +3,11 @@ using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
+using Main.Shared;
 using MoreMountains.Feedbacks;
 using TrailsFX;
 using UnityEngine;
-using Debug = Main.Core.Debug;
+using Debug = UnityEngine.Debug;
 
 
 namespace PJH.Runtime.Players
@@ -24,15 +25,14 @@ namespace PJH.Runtime.Players
         [SerializeField] private TrailEffect _meshTrailEffect;
         private Player _player;
         private PlayerAnimator _animatorCompo;
-        private GameEventChannelSO _spawnEventChannel;
         private GameEventChannelSO _gameEventChannel;
-        private PoolManagerSO _poolManager;
         private MMF_Player _applyDamagedFeedback, _evasionFeedbackWhileHitting;
         private MMF_Player _counterAttackFeedback, _hitCounterAttackTargetFeedback;
         private MMF_Player _hitWarpStrikeTargetFeedback, _avoidingAttackFeedback;
         private MMF_Player _onDeathFeedbackPlayer;
-
         private Dictionary<HumanBodyBones, List<AttachedToBodyEffectInfo>> _attachedEffects;
+
+        private GameObject _healPotionObject;
 
         public override void Initialize(Agent agent)
         {
@@ -47,8 +47,6 @@ namespace PJH.Runtime.Players
             _evasionFeedbackWhileHitting = transform.Find("EvasionFeedbackWhileHitting").GetComponent<MMF_Player>();
             _avoidingAttackFeedback = transform.Find("AvoidingAttackFeedback").GetComponent<MMF_Player>();
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
-            _spawnEventChannel = AddressableManager.Load<GameEventChannelSO>("SpawnEventChannel");
-            _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
             _player = agent as Player;
             _animatorCompo = _player.GetCompo<PlayerAnimator>();
             _meshTrailEffect.active = false;
@@ -81,6 +79,10 @@ namespace PJH.Runtime.Players
             PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
             finisherCompo.OnFinisher += HandleFinisher;
             finisherCompo.OnFinisherEnd += HandleFinisherEnd;
+
+            PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+            animationTriggerCompo.OnGrabHealItem += HandleGrabHealItem;
+            animationTriggerCompo.OnDestroyHealItem += HandleDestroyHealItem;
         }
 
         protected override void OnDestroy()
@@ -110,8 +112,25 @@ namespace PJH.Runtime.Players
 
 
             PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
-            finisherCompo.OnFinisher += HandleFinisher;
-            finisherCompo.OnFinisherEnd += HandleFinisherEnd;
+            finisherCompo.OnFinisher -= HandleFinisher;
+            finisherCompo.OnFinisherEnd -= HandleFinisherEnd;
+
+            PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
+            animationTriggerCompo.OnGrabHealItem -= HandleGrabHealItem;
+            animationTriggerCompo.OnDestroyHealItem -= HandleDestroyHealItem;
+        }
+
+        private void HandleDestroyHealItem()
+        {
+            Destroy(_healPotionObject);
+        }
+
+        private void HandleGrabHealItem()
+        {
+            _healPotionObject = AddressableManager.Instantiate("HealPotion");
+            AgentEquipmentSystem agentEquipmentSystemCompo = _player.GetCompo<AgentEquipmentSystem>();
+            Transform socketTransform = agentEquipmentSystemCompo.GetSocket(Define.ESocketType.LeftHand).transform;
+            _healPotionObject.transform.SetParent(socketTransform, false);
         }
 
         private void HandleEnemyDead(EnemyDead evt)
@@ -226,19 +245,21 @@ namespace PJH.Runtime.Players
         {
             if (_attachedEffects.TryGetValue(attachedBone, out var effectInfos))
             {
-                Debug.Log(effectInfos.Count);
+                if (effectInfos.Count == 0) return;
 
                 int idx = effectInfos.FindIndex(x => x.key == poolTypeSO.typeName);
+                if (idx == -1) return;
                 AttachedToBodyEffectInfo effectInfo = effectInfos[idx];
                 effectInfo.effectPlayer.StopEffects();
                 _attachedEffects[attachedBone].RemoveAt(idx);
+                if (_attachedEffects[attachedBone].Count == 0)
+                    _attachedEffects.Remove(attachedBone);
             }
         }
 
         private PoolEffectPlayer PlayEffectAndAddEffects(PoolTypeSO poolTypeSO, HumanBodyBones attachedBone,
             bool isLooped = true, float playTime = 0.0f, bool applyRotation = true)
         {
-            Debug.Log("wwff");
             PoolEffectPlayer effectPlayer = _poolManager.Pop(poolTypeSO) as PoolEffectPlayer;
             AttachedToBodyEffectInfo info = new AttachedToBodyEffectInfo
             {

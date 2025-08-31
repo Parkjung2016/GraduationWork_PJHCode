@@ -22,7 +22,8 @@
         "Main.Runtime.Equipment.Weapons",
         "GUID:c5e27b83dc86b2c4d8abae9dcbfd3975",
         "GUID:4c36dcf6d8eeb6d44ab73ef966534b46",
-        "GUID:0c752da273b17c547ae705acf0f2adf2"
+        "GUID:0c752da273b17c547ae705acf0f2adf2",
+        "GUID:b8c676d5774719e428e0a530bb4b46ce"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

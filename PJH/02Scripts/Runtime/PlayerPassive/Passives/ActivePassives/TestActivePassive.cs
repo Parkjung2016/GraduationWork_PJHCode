@@ -1,7 +1,4 @@
-﻿using Main.Runtime.Agents;
-using Main.Shared;
-using PJH.Runtime.Players;
-using Sirenix.Serialization;
+﻿using Sirenix.Serialization;
 using UnityEngine;
 
 namespace PJH.Runtime.PlayerPassive.Passives

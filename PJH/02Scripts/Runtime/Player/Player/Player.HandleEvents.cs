@@ -84,12 +84,12 @@ namespace PJH.Runtime.Players
         {
             PlayerInput.EnablePlayerInput(true);
             HealthCompo.IsInvincibility = false;
+            IsHitting = false;
         }
 
         private void HandleEndGrabbed()
         {
             IsHitting = false;
         }
-        
     }
 }

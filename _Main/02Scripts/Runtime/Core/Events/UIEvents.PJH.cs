@@ -19,13 +19,18 @@ namespace Main.Runtime.Core.Events
         public static readonly ShowTextDialogueUI ShowTextDialogueUI = new ShowTextDialogueUI();
         public static readonly ShowEvasionWhileHittingInfUI ShowEvasionWhileHittingInfUI =
             new ShowEvasionWhileHittingInfUI();
+        public static readonly ShowNoticeText ShowNoticeText = new ShowNoticeText();
     }
-
     public enum PassiveInfoType
     {
         None,
         Buff
     }
+    public class ShowNoticeText : GameEvent
+    {
+        public string notice;
+    }
+
     public class ShowEvasionWhileHittingInfUI : GameEvent
     {
         public IPlayer player;

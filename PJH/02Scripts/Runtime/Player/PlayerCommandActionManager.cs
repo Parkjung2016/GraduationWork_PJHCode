@@ -6,6 +6,8 @@ using Main.Runtime.Core;
 using Main.Core;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using PJH.Runtime.PlayerPassive;
+using Debug = UnityEngine.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -113,7 +115,15 @@ namespace PJH.Runtime.Players
 
             for (int i = 0; i < _commandActions[index].ExecuteCommandActionPieces.Count; i++)
             {
-                _commandActions[index].ExecuteCommandActionPieces[i].UnEquipPiece();
+                CommandActionPieceSO commandActionPiece = _commandActions[index].ExecuteCommandActionPieces[i];
+                if (commandActionPiece == null) continue;
+                foreach (PassiveSO passive in commandActionPiece.Passives)
+                {
+                    if (passive is IBuffPassive buffPassive)
+                        buffPassive.EndBuff();
+                }
+
+                _commandActions[index].ExecuteCommandActionPieces[i]?.UnEquipPiece();
             }
 
             _commandActions[index] = copyCommandActionData;

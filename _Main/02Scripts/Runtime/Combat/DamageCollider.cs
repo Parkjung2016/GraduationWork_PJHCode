@@ -1,5 +1,4 @@
 using System;
-using Animancer;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.StatSystem;
 using Main.Shared;
@@ -12,33 +11,30 @@ namespace Main.Runtime.Combat
     public class DamageCollider : MonoBehaviour
     {
         public event Action<Collider, HitInfo> OnDamageTrigger;
+        public event Action<Collider> OnHitOther;
         private MMF_Player _hitFeedback;
         private CinemachineImpulseSource _impulseSource;
 
         public MMF_Player HitFeedback => _hitFeedback;
+        public IAgent Agent => _owner;
 
         private Collider _colliderCompo;
         private CombatDataSO _combatData;
 
         private IAgent _owner;
 
-        private StatSO _power;
-        private StatSO _increaseMomentumGauge;
+        private StatSO _powerStat;
+        private StatSO _increaseMomentumGaugeStat;
 
-        private float _powerMultiplier;
-        private float _increaseMomentumGaugeMultiplier;
 
-        public void Init(IAgent owner, StatSO power, StatSO increaseMomentumGauge, float powerMultiplier,
-            float increaseMomentumGaugeMultiplier)
+        public void Init(IAgent owner, StatSO power, StatSO increaseMomentumGauge)
         {
             _hitFeedback = transform.Find("HitTargetFeedback").GetComponent<MMF_Player>();
             _impulseSource = _hitFeedback.GetComponent<CinemachineImpulseSource>();
             _owner = owner;
-            _power = power;
-            _powerMultiplier = powerMultiplier;
-            _increaseMomentumGauge = increaseMomentumGauge;
-            _increaseMomentumGaugeMultiplier = increaseMomentumGaugeMultiplier;
-            _colliderCompo.excludeLayers = owner.GameObject.layer;
+            _powerStat = power;
+            _increaseMomentumGaugeStat = increaseMomentumGauge;
+            _colliderCompo.excludeLayers = 1 << owner.GameObject.layer;
         }
 
         private void Awake()
@@ -63,29 +59,12 @@ namespace Main.Runtime.Combat
             if (other.gameObject.layer == _owner.GameObject.layer) return;
             if (other.TryGetComponent(out IDamageable damageable))
             {
-                float increaseMomentumGauge =
-                    _increaseMomentumGauge.Value * _combatData.increaseMomentumGaugeMultiplier *
-                    _increaseMomentumGaugeMultiplier;
-                int getDamagedAnimationIndex = _combatData.currentGetDamagedAnimationClipIndex;
-                IAgent hitTarget = other.GetComponent<IAgent>();
-                GetDamagedAnimationClipInfo getDamagedAnimationClip =
-                    _combatData.getDamagedAnimationClips[getDamagedAnimationIndex];
                 Vector3 hitPoint = other.ClosestPoint(transform.position);
                 Vector3 normal = (transform.position - hitPoint).normalized;
-                float damage = _combatData.damageMultiplier * _power.Value * _powerMultiplier;
-                GetDamagedInfo getDamagedInfo = new()
-                {
-                    hitPoint = hitPoint,
-                    normal = normal,
-                    damage = damage,
-                    increaseMomentumGauge = increaseMomentumGauge,
-                    attacker = _owner as MonoBehaviour,
-                    isForceAttack = _combatData.isForceAttack,
-                    isKnockDown = _combatData.isKnockDown,
-                    knockDownTime = _combatData.knockDownTime,
-                    getUpAnimationClip = _combatData.getUpAnimationClip,
-                    getDamagedAnimationClip = getDamagedAnimationClip
-                };
+
+                GetDamagedInfo getDamagedInfo = _combatData.MakeGetDamagedInfo(_increaseMomentumGaugeStat, _powerStat,
+                    _owner as MonoBehaviour, hitPoint, normal);
+                IAgent hitTarget = other.GetComponent<IAgent>();
                 HitInfo hitInfo = new()
                 {
                     hitTarget = hitTarget
@@ -99,6 +78,10 @@ namespace Main.Runtime.Combat
 
                 if (_combatData.disableColliderOnHit)
                     DisableCollider();
+            }
+            else
+            {
+                OnHitOther?.Invoke(other);
             }
         }
     }

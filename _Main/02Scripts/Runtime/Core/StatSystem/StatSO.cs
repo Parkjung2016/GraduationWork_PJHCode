@@ -32,7 +32,7 @@ namespace Main.Runtime.Core.StatSystem
         private Sprite _icon;
 
 
-        [SerializeField, ProgressBar("_minValue", "_maxValue", R = 0.0f, G = 0.8f, B = 1f), VerticalGroup("Data/Stats")]
+        [SerializeField, PropertyRange("_minValue", "_maxValue"), VerticalGroup("Data/Stats")]
         private float _baseValue;
 
         [SerializeField, VerticalGroup("Data/Stats")]

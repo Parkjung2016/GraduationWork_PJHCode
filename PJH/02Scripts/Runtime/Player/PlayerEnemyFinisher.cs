@@ -16,12 +16,10 @@ namespace PJH.Runtime.Players
     public class PlayerEnemyFinisher : MonoBehaviour, IAgentComponent, IAfterInitable
     {
         public bool IsFinishering { get; private set; }
-        // public event Action<bool> OnFinisherTimeline;
 
         public event Action OnFinisher;
         public event Action OnFinisherEnd;
 
-        // public event Action<Transform, float> OnAdjustTimelineModelPosition;
         [SerializeField, InlineEditor] private FinisherSequenceSO _finisherSequence;
         [SerializeField] private LayerMask _whatIsObstacle;
         private GameEventChannelSO _gameEventChannel;
@@ -102,7 +100,6 @@ namespace PJH.Runtime.Players
                 .GroupBy(data => data.spaceToExecute)
                 .Where(data =>
                 {
-                    Debug.Log(data.Key);
                     if (data.Key == 0) return true;
                     bool result = Physics.CheckSphere(playerPosition, data.Key, _whatIsObstacle);
                     return !result;

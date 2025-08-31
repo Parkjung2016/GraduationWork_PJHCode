@@ -388,6 +388,7 @@ MonoBehaviour:
     impulsePower: 0.5
     freezeFrameDuration: 0.03
     impulseShape: 2
+    chromaticAberrationIntensity: 0.05
   isManualMove: 0
   manualMoveSpeed: 0
   references:

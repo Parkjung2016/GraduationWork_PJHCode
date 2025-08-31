@@ -93,7 +93,7 @@ namespace PJH.Runtime.Players
                         continue;
                     }
 
-                    if (_target && _target.HealthCompo.IsDead)
+                    if (_target && (_target.HealthCompo.IsDead || !(_target as IEnemy).IsLockOnTargetable))
                     {
                         ClearTarget();
                         continue;
@@ -127,8 +127,8 @@ namespace PJH.Runtime.Players
                 .Take(count)
                 .Where(c => c && c.CompareTag("Enemy") && c.gameObject != exclude && (filter?.Invoke(c) ?? true))
                 .OrderBy(c => Vector3.Distance(transform.position, c.transform.position))
-                .Select(c => c.GetComponent<Agent>())
-                .FirstOrDefault(a => a);
+                .Select(c => c.GetComponent<Agent>()).Where(a => (a as IEnemy).IsLockOnTargetable)
+                .FirstOrDefault();
         }
 
         private void ApplyNewTarget(Agent newTarget)

@@ -1,11 +1,12 @@
 using Main.Runtime.Core.Events;
-using Main.Scenes;
 
 
 namespace Main.Scenes
 {
     public class TutorialScene : BattleScene
     {
+        private bool _startedBGM;
+
         protected override void Awake()
         {
             _autoPlayBGM = false;
@@ -21,6 +22,8 @@ namespace Main.Scenes
 
         private void HandleStartTutorial(StartTutorial evt)
         {
+            if (_startedBGM) return;
+            _startedBGM = true;
             PlayBGM();
         }
     }

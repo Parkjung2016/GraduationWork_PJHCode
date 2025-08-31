@@ -1,5 +1,6 @@
 ﻿using System;
 using Main.Runtime.Agents;
+using UnityEngine;
 
 namespace PJH.Runtime.Players
 {
@@ -24,6 +25,11 @@ namespace PJH.Runtime.Players
         public event Action OnPlayCharacterFallingOnGroundSound;
         public event Action OnPlayArmGrabSound, OnPlayArmBreakSound;
         public event Action OnEndRotatingTargetWhileAttack;
+        public event Action OnHeal;
+        public event Action OnGrabHealItem;
+        public event Action OnDestroyHealItem;
+        public event Action OnPlayUseHealItemSound;
+        public event Action OnPlayGrabHealItemSound;
         private Player _player;
 
         public override void Initialize(Agent agent)
@@ -95,6 +101,31 @@ namespace PJH.Runtime.Players
         private void PlayPunchImpactSound()
         {
             OnPlayPunchImpactSound?.Invoke();
+        }
+
+        private void Heal()
+        {
+            OnHeal?.Invoke();
+        }
+
+        private void GrabHealItem()
+        {
+            OnGrabHealItem?.Invoke();
+        }
+
+        private void DestroyHealItem()
+        {
+            OnDestroyHealItem?.Invoke();
+        }
+
+        private void PlayUseHealItemSound()
+        {
+            OnPlayUseHealItemSound?.Invoke();
+        }
+
+        private void PlayGrabHealItemSound()
+        {
+            OnPlayGrabHealItemSound?.Invoke();
         }
 
         #region FinisherSequence

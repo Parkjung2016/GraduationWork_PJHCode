@@ -25,7 +25,7 @@ MonoBehaviour:
     _NormalizedStartTime: NaN
   sequenceDuration: 1
   lookAtTarget: 0
-  lookAtBone: 7
+  lookAtBone: 10
   sequenceCurve:
     serializedVersion: 2
     m_Curve:
@@ -51,9 +51,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   sequenceCameraWayPoints:
-  - {x: 1.48, y: 1.41, z: 0}
-  - {x: 1.11, y: 1.41, z: 1.73}
-  - {x: 2.02, y: 1.41, z: 3.19}
+  - {x: 1.639359, y: 1.409663, z: 0.6617737}
+  - {x: 2.911362, y: 1.409663, z: -0.1242218}
+  - {x: 0.7433624, y: 1.169663, z: -1.650223}
   references:
     version: 2
     RefIds: []

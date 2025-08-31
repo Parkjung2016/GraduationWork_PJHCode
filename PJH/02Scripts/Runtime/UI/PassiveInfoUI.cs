@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using Main.Core;
 using Main.Runtime.Core.Events;
+using PJH.Runtime.Core;
 using PJH.Runtime.PlayerPassive;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,14 +10,19 @@ namespace PJH.Runtime.UI
 {
     public class PassiveInfoUI : MonoBehaviour
     {
+        private static readonly int ShiftingFadeShaderHash = Shader.PropertyToID("_ShiftingFade");
         private PassiveSO _currentPassive;
         private Image _passiveIcon;
+        private Image _outline;
         private List<PassiveInfoType> _infoTypes = new();
 
         private PassiveInfoProgress _buffProgress;
+        private ComboColorInfoSO _comboColorInfo;
 
         private void Awake()
         {
+            _comboColorInfo = AddressableManager.Load<ComboColorInfoSO>("ComboColorInfo");
+            _outline = transform.Find("Outline").GetComponent<Image>();
             Transform maskTrm = transform.Find("Mask");
             _passiveIcon = maskTrm.Find("Icon").GetComponent<Image>();
             _buffProgress = transform.Find("BuffProgress").GetComponent<PassiveInfoProgress>();
@@ -25,6 +32,17 @@ namespace PJH.Runtime.UI
         public void SetPassiveInfo(PassiveSO passive)
         {
             _currentPassive = passive;
+            Color outlineColor = Color.white;
+            float shiftingFadeValue = 1;
+            if (passive.RankType != PassiveRankType.High)
+            {
+                outlineColor = _comboColorInfo.GetPassiveRankColor(passive.RankType);
+                shiftingFadeValue = 0;
+            }
+
+            _outline.color = outlineColor;
+            _outline.material.SetFloat(ShiftingFadeShaderHash, shiftingFadeValue);
+
             _passiveIcon.sprite = passive.pieceIcon;
         }
 

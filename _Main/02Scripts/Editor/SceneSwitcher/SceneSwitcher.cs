@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityToolbarExtender;
+//using UnityToolbarExtender;
 
 namespace PJH.SceneSwitcher
 {
@@ -41,7 +41,7 @@ namespace PJH.SceneSwitcher
             userSceneSwitcherList =
                 AssetDatabase.LoadAssetAtPath<UserSceneSwitcherSOList>(
                     "Assets/00Work/_Main/05SO/Editor/UserSceneSwitcherList.asset");
-            ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
+            //ToolbarExtender.LeftToolbarGUI.Add(OnToolbarGUI);
         }
 
         static void OnToolbarGUI()

@@ -132,7 +132,10 @@ public class AilmentStat
         currentAilment = Ailment.None;
         foreach (Ailment ailment in Enum.GetValues(typeof(Ailment)))
         {
+            if (ailment == Ailment.None) continue;
             _dotTimers[ailment] = 0;
+            _ailmentTimerDictionary[ailment] = 0;
+            _ailmentValueDictionary[ailment] = 0;
         }
 
         OnAilmentChanged?.Invoke(oldAilment, currentAilment);

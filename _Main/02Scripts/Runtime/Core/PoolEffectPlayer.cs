@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Accessibility;
 using UnityEngine.VFX;
 
 namespace Main.Runtime.Core

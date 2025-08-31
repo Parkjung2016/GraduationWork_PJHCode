@@ -95,7 +95,10 @@ namespace Main.Runtime.Manager
         {
             RuntimeManager.PlayOneShot("event:/UI/ButtonClick2");
         }
-
+        public void PlayGetComboPieceSound()
+        {
+            RuntimeManager.PlayOneShot("event:/UI/GetComboPiece");
+        }
         public void ResumeMainSound()
         {
             _gameBus.setPaused(false);

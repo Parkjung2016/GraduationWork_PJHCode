@@ -26,3 +26,4 @@ MonoBehaviour:
   pieceDescription: "\uC5EC\uB7EC \uBC88\uC758 \uACF5\uACA9\uC744 \uB0A0\uB9BD\uB2C8\uB2E4."
   combatData: {fileID: 11400000, guid: 9508590cc4851644aaa94745c43ad9a3, type: 2}
   _passives: []
+  equipSlotIndex: 0

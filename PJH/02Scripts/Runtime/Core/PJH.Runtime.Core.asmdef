@@ -1,8 +1,14 @@
 {
     "name": "PJH.Runtime.Core",
-    "rootNamespace": "",
+    "rootNamespace": "PJH.Runtime.Core",
     "references": [
-        "GUID:9fc11ab03a9187d45baf4f15474639fe"
+        "GUID:9fc11ab03a9187d45baf4f15474639fe",
+        "GUID:33bf5b3355013954b9c5a585ea26ef39",
+        "GUID:2373c20d2432eae4a8c2cf2061f879e2",
+        "GUID:1bc30e539656bfd45b968dcf8cc848c9",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:9e76ffd1f3f77a246968f93aa898a174",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

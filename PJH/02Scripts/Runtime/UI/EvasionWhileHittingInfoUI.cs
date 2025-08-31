@@ -15,16 +15,18 @@ namespace PJH.Runtime.UI
         private TextMeshProUGUI _cooldownProgressText;
 
         private Player _player;
+        private Transform _groupTrm;
 
         private void Awake()
         {
+            _groupTrm = transform.GetChild(0);
             Transform fillGroup = transform.Find("EvasionInfoUI/Mask/FillGroup");
             _cooldownProgress = fillGroup.Find("CooldownProgress").GetComponent<Image>();
             _cooldownProgressText =
                 _cooldownProgress.transform.Find("RemainingTimeText").GetComponent<TextMeshProUGUI>();
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _uiEventChannel.AddListener<ShowEvasionWhileHittingInfUI>(HandleShowEvasionWhileHittingInfUI);
-            gameObject.SetActive(false);
+            _groupTrm.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -35,7 +37,7 @@ namespace PJH.Runtime.UI
         private void HandleShowEvasionWhileHittingInfUI(ShowEvasionWhileHittingInfUI evt)
         {
             _player = evt.player as Player;
-            gameObject.SetActive(true);
+            _groupTrm.gameObject.SetActive(true);
             _player.GetCompo<PlayerMovement>().OnUpdateCooldownEvasionWhileHitting +=
                 HandleUpdateCooldown;
         }
@@ -46,7 +48,7 @@ namespace PJH.Runtime.UI
             _cooldownProgressText.SetText($"{currentCooldown:F1}s");
             if (currentCooldown <= 0)
             {
-                gameObject.SetActive(false);
+                _groupTrm.gameObject.SetActive(false);
                 _player.GetCompo<PlayerMovement>().OnUpdateCooldownEvasionWhileHitting -=
                     HandleUpdateCooldown;
             }

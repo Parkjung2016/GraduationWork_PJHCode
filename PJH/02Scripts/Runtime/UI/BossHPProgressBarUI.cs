@@ -58,28 +58,16 @@ namespace PJH.Runtime.UI
 
         public override void SetUp()
         {
-            Debug.Log("adwd");
             Bind<Image>(typeof(Progress));
             _fill = Get<Image>((int)Progress.HealthBar);
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (_bossHealth != null)
             {
                 _bossHealth.OnDeath -= HandleDeath;
                 _bossHealth.OnApplyDamaged -= HandleApplyDamage;
-            }
-        }
-
-        private void OnEnable()
-        {
-            if (_boss != null)
-            {
-                _bossHealth = _boss.HealthCompo;
-                _bossHealth.OnDeath += HandleDeath;
-                _bossHealth.OnApplyDamaged += HandleApplyDamage;
-                previousHealth = _bossHealth.CurrentHealth;
             }
         }
     }

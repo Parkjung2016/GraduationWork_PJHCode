@@ -8,8 +8,7 @@ namespace Main.Runtime.Manager.VolumeTypes
         {
             volume.profile.TryGet(out Beautify.Universal.Beautify beautify);
             if (beautify != null)
-
-            SetFloatParameter(beautify.blurIntensity);
+                SetFloatParameter(beautify.blurIntensity);
         }
     }
 }

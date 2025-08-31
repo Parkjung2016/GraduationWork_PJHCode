@@ -27,24 +27,13 @@ namespace PJH.Runtime.UI
         }
 
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             if (_boss != null)
             {
                 Health health = _boss.GetComponent<Health>();
                 health.OnDeath += HandleDeath;
                 _boss.GetCompo<AgentMomentumGauge>(true).OnChangedMomentumGauge -= SetUpProgress;
-            }
-        }
-
-        private void OnEnable()
-        {
-            if (_boss != null)
-            {
-                Health health = _boss.GetComponent<Health>();
-                health.OnDeath += HandleDeath;
-                AgentMomentumGauge momentumGaugeCompo = _boss.GetCompo<AgentMomentumGauge>(true);
-                momentumGaugeCompo.OnChangedMomentumGauge += SetUpProgress;
             }
         }
     }

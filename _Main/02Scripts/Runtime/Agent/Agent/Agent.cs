@@ -41,10 +41,6 @@ namespace Main.Runtime.Agents
         protected virtual void Awake()
         {
             WarpingComponent = GetComponent<MotionWarping>();
-            WalkSpeedStat = AddressableManager.Load<StatSO>("WalkSpeedStat");
-            RunSpeedStat = AddressableManager.Load<StatSO>("RunSpeedStat");
-            _maxHealthStat = AddressableManager.Load<StatSO>("MaxHealthStat");
-            _maxShieldStat = AddressableManager.Load<StatSO>("MaxShieldStat");
             ModelTrm = transform;
             HealthCompo = GetComponent<Health>();
             _componentManager = new ComponentManager();
@@ -52,15 +48,21 @@ namespace Main.Runtime.Agents
             _componentManager.AddComponentToDictionary(this);
             _componentManager.ComponentInitialize(this);
             AgentStat statCompo = GetCompo<AgentStat>(true);
-            WalkSpeedStat = statCompo.GetStat(WalkSpeedStat);
-            RunSpeedStat = statCompo.GetStat(RunSpeedStat);
+            if (statCompo)
+            {
+                WalkSpeedStat = AddressableManager.Load<StatSO>("WalkSpeedStat");
+                RunSpeedStat = AddressableManager.Load<StatSO>("RunSpeedStat");
+                _maxHealthStat = AddressableManager.Load<StatSO>("MaxHealthStat");
+                _maxShieldStat = AddressableManager.Load<StatSO>("MaxShieldStat");
+                WalkSpeedStat = statCompo.GetStat(WalkSpeedStat);
+                RunSpeedStat = statCompo.GetStat(RunSpeedStat);
+                _maxHealthStat = statCompo.GetStat(_maxHealthStat);
+                _maxShieldStat = statCompo.GetStat(_maxShieldStat);
+            }
 
             if (HealthCompo)
             {
-                _maxHealthStat = statCompo.GetStat(_maxHealthStat);
-                _maxShieldStat = statCompo.GetStat(_maxShieldStat);
-
-                HealthCompo.Init(_maxHealthStat, _maxShieldStat);
+                HealthCompo.Init(this, _maxHealthStat, _maxShieldStat);
                 HealthCompo.OnApplyDamaged += HandleApplyDamaged;
                 HealthCompo.ailmentStat.OnAilmentChanged += HandleAilmentChanged;
             }

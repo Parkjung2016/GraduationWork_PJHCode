@@ -1,6 +1,4 @@
-﻿using System;
-using Animancer;
-using Main.Shared;
+﻿using Animancer;
 using UnityEngine;
 
 namespace Main.Runtime.Combat.Core

@@ -22,7 +22,7 @@ namespace PJH.Shared
 
         public bool IsCloned { get; private set; }
 
-        private bool _inited;
+        protected bool _inited;
 
         public virtual void EquipPiece(IPlayer player)
         {

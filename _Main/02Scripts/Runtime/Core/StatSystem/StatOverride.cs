@@ -10,7 +10,7 @@ namespace Main.Runtime.Core.StatSystem
         [InlineEditor] [SerializeField] private StatSO _stat;
         [SerializeField] private bool _isUseOverride;
 
-        [SerializeField, ShowIf("_isUseOverride"),ProgressBar("GetMinValue", "GetMaxValue", 1,0,0)]
+        [SerializeField, ShowIf("_isUseOverride"), PropertyRange("GetMinValue", "GetMaxValue"), GUIColor(0, 1, 1)]
         private float _overrideValue;
 
 
@@ -18,10 +18,12 @@ namespace Main.Runtime.Core.StatSystem
         {
             return _stat.MinValue;
         }
+
         private float GetMaxValue()
         {
             return _stat.MaxValue;
         }
+
         public StatOverride(StatSO stat) => _stat = stat;
 
         public StatSO CreateStat()

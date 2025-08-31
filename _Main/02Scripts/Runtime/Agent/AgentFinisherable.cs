@@ -44,7 +44,7 @@ namespace Main.Runtime.Agents
         public void SetToFinisherTarget()
         {
             _deadFinisherTargetEventChannel.AddListener<DeadFinisherTarget>(HandleDeadFinisherTarget);
-            _agent.GetCompo<AgentIK>(true).LegsAnimator.User_FadeToDisabled(0f);
+            _agent.GetCompo<AgentIK>(true).LegsAnimator?.User_FadeToDisabled(0f);
             _agent.GetCompo<AgentAnimator>(true).Animator.applyRootMotion = true;
             OnSetToFinisherTarget?.Invoke();
         }

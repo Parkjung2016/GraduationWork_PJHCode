@@ -40,7 +40,7 @@ MonoBehaviour:
       - 0.8227409
       - 0.8227409
       - 0.84009826
-      - 0.9122516
+      - 0.8928571
       - 0.9221854
       _Callbacks:
       - rid: -2
@@ -1609,4 +1609,4 @@ MonoBehaviour:
     - rid: 15841035899371682
       type: {class: AnimancerEvent/ParameterFloat, ns: Animancer, asm: Kybernetik.Animancer}
       data:
-        _Value: 1
+        _Value: 1.5

@@ -2,6 +2,7 @@
 using Main.Runtime.Combat;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.StatSystem;
+using Main.Shared;
 
 namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
 {
@@ -9,9 +10,9 @@ namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones
     {
         private ShadowClone _shadowClone;
 
-        public override void Init(StatSO maxHealthStat, StatSO maxShieldStat)
+        public override void Init(IAgent agent, StatSO maxHealthStat, StatSO maxShieldStat)
         {
-            base.Init(maxHealthStat, maxShieldStat);
+            base.Init(agent, maxHealthStat, maxShieldStat);
             _shadowClone = _agent as ShadowClone;
         }
 

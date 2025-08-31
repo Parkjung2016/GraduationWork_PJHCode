@@ -17,6 +17,6 @@ MonoBehaviour:
   _displayName: "\uCC98\uD615 \uC2DC \uCCB4\uB825 \uD68C\uBCF5"
   _icon: {fileID: 0}
   _baseValue: 10.855946
-  _minValue: 5
+  _minValue: 0
   _maxValue: 20
   <IsPercent>k__BackingField: 0

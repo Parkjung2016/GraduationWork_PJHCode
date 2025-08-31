@@ -1,4 +1,5 @@
-﻿using Animancer;
+﻿using System.Threading.Tasks;
+using Animancer;
 using FMODUnity;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.Events;

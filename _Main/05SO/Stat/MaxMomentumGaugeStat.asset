@@ -16,7 +16,7 @@ MonoBehaviour:
   description: "\uCD5C\uB300 \uAE30\uC138 \uAC8C\uC774\uC9C0"
   _displayName: "\uAE30\uC138 \uAC8C\uC774\uC9C0"
   _icon: {fileID: 0}
-  _baseValue: 50
+  _baseValue: 99.75726
   _minValue: 1
   _maxValue: 300
   <IsPercent>k__BackingField: 0

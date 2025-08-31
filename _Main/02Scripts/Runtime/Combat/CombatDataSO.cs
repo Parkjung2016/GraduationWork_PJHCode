@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Animancer;
+using Main.Runtime.Combat.Core;
+using Main.Runtime.Core.StatSystem;
 using Main.Shared;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
@@ -65,6 +67,34 @@ namespace Main.Runtime.Combat
             attackAnimationClip.Speed = _originAttackSpeed * speed;
         }
 
+        public GetDamagedInfo MakeGetDamagedInfo(StatSO _increaseMomentumGaugeStat,
+            StatSO powerStat
+            , MonoBehaviour attacker, Vector3 hitPoint, Vector3 normal = default, bool ignoreHitDirection = false,
+            ITransition getDamagedAnimationClipOnIgnoreDirection = null)
+        {
+            float increaseMomentumGauge =
+                _increaseMomentumGaugeStat.Value * increaseMomentumGaugeMultiplier;
+            GetDamagedAnimationClipInfo getDamagedAnimationClip =
+                getDamagedAnimationClips[currentGetDamagedAnimationClipIndex];
+            float damage = powerStat.Value * damageMultiplier;
+            GetDamagedInfo getDamagedInfo = new()
+            {
+                hitPoint = hitPoint,
+                normal = normal,
+                damage = damage,
+                increaseMomentumGauge = increaseMomentumGauge,
+                attacker = attacker,
+                isForceAttack = isForceAttack,
+                ignoreDirection = ignoreHitDirection,
+                getDamagedAnimationClipOnIgnoreDirection = getDamagedAnimationClipOnIgnoreDirection,
+                isKnockDown = isKnockDown,
+                knockDownTime = knockDownTime,
+                getUpAnimationClip = getUpAnimationClip,
+                getDamagedAnimationClip = getDamagedAnimationClip
+            };
+            return getDamagedInfo;
+        }
+
         private void OnEnable()
         {
             _originAttackSpeed = attackAnimationClip.Speed;
@@ -94,5 +124,7 @@ namespace Main.Runtime.Combat
         public float freezeFrameDuration;
 
         [LabelText("Shake 형태")] public CinemachineImpulseDefinition.ImpulseShapes impulseShape;
+
+        [LabelText("ChromaticAberration 강도")] public float chromaticAberrationIntensity;
     }
 }

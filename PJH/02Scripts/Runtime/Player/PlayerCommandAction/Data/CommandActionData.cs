@@ -11,7 +11,7 @@ namespace PJH.Runtime.Players
         [field: SerializeField]
         public List<CommandActionPieceSO> ExecuteCommandActionPieces { get; private set; } = new();
 
-        public int maxActionCount = 5;
+        public int maxActionCount = 3;
 
         public bool TryAddCommandActionPiece(CommandActionPieceSO commandActionPiece)
         {

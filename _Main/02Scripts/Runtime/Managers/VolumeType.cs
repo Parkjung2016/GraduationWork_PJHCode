@@ -16,16 +16,20 @@ namespace Main.Runtime.Manager
         public void SetFloatParameter(FloatParameter floatParameter)
         {
             _floatParameter = floatParameter;
+            if (_floatParameter == null) return;
             _originValue = floatParameter.value;
         }
 
         public void SetValue(float value)
         {
+            if (_floatParameter == null) return;
             _floatParameter.Override(value);
         }
 
         public Tween SetValue(float value, float duration)
         {
+            if (_floatParameter == null) return null;
+
             if (_valueTween != null && _valueTween.IsActive()) _valueTween.Kill();
             _valueTween = DOTween.To(() => _floatParameter.value, SetValue,
                 value, duration);
@@ -34,6 +38,8 @@ namespace Main.Runtime.Manager
 
         public void ResetValue()
         {
+            if (_floatParameter == null) return;
+
             _floatParameter.value = _originValue;
         }
 
