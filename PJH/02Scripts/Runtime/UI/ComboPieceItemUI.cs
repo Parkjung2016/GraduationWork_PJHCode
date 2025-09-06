@@ -1,13 +1,12 @@
 ﻿using System;
-using Main.Core;
 using Main.Runtime.Manager;
 using PJH.Runtime.Core;
 using PJH.Runtime.Players;
+using PJH.Utility.Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.UI
 {

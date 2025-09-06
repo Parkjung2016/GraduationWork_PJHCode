@@ -97,6 +97,7 @@ namespace PJH.Runtime.PlayerPassive.Passives
 
         public void EndBuff()
         {
+            if (_player == null) return;
             _isApplyingBuff = false;
             if (_timeRewindType == TimeRewindPassiveType.Heal)
             {

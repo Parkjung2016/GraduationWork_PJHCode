@@ -14,6 +14,7 @@ namespace Main.Runtime.Agents
         [SerializeField] private List<AnimancerEventAssetSO> _animationEvents;
         public event Action OnAnimationEnd;
         public event Action OnPlayAttackWhooshSound;
+        public event Action OnPlayImpactWallSound;
         public Action OnDisableDamageCollider;
         public event Action<int> OnSetGetDamagedAnimationIndex;
         public event Action<Define.ESocketType> OnEnableDamageCollider;
@@ -140,6 +141,11 @@ namespace Main.Runtime.Agents
         private void SetGetDamagedAnimationIndex(int idx)
         {
             OnSetGetDamagedAnimationIndex?.Invoke(idx);
+        }
+
+        private void PlayImpactWallSound()
+        {
+            OnPlayImpactWallSound?.Invoke();
         }
     }
 }

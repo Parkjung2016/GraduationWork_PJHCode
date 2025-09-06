@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Main.Runtime.Manager
 {
     public static class Managers
@@ -6,6 +8,6 @@ namespace Main.Runtime.Manager
         public static FMODManager FMODManager { get; } = new();
         public static VolumeManager VolumeManager { get; } = new();
         public static TimeManager TimeManager { get; } = new();
-        public static int clearedThemeCount = 0;
+        public static Dictionary<string, bool> clearedTheme = new Dictionary<string, bool>(maxThemeCount);
     }
 }

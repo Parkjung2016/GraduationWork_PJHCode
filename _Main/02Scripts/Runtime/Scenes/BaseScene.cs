@@ -3,12 +3,13 @@ using BIS.Data;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using FMODUnity;
-using Main.Core;
+using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Main.Runtime.Manager.VolumeTypes;
 using Main.Shared;
 using PJH.Runtime.Core;
 using PJH.Runtime.Players;
+using PJH.Utility.Managers;
 using UnityEngine;
 
 namespace Main.Scenes
@@ -34,17 +35,58 @@ namespace Main.Scenes
         {
             try
             {
-                await UniTask.WaitUntil(() => AddressableManager.IsLoaded,
+                await UniTask.WaitUntil(() => AddressableManager.isLoaded,
                     cancellationToken: gameObject.GetCancellationTokenOnDestroy());
                 _cheatSO = AddressableManager.Load<CheatSO>("CheatSO");
                 _cheatSO.money = AddressableManager.Load<CurrencySO>("Money");
                 _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
+                _playerInput.preventChangePlayerInput = false;
+                _playerInput.preventAttackInput = false;
+                _playerInput.preventBlockInput = false;
                 _playerInput.EnablePlayerInput(true);
                 _playerInput.EnableUIInput(true);
+
+                GameEventChannelSO gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
+                gameEventChannel.AddListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
+                gameEventChannel.AddListener<PlayerStunned>(HandlePlayerStunned);
             }
             catch (Exception e)
             {
                 // ignored
+            }
+        }
+
+        private void HandlePlayerStunned(PlayerStunned evt)
+        {
+            if (evt.isStunned)
+            {
+                float duration = .4f;
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().SetValue(-2, duration);
+                Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(.3f, duration);
+                Managers.VolumeManager.GetVolumeType<VignettingFadeVolumeType>().SetValue(.4f, duration);
+            }
+            else
+            {
+                float duration = .2f;
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().ResetValue(duration);
+                Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().ResetValue(duration);
+                Managers.VolumeManager.GetVolumeType<VignettingFadeVolumeType>().ResetValue(duration);
+            }
+        }
+
+        private void HandlePlayerAvoidingAttack(TimeSlowByPlayer evt)
+        {
+            if (evt.isEnabledEffect)
+            {
+                float duration = .2f;
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().SetValue(-2, 2f);
+                Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().SetValue(-2, 2f);
+            }
+            else
+            {
+                float duration = .2f;
+                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().ResetValue(duration);
+                Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().ResetValue(duration);
             }
         }
 
@@ -54,7 +96,7 @@ namespace Main.Scenes
             Managers.FMODManager.ResumeMainSound();
             Managers.FMODManager.SetGameSoundVolume(1);
             Time.timeScale = 1;
-            CursorManager.EnableCursor(false);
+            CursorManager.SetCursorLockMode(CursorLockMode.Locked);
             if (_autoPlayBGM)
             {
                 PlayBGM();
@@ -78,6 +120,13 @@ namespace Main.Scenes
 
         protected virtual void OnDestroy()
         {
+            GameEventChannelSO gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
+            if (gameEventChannel)
+            {
+                gameEventChannel.RemoveListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
+                gameEventChannel.RemoveListener<PlayerStunned>(HandlePlayerStunned);
+            }
+
             BIS.Manager.Managers.Save.SaveGame();
         }
 

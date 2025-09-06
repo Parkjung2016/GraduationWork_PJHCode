@@ -20,6 +20,19 @@ namespace Main.Runtime.Agents
         public void AfterInitialize()
         {
             _agent.GetCompo<AgentAnimationTrigger>(true).OnGetUp += HandleGetUp;
+            _agent.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
+        }
+
+        private void OnDestroy()
+        {
+            _agent.GetCompo<AgentAnimationTrigger>(true).OnGetUp -= HandleGetUp;
+            _agent.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
+        }
+
+        private void HandleApplyDamaged(float value)
+        {
+            OnEndFullMounted?.Invoke();
+            IsFullMounted = false;
         }
 
         private void HandleGetUp()
@@ -31,6 +44,7 @@ namespace Main.Runtime.Agents
         public void FullMounted()
         {
             OnFullMounted?.Invoke();
+            _agent.IsKnockDown = false;
             IsFullMounted = true;
         }
     }

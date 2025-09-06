@@ -1,9 +1,7 @@
-﻿using System;
-using Main.Runtime.Core;
+﻿using Main.Runtime.Core;
 using Main.Runtime.Core.StatSystem;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
-using System.Linq;
-using Main.Core;
 using UnityEngine;
 using ZLinq;
 using Debug = UnityEngine.Debug;

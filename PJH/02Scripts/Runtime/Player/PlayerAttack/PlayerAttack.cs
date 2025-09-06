@@ -1,10 +1,10 @@
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Equipments.Scripts;
 using Main.Shared;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -22,9 +22,6 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             SubscribeEvents();
-            Weapon beginWeapon = _player.GetCompo<AgentEquipmentSystem>().GetSocket(Define.ESocketType.LeftHand)
-                .GetItem<Weapon>();
-            // _combatDataList = _combatDatabase.database[beginWeapon.EquipmentData].combatDataList;
         }
 
         private void OnDestroy()
@@ -86,7 +83,8 @@ namespace PJH.Runtime.Players
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             PlayerWarpStrike warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
             PlayerCounterAttack counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
-            return !_player.IsGrabbed && _isComboPossible && !_player.IsStunned && !_player.IsHitting &&
+            return !_player.IsGrabbed && _isComboPossible && !_player.IsStunned &&
+                   !_player.IsHitting &&
                    !movementCompo.IsEvading &&
                    !blockCompo.IsBlocking &&
                    !warpStrikeCompo.Activating && !counterAttackCompo.IsCounterAttacking;

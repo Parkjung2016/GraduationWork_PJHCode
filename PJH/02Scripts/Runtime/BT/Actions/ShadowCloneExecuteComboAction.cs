@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Combat;
 using Opsive.BehaviorDesigner.Runtime.Tasks;
 using Opsive.GraphDesigner.Runtime.Variables;
 using PJH.Runtime.BossSkill.BossSkills.ShadowClones;
+using PJH.Utility.Extensions;
 using UnityEngine;
 
 namespace PJH.Runtime.BT.Actions
@@ -39,7 +39,7 @@ namespace PJH.Runtime.BT.Actions
             _animationEnd = false;
             _curComboCnt = 0;
             _combatData = null;
-            _combatDatas = _combatDataList.combatDataList.GetRandom().combatDatas;
+            _combatDatas = _combatDataList.combatDataList.Random().combatDatas;
             _length = _combatDatas.Count;
             _comboPossible.Value = false;
             PlayCombatAnimation();

@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
+using PJH.Utility.Managers;
 using UnityEngine;
 using ZLinq;
 
@@ -33,21 +33,17 @@ namespace PJH.Runtime.Players
 
         public void AfterInitialize()
         {
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisher += HandleFinisher;
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd += HandleFinisherEnd;
+            PlayerEnemyFinisher enemyFinisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            enemyFinisherCompo.OnFinisher += HandleFinisher;
+            enemyFinisherCompo.OnFinisherEnd += HandleFinisherEnd;
             DetectNearInteractTarget();
         }
 
         private void OnDestroy()
         {
-            if (_cancellationToken is { IsCancellationRequested: false })
-            {
-                _cancellationToken.Cancel();
-                _cancellationToken.Dispose();
-            }
-
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisher -= HandleFinisher;
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd -= HandleFinisherEnd;
+            PlayerEnemyFinisher enemyFinisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            enemyFinisherCompo.OnFinisher -= HandleFinisher;
+            enemyFinisherCompo.OnFinisherEnd -= HandleFinisherEnd;
         }
 
         private void HandleFinisherEnd()
@@ -65,6 +61,7 @@ namespace PJH.Runtime.Players
             try
             {
                 _cancellationToken = new CancellationTokenSource();
+                _cancellationToken.RegisterRaiseCancelOnDestroy(gameObject);
                 while (!_cancellationToken.IsCancellationRequested)
                 {
                     await UniTask.WaitUntil(() => gameObject.activeSelf, cancellationToken: _cancellationToken.Token);
@@ -98,17 +95,14 @@ namespace PJH.Runtime.Players
 
                     var evt = UIEvents.ShowInteractUIEventChannel;
                     bool isShowUI = _interactableTarget != null;
-                    if (evt.isShowUI != isShowUI)
+                    evt.isShowUI = isShowUI;
+                    evt.interactableTarget = _interactableTarget;
+                    if (_interactableTarget != null)
                     {
-                        evt.isShowUI = _interactableTarget != null;
-                        evt.interactableTarget = _interactableTarget;
-                        if (_interactableTarget != null)
-                        {
-                            evt.interactDescription = _interactableTarget.Description;
-                        }
-
-                        _showInteractUIEventChannel.RaiseEvent(evt);
+                        evt.interactDescription = _interactableTarget.Description;
                     }
+
+                    _showInteractUIEventChannel.RaiseEvent(evt);
                 }
             }
             catch (Exception e)

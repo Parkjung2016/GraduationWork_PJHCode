@@ -63,7 +63,7 @@ namespace PJH.Runtime.Players
             OnHitFullMountTarget?.Invoke();
 
             float power = _powerStat.Value;
-            _fullMountTarget.HealthCompo.ApplyOnlyDamageWithOutEvent(power);
+            _fullMountTarget.HealthCompo.ApplyOnlyDamage(power);
         }
 
         private void HandleFullMount()

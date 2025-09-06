@@ -7,7 +7,7 @@ namespace PJH.Runtime.Core
     [CreateAssetMenu(menuName = "SO/DropItemInfo")]
     public class DropItemInfoSO : ScriptableObject
     {
-        [Range(0, 100)] public float passiveChancePercent;
+        [Range(0, 100)] public float passiveChancePercent, dropItemChancePercent;
 
         public float lowPassiveChancePercent = 10f, middlePassiveChancePercent = 50f;
 
@@ -15,6 +15,15 @@ namespace PJH.Runtime.Core
         {
             float value = Random.Range(0f, 100f);
             return value <= passiveChancePercent;
+        }
+
+        public bool CanSpawnDropItem()
+        {
+#if UNITY_EDITOR
+            return true;
+#endif
+            float value = Random.Range(0f, 100f);
+            return value <= dropItemChancePercent;
         }
 
         public PassiveRankType GetPassiveRank()

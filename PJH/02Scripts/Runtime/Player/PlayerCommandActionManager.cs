@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using BIS.Data;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
-using Main.Core;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using PJH.Runtime.PlayerPassive;
-using Debug = UnityEngine.Debug;
+using PJH.Utility.Managers;
 
 namespace PJH.Runtime.Players
 {

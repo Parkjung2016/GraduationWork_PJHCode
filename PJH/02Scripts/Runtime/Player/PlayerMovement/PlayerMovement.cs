@@ -2,11 +2,11 @@
 using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Core;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -18,6 +18,7 @@ namespace PJH.Runtime.Players
         {
             try
             {
+                CanEvadingWhileHitting = true;
                 _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
                 _player = agent as Player;
                 _animatorCompo = _player.GetCompo<PlayerAnimator>();
@@ -67,7 +68,7 @@ namespace PJH.Runtime.Players
 
             if (_player.IsHitting)
             {
-                if (_isCooldownEvasionWhileHitting) return;
+                if (_isCooldownEvasionWhileHitting || !CanEvadingWhileHitting) return;
                 _currentEvasionWhileHittingDelayTime = _evasionWhileHittingDelay;
                 _isCooldownEvasionWhileHitting = true;
                 IsEvadingWhileHitting = true;
@@ -238,5 +239,6 @@ namespace PJH.Runtime.Players
             CC.Move(movement);
             OnMovement?.Invoke(CC.velocity.sqrMagnitude);
         }
+        
     }
 }

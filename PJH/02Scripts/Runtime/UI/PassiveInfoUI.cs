@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Core;
 using PJH.Runtime.PlayerPassive;
+using PJH.Utility.Managers;
 using UnityEngine;
 using UnityEngine.UI;
 

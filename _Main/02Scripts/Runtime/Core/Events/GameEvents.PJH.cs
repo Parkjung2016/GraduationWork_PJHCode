@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using PJH.Runtime.Players.FinisherSequence;
 using UnityEngine;
-using UnityEngine.Playables;
 using YTH.Shared;
 
 namespace Main.Runtime.Core.Events

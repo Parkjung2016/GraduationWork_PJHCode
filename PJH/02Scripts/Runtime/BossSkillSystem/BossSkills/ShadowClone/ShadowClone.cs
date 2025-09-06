@@ -4,7 +4,6 @@ using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using INab.Dissolve;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Characters.StateMachine;
 using Main.Runtime.Core;
@@ -12,6 +11,7 @@ using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Opsive.BehaviorDesigner.Runtime;
 using PJH.Runtime.Players;
+using PJH.Utility.Managers;
 using UnityEngine;
 
 namespace PJH.Runtime.BossSkill.BossSkills.ShadowClones

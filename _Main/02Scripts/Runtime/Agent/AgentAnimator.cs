@@ -45,12 +45,6 @@ namespace Main.Runtime.Agents
 
         protected virtual void OnDestroy()
         {
-            if (_knockDownToken is { IsCancellationRequested: false })
-            {
-                _knockDownToken.Cancel();
-                _knockDownToken.Dispose();
-            }
-
             _agent.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
             _agent.HealthCompo.OnDeath -= HandleDeath;
             if (_agent.HealthCompo.ailmentStat != null)
@@ -113,6 +107,8 @@ namespace Main.Runtime.Agents
                 _knockDownToken.Dispose();
             }
 
+            _knockDownToken = new CancellationTokenSource();
+            _knockDownToken.RegisterRaiseCancelOnDestroy(gameObject);
             GetDamagedInfo getDamagedInfo = _agent.HealthCompo.GetDamagedInfo;
             ITransition getDamagedAnimationClip = null;
             if (getDamagedInfo.ignoreDirection)
@@ -159,8 +155,6 @@ namespace Main.Runtime.Agents
                             try
                             {
                                 OnKnockDown?.Invoke();
-                                if (_knockDownToken is { IsCancellationRequested: false }) return;
-                                _knockDownToken = new CancellationTokenSource();
                                 await UniTask.WaitForSeconds(getDamagedInfo.knockDownTime,
                                     cancellationToken: _knockDownToken.Token);
                                 _agent.IsKnockDown = false;
@@ -172,9 +166,9 @@ namespace Main.Runtime.Agents
 
                                 PlayGetUpAnimation();
                             }
-                            catch (Exception)
+                            catch (Exception e)
                             {
-                                // ignored
+                                Debug.Log(e);
                             }
                         }
                         else
@@ -189,6 +183,7 @@ namespace Main.Runtime.Agents
         {
             GetDamagedInfo getDamagedInfo = _agent.HealthCompo.GetDamagedInfo;
 
+            if (!getDamagedInfo.getUpAnimationClip.IsValid()) return;
             PlayAnimationClip(getDamagedInfo.getUpAnimationClip, () =>
             {
                 if (_agent.HealthCompo.IsDead) return;

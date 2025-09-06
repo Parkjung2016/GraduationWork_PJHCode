@@ -1,6 +1,6 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Main.Core;
+using PJH.Utility.Managers;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -21,7 +21,7 @@ namespace Main.Scenes
             {
                 _cinemachineRotationComposer = _cinemachineCamera.GetComponent<CinemachineRotationComposer>();
 
-                await UniTask.WaitUntil(() => AddressableManager.IsLoaded,
+                await UniTask.WaitUntil(() => AddressableManager.isLoaded,
                     cancellationToken: gameObject.GetCancellationTokenOnDestroy());
                 PlayBGM();
             }
@@ -35,7 +35,7 @@ namespace Main.Scenes
         {
             base.Start();
             Application.targetFrameRate = 30;
-            CursorManager.EnableCursor(true);
+            CursorManager.SetCursorLockMode(CursorLockMode.None);
         }
 
         private void LateUpdate()

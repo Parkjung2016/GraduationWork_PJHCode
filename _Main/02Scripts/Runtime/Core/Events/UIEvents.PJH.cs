@@ -1,9 +1,8 @@
-﻿using System;
-using DG.Tweening;
-using Main.Shared;
+﻿using Main.Shared;
 using PJH.Shared;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Video;
 
 namespace Main.Runtime.Core.Events
 {
@@ -17,15 +16,26 @@ namespace Main.Runtime.Core.Events
         public static readonly ShowWarpStrikeTargetUI ShowWarpStrikeTargetUI = new ShowWarpStrikeTargetUI();
         public static readonly ShowPassiveInfoUI ShowPassiveInfoUI = new ShowPassiveInfoUI();
         public static readonly ShowTextDialogueUI ShowTextDialogueUI = new ShowTextDialogueUI();
+
         public static readonly ShowEvasionWhileHittingInfUI ShowEvasionWhileHittingInfUI =
             new ShowEvasionWhileHittingInfUI();
+
         public static readonly ShowNoticeText ShowNoticeText = new ShowNoticeText();
+        public static readonly ShowQuestPreviewUI ShowQuestPreviewUI = new ShowQuestPreviewUI();
     }
+
     public enum PassiveInfoType
     {
         None,
         Buff
     }
+
+    public class ShowQuestPreviewUI : GameEvent
+    {
+        public bool show;
+        public VideoClip previewVideo;
+    }
+
     public class ShowNoticeText : GameEvent
     {
         public string notice;
@@ -72,10 +82,12 @@ namespace Main.Runtime.Core.Events
     {
         public bool isShowUI;
     }
+
     public class ShowTextDialogueUI : GameEvent
     {
         public string dialogueText;
     }
+
     public class ShowFinisherTargetUI : GameEvent
     {
         public bool isShowUI;

@@ -1,7 +1,7 @@
 ﻿using Animancer;
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Agents;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using YTH.Enemies;

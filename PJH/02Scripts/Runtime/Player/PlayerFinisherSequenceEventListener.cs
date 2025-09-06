@@ -1,10 +1,10 @@
 using FMOD.Studio;
 using FMODUnity;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Equipments.Datas;
+using PJH.Utility.Managers;
 using Unity.Cinemachine;
 using UnityEngine;
 using STOP_MODE = FMOD.Studio.STOP_MODE;

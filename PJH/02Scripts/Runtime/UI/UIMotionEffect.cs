@@ -1,12 +1,10 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Main.Runtime.Manager;
 using PJH.Runtime.Core.PlayerCamera;
 using PJH.Runtime.Players;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace PJH.Runtime.UI
 {

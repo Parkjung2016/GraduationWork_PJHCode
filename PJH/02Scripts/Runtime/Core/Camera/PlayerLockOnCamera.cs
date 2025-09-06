@@ -1,10 +1,7 @@
-using System;
-using Main.Core;
-using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
+using PJH.Utility.Managers;
 using Unity.Cinemachine;
 using UnityEngine;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Core.PlayerCamera
 {

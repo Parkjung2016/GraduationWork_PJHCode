@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Magio;
-using Main.Core;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

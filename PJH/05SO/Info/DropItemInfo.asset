@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12aacd768a05498f97b577c7f894c1fa, type: 3}
   m_Name: DropItemInfo
   m_EditorClassIdentifier: 
-  passiveChancePercent: 50
-  lowPassiveChancePercent: 10
-  middlePassiveChancePercent: 50
+  passiveChancePercent: 80
+  dropItemChancePercent: 70
+  lowPassiveChancePercent: 50
+  middlePassiveChancePercent: 30

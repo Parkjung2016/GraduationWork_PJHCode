@@ -1,15 +1,15 @@
 using System;
 using DG.Tweening;
 using Kinemation.MotionWarping.Runtime.Examples;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Players.FinisherSequence;
+using PJH.Utility.Extensions;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using ZLinq;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -104,7 +104,7 @@ namespace PJH.Runtime.Players
                     bool result = Physics.CheckSphere(playerPosition, data.Key, _whatIsObstacle);
                     return !result;
                 }).OrderByDescending(data => data.Key).FirstOrDefault().ToList();
-            return filteredList.GetRandom();
+            return filteredList.Random();
         }
     }
 }

@@ -1,13 +1,12 @@
-using System;
 using DG.Tweening;
 using FIMSpace.FLook;
 using Kinemation.MotionWarping.Runtime.Core;
 using Kinemation.MotionWarping.Runtime.Examples;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Manager;
 using Main.Shared;
 using PJH.Runtime.Players;
+using PJH.Utility.Managers;
 using UnityEngine;
 
 namespace PJH.Runtime.Core.InteractObjects
@@ -30,6 +29,11 @@ namespace PJH.Runtime.Core.InteractObjects
             CanInteract = true;
             _alignComponent = GetComponent<AlignComponent>();
             _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
+        }
+
+        protected override void Start()
+        {
+            base.Start();
             transform.Find("Model").GetComponent<FLookAnimator>().ObjectToFollow =
                 PlayerManager.Instance.Player.HeadTrm;
         }

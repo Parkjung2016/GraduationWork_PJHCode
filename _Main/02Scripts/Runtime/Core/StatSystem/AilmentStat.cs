@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Animancer;
-using Main.Core;
 using Main.Runtime.Core.StatSystem;
+using PJH.Utility.Extensions;
+using PJH.Utility.Managers;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 [Flags]
 public enum Ailment : int
@@ -49,9 +49,11 @@ public class AilmentStat
                 _dotTimers.Add(ailment, 0f);
             }
         }
+    }
 
-        getDamagedAnimationClip =
-            AddressableManager.Load<DotDamagedAnimationListSO>("DotDamageAnimList");
+    public void Init()
+    {
+        getDamagedAnimationClip = AddressableManager.Load<DotDamagedAnimationListSO>("DotDamageAnimList");
     }
 
     public void UpdateAilment()
@@ -67,7 +69,7 @@ public class AilmentStat
                 if (_ailmentTimerDictionary[ailment] <= 0)
                 {
                     Ailment oldAilment = currentAilment;
-                    currentAilment ^= ailment; //XOR·Î »©ÁÖ°í
+                    currentAilment ^= ailment; //XORï¿½ï¿½ ï¿½ï¿½ï¿½Ö°ï¿½
                     _dotTimers[ailment] = 0;
                     OnAilmentChanged?.Invoke(oldAilment, currentAilment);
                 }
@@ -90,7 +92,7 @@ public class AilmentStat
                 {
                     _dotTimers[type] = 0;
                     OnDotDamage?.Invoke(Ailment.Dot, _ailmentValueDictionary[type],
-                        getDamagedAnimationClip.getDamagedAnimations.GetRandom());
+                        getDamagedAnimationClip.getDamagedAnimations.Random());
                 }
             }
         }

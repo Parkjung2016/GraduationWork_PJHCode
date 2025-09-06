@@ -5,7 +5,7 @@
         private void SubscribeEvents()
         {
             _player.OnStartStun += HandleEndEvasion;
-            _player.OnGrabbed += HandleEndEvasion;
+            _player.OnEndGrabbed += HandleEndEvasion;
 
             _player.HealthCompo.OnDeath += HandleDeath;
             _player.PlayerInput.RunEvent += HandleRun;
@@ -34,7 +34,7 @@
         private void UnSubscribeEvents()
         {
             _player.OnStartStun -= HandleEndEvasion;
-            _player.OnGrabbed -= HandleEndEvasion;
+            _player.OnEndGrabbed -= HandleEndEvasion;
 
             _player.HealthCompo.OnDeath -= HandleDeath;
             _player.PlayerInput.RunEvent -= HandleRun;

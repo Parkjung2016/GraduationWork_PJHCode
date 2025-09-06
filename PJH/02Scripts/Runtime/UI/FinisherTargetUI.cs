@@ -1,12 +1,11 @@
 using System;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using PJH.Runtime.Core.InputKeyIcon;
+using PJH.Utility.Managers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.UI
 {

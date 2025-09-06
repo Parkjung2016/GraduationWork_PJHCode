@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
 using Main.Runtime.Core.Events;
-using Main.Runtime.Manager;
-using Main.Shared;
 using UnityEngine;
 using YTH.Boss;
 

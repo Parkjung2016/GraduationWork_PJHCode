@@ -1,15 +1,11 @@
-using System;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Players.FinisherSequence;
+using PJH.Utility.Managers;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Splines;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Core.PlayerCamera
 {

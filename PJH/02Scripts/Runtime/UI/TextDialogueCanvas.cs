@@ -1,8 +1,8 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Febucci.UI;
-using Main.Core;
 using Main.Runtime.Core.Events;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;

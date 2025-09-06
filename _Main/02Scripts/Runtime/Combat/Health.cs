@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlTypes;
 using Animancer;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.StatSystem;
@@ -88,6 +89,7 @@ namespace Main.Runtime.Combat
             IsInitialized = true;
 
             ailmentStat = new AilmentStat();
+            ailmentStat.Init();
             ailmentStat.OnAilmentChanged += HandAilmentChangeEvent;
             ailmentStat.OnDotDamage += HandleDotDamageEvent;
         }
@@ -97,10 +99,11 @@ namespace Main.Runtime.Combat
         {
             if (_maxHealthStat)
                 _maxHealthStat.OnValueChange -= HandleMaxHealthChanged;
-
-            ailmentStat.OnAilmentChanged -= HandAilmentChangeEvent;
-            ailmentStat.OnDotDamage -= HandleDotDamageEvent;
-            ailmentStat = null;
+            if (ailmentStat != null)
+            {
+                ailmentStat.OnAilmentChanged -= HandAilmentChangeEvent;
+                ailmentStat.OnDotDamage -= HandleDotDamageEvent;
+            }
         }
 
         private void HandleMaxHealthChanged(StatSO stat, float current, float prev)
@@ -140,42 +143,31 @@ namespace Main.Runtime.Combat
 
         public virtual bool ApplyOnlyDamage(float damage)
         {
-            GetDamagedInfo getDamagedInfo = new();
-            getDamagedInfo.damage = damage;
-            if (!CanApplyDamage(getDamagedInfo)) return false;
+            GetDamagedInfo getDamagedInfo = new()
+            {
+                damage = damage,
+                attacker = _getDamagedInfo.attacker,
+                hitPoint = _getDamagedInfo.hitPoint,
+                normal = _getDamagedInfo.normal,
+                getUpAnimationClip = _getDamagedInfo.getUpAnimationClip,
+                increaseMomentumGauge = _getDamagedInfo.increaseMomentumGauge,
+            };
+            _getDamagedInfo = getDamagedInfo;
+
+            if (!CanApplyDamage(_getDamagedInfo)) return false;
             if (CurrentShield > 0)
             {
-                CurrentShield -= getDamagedInfo.damage;
+                CurrentShield -= _getDamagedInfo.damage;
                 _getDamagedInfo.damage = 0;
             }
             else
             {
-                GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(getDamagedInfo);
+                GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(_getDamagedInfo);
                 if (returnValue.HasValue)
                     _getDamagedInfo = returnValue.Value;
             }
 
             OnApplyDamaged?.Invoke(_getDamagedInfo.damage);
-            CurrentHealth -= _getDamagedInfo.damage;
-            return true;
-        }
-
-        public virtual bool ApplyOnlyDamageWithOutEvent(float damage)
-        {
-            GetDamagedInfo getDamagedInfo = new();
-            getDamagedInfo.damage = damage;
-            if (CurrentShield > 0)
-            {
-                CurrentShield -= getDamagedInfo.damage;
-                _getDamagedInfo.damage = 0;
-            }
-            else
-            {
-                GetDamagedInfo? returnValue = SetGetDamagedInfoBeforeApplyDamagedEvent?.Invoke(getDamagedInfo);
-                if (returnValue.HasValue)
-                    _getDamagedInfo = returnValue.Value;
-            }
-
             CurrentHealth -= _getDamagedInfo.damage;
             return true;
         }

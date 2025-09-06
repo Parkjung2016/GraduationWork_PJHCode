@@ -8,9 +8,8 @@ using System.Collections.Generic;
 using Main.Runtime.Combat;
 using Main.Runtime.Core.StatSystem;
 using UnityEngine;
-using Main.Core;
 using Main.Runtime.Core.Events;
-using Debug = Main.Core.Debug;
+using PJH.Utility.Managers;
 
 
 namespace PJH.Runtime.PlayerPassive

@@ -23,6 +23,7 @@ namespace PJH.Runtime.Players
         public bool IsEvadingWhileHitting { get; private set; }
         public bool IsManualMove { get; private set; }
         public bool IsKnockBack { get; private set; }
+        public bool CanEvadingWhileHitting { get; set; }
         [field: SerializeField] public float DecreaseMomentumGaugeWhenEvading { get; private set; } = 20;
 
         public float Speed

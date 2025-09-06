@@ -1,11 +1,11 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
+using PJH.Utility.Managers;
 using UnityEngine;
 using YTH.Shared;
 using ZLinq;
@@ -47,8 +47,6 @@ namespace PJH.Runtime.Players
 
         private void OnDestroy()
         {
-            _cancellationToken?.Cancel();
-            _cancellationToken?.Dispose();
 
             _player.OnHitTarget -= HandleHitTarget;
             _player.GetCompo<PlayerAttack>().OnAttack -= HandleAttack;
@@ -75,7 +73,7 @@ namespace PJH.Runtime.Players
         private async UniTaskVoid DetectNearTarget()
         {
             _cancellationToken = new CancellationTokenSource();
-
+            _cancellationToken.RegisterRaiseCancelOnDestroy(gameObject);
             try
             {
                 while (!_cancellationToken.IsCancellationRequested)

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using FMODUnity;
-using Main.Core;
 using Main.Runtime.Combat;
-using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Core.StatSystem;
 using Main.Runtime.Equipments.Datas;
@@ -11,6 +8,7 @@ using Main.Runtime.Equipments.Scripts.Weapons.Core;
 using Main.Shared;
 using MoreMountains.Feedbacks;
 using MoreMountains.FeedbacksForThirdParty;
+using PJH.Utility.Managers;
 using UnityEngine;
 
 namespace Main.Runtime.Equipments.Scripts

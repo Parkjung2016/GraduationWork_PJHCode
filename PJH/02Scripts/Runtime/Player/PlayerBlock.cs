@@ -10,6 +10,7 @@ namespace PJH.Runtime.Players
     {
         public event Action<bool> OnBlock;
         public bool IsBlocking { get; private set; }
+        public bool PreventParrying { get; set; }
 
         [field: SerializeField] public float IncreaseTargetMomentumGauge { get; private set; } = 20;
         [field: SerializeField] public float IncreaseMomentumGaugeOnBlock { get; private set; } = 20;
@@ -20,13 +21,14 @@ namespace PJH.Runtime.Players
 
         public void Initialize(Agent agent)
         {
+            PreventParrying = false;
             _player = agent as Player;
         }
 
         public void AfterInitialize()
         {
             _player.OnStartStun += HandleBlockEnd;
-            _player.OnGrabbed += HandleBlockEnd;
+            _player.OnEndGrabbed += HandleBlockEnd;
             _player.PlayerInput.BlockEvent += HandleBlock;
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
             _player.GetCompo<PlayerAttack>().OnAttack += HandleBlockEnd;
@@ -41,7 +43,7 @@ namespace PJH.Runtime.Players
         private void OnDestroy()
         {
             _player.OnStartStun -= HandleBlockEnd;
-            _player.OnGrabbed -= HandleBlockEnd;
+            _player.OnEndGrabbed -= HandleBlockEnd;
 
             _player.PlayerInput.BlockEvent -= HandleBlock;
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
@@ -92,7 +94,7 @@ namespace PJH.Runtime.Players
 
         public bool CanParrying()
         {
-            bool canParrying = Time.time - _currentBlockingTime <= .2f;
+            bool canParrying = !PreventParrying && Time.time - _currentBlockingTime <= .2f;
             return canParrying;
         }
     }

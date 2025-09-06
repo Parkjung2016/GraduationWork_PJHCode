@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
+using PJH.Utility.Managers;
 using UnityEngine;
 
 namespace PJH.Runtime.Players
@@ -16,6 +16,7 @@ namespace PJH.Runtime.Players
         private Player _player;
 
         private PlayerEnemyFinisher _enemyFinisherCompo;
+        private PlayerFullMount _fullMountCompo;
         private Agent _finisherTarget;
         private Agent _checkTarget;
         private CancellationTokenSource _cancellationToken;
@@ -24,6 +25,7 @@ namespace PJH.Runtime.Players
         {
             _player = agent as Player;
             _enemyFinisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            _fullMountCompo = _player.GetCompo<PlayerFullMount>();
             _showFinisherTargetUIEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
         }
 
@@ -43,7 +45,7 @@ namespace PJH.Runtime.Players
                 _cancellationToken.Dispose();
             }
 
-            _player.GetCompo<PlayerEnemyDetection>().OnChangedHitTargetEnemy -=HandleChangedTargetEnemy;
+            _player.GetCompo<PlayerEnemyDetection>().OnChangedHitTargetEnemy -= HandleChangedTargetEnemy;
             _player.GetCompo<PlayerEnemyDetection>().OnChangedTargetEnemy -= HandleChangedTargetEnemy;
         }
 
@@ -70,9 +72,9 @@ namespace PJH.Runtime.Players
                         if (!finisherable) continue;
                         float dis = Vector3.Distance(finisherable.Agent.transform.position,
                             _player.transform.position);
-                        bool canFinisher = !_enemyFinisherCompo.IsFinishering && finisherable.CanFinisher() &&
+                        bool canFinisher = !_fullMountCompo.IsFullMounting && !_enemyFinisherCompo.IsFinishering &&
+                                           finisherable.CanFinisher() &&
                                            dis <= 1.5f;
-
                         evt.isShowUI = canFinisher;
                         if (canFinisher)
                         {

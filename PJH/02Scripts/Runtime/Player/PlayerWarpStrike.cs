@@ -1,7 +1,6 @@
 using System;
 using Animancer;
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Combat;
 using Main.Runtime.Combat.Core;
@@ -10,6 +9,7 @@ using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using PJH.Runtime.Core;
 using PJH.Runtime.Core.PlayerCamera;
+using PJH.Utility.Managers;
 using UnityEngine;
 
 namespace PJH.Runtime.Players

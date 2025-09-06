@@ -1,9 +1,10 @@
-﻿using BIS.Manager;
+﻿using BIS.Data;
+using BIS.Events;
+using BIS.Manager;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using LJS.Map;
 using LJS.Utils;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
@@ -14,13 +15,14 @@ using PJH.Runtime.Core;
 using PJH.Runtime.Core.EnemySpawnSystem;
 using PJH.Runtime.Players;
 using PJH.Runtime.UI;
+using PJH.Utility.Managers;
 using Unity.Cinemachine;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using YTH.Boss;
 using YTH.Enemies;
+using ZLinq;
 using Managers = Main.Runtime.Manager.Managers;
 using Random = UnityEngine.Random;
 using SceneManagerEx = Main.Runtime.Manager.SceneManagerEx;
@@ -36,6 +38,8 @@ namespace Main.Scenes
         [SerializeField] private Vector3 _timelineOffsetFromCenter = new Vector3(0, 0, 0.55f);
         private IBattleZoneController _currentBattleZoneController;
 
+        private bool _deathBoss;
+
         public IBattleZoneController CurrentBattleZoneController
         {
             get => _currentBattleZoneController;
@@ -48,10 +52,9 @@ namespace Main.Scenes
         }
 
         private GameEventChannelSO _uiEventChannel;
-
         protected GameEventChannelSO _gameEventChannel;
-
         private PlayableDirector _playableDirector;
+        private InventorySO _inventory;
 
         protected override void Awake()
         {
@@ -63,6 +66,7 @@ namespace Main.Scenes
             _playableDirector = FindAnyObjectByType<PlayableDirector>();
             Application.targetFrameRate = 60;
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
+            _inventory = AddressableManager.Load<InventorySO>("InventorySO");
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             AddressableManager.Instantiate<TextDialogueCanvas>("TextDialogueCanvas");
         }
@@ -71,8 +75,6 @@ namespace Main.Scenes
         {
             base.Start();
             _gameEventChannel.AddListener<PlayerDeath>(HandlePlayerDeath);
-            _gameEventChannel.AddListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
-            _gameEventChannel.AddListener<PlayerStunned>(HandlePlayerStunned);
             _gameEventChannel.AddListener<FinishAllWave>(HandleEndBattle);
             _gameEventChannel.AddListener<StartWave>(HandleStartWave);
             _gameEventChannel.AddListener<BossDead>(HandleBossDead);
@@ -87,8 +89,6 @@ namespace Main.Scenes
         {
             base.OnDestroy();
             _gameEventChannel.RemoveListener<PlayerDeath>(HandlePlayerDeath);
-            _gameEventChannel.RemoveListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
-            _gameEventChannel.RemoveListener<PlayerStunned>(HandlePlayerStunned);
             _gameEventChannel.RemoveListener<FinishAllWave>(HandleEndBattle);
             _gameEventChannel.RemoveListener<StartWave>(HandleStartWave);
             _gameEventChannel.RemoveListener<BossDead>(HandleBossDead);
@@ -165,7 +165,7 @@ namespace Main.Scenes
         private void HandleBossDead(BossDead obj)
         {
             SettingForTimeline();
-
+            _deathBoss = true;
             Managers.FMODManager.StopMusicSound();
             Sequence seq = DOTween.Sequence();
             seq.Append(Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(0, 1f));
@@ -259,40 +259,6 @@ namespace Main.Scenes
             Managers.FMODManager.MusicEventInstance.setParameterByNameWithLabel("MusicType", "Default");
         }
 
-        private void HandlePlayerStunned(PlayerStunned evt)
-        {
-            if (evt.isStunned)
-            {
-                float duration = .4f;
-                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().SetValue(-2, duration);
-                Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(.3f, duration);
-                Managers.VolumeManager.GetVolumeType<VignettingFadeVolumeType>().SetValue(.4f, duration);
-            }
-            else
-            {
-                float duration = .2f;
-                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().ResetValue(duration);
-                Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().ResetValue(duration);
-                Managers.VolumeManager.GetVolumeType<VignettingFadeVolumeType>().ResetValue(duration);
-            }
-        }
-
-        private void HandlePlayerAvoidingAttack(TimeSlowByPlayer evt)
-        {
-            if (evt.isEnabledEffect)
-            {
-                float duration = .2f;
-                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().SetValue(-2, 2f);
-                Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().SetValue(-2, 2f);
-            }
-            else
-            {
-                float duration = .2f;
-                Managers.VolumeManager.GetVolumeType<SaturateVolumeType>().ResetValue(duration);
-                Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().ResetValue(duration);
-            }
-        }
-
         private void HandlePlayerDeath(PlayerDeath evt)
         {
             _playerInput.EnablePlayerInput(false);
@@ -308,7 +274,7 @@ namespace Main.Scenes
                 _uiEventChannel.RaiseEvent(showDeathUIEvt);
             });
             seq.AppendInterval(5);
-            seq.AppendCallback(() => { SceneManagerEx.LoadScene("Lobby", true); });
+            seq.AppendCallback(() => { OpenComboPieceLoadoutUI(); });
         }
 
         public void GoToLobby(GoToLobby evt)
@@ -316,8 +282,11 @@ namespace Main.Scenes
             var destroyDeadEnemyEvt = GameEvents.DestroyDeadEnemy;
             destroyDeadEnemyEvt.isPlayingBossDeathTimeline = false;
             _gameEventChannel.RaiseEvent(destroyDeadEnemyEvt);
-            Managers.clearedThemeCount++;
-            if (Managers.clearedThemeCount >= Managers.maxThemeCount)
+            string themeName = UIEvent.ThemePopupChoiceEvent.themeSO.ThemeName;
+            if (_deathBoss)
+                Managers.clearedTheme[themeName] = true;
+            if (Managers.clearedTheme.Count >= Managers.maxThemeCount &&
+                Managers.clearedTheme.Values.AsValueEnumerable().All(x => x == true))
             {
                 SceneControlManager.FadeOut(async () =>
                 {

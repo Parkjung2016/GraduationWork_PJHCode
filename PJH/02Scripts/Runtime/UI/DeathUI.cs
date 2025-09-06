@@ -1,8 +1,9 @@
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using MoreMountains.Feedbacks;
+using PJH.Utility.Extensions;
+using PJH.Utility.Managers;
 using TMPro;
 using TransitionsPlus;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace PJH.Runtime.UI
             if (showDeathUIEvt.isShowUI)
             {
                 Managers.FMODManager.PlaySound("event:/UI/DeathUI");
-                _deathTMP.SetText(_deathTexts.GetRandom());
+                _deathTMP.SetText(_deathTexts.Random());
                 _canvasGroup.DOFade(1, 1);
                 _showFeedbackPlayer.PlayFeedbacks();
             }

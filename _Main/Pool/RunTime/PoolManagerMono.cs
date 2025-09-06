@@ -1,8 +1,6 @@
 using System.Collections;
-using Main.Core;
-using Main.Runtime.Manager;
+using PJH.Utility.Managers;
 using UnityEngine;
-using Debug = Main.Core.Debug;
 
 public class PoolManagerMono : MonoBehaviour
 {
@@ -12,7 +10,7 @@ public class PoolManagerMono : MonoBehaviour
 
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => AddressableManager.IsLoaded);
+        yield return new WaitUntil(() => AddressableManager.isLoaded);
         _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
         PoolManagerMono[] objs = FindObjectsByType<PoolManagerMono>(FindObjectsSortMode.None);
         if (objs.Length > 1)
@@ -26,7 +24,7 @@ public class PoolManagerMono : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        Debug.Log("Ç®¸µ ¿Ï·á");
+        Debug.Log("Ç®ï¿½ï¿½ ï¿½Ï·ï¿½");
     }
 
 

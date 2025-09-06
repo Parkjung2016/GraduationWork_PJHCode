@@ -81,10 +81,11 @@ namespace Main.Runtime.Agents
 
             try
             {
-                StopDecreaseMomentumGauge();
-                DisposeTokenSource();
-
-                _checkDecreaseMomentumGaugeTokenSource = new CancellationTokenSource();
+                CancelTokenSource();
+                _autoDecreaseMomentumGaugeTokenSource = new();
+                _autoDecreaseMomentumGaugeTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
+                _checkDecreaseMomentumGaugeTokenSource = new();
+                _checkDecreaseMomentumGaugeTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
                 await UniTask.WaitForSeconds(AutoDecreaseMomentumGaugeTime,
                     cancellationToken: _checkDecreaseMomentumGaugeTokenSource.Token);
                 StartDecreaseMomentumGauge();
@@ -97,19 +98,21 @@ namespace Main.Runtime.Agents
 
         private void OnDestroy()
         {
-            DisposeTokenSource();
-            StopDecreaseMomentumGauge();
-
             _agent.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;
         }
 
-        public void DisposeTokenSource()
+        public void CancelTokenSource()
         {
-            if (_checkDecreaseMomentumGaugeTokenSource != null &&
-                !_checkDecreaseMomentumGaugeTokenSource.IsCancellationRequested)
+            if (_checkDecreaseMomentumGaugeTokenSource is { IsCancellationRequested: false })
             {
                 _checkDecreaseMomentumGaugeTokenSource.Cancel();
                 _checkDecreaseMomentumGaugeTokenSource.Dispose();
+            }
+
+            if (_autoDecreaseMomentumGaugeTokenSource is { IsCancellationRequested: false })
+            {
+                _autoDecreaseMomentumGaugeTokenSource.Cancel();
+                _autoDecreaseMomentumGaugeTokenSource.Dispose();
             }
         }
 
@@ -120,7 +123,6 @@ namespace Main.Runtime.Agents
 
         public virtual async void StartDecreaseMomentumGauge()
         {
-            _autoDecreaseMomentumGaugeTokenSource = new();
             try
             {
                 while (!_autoDecreaseMomentumGaugeTokenSource.IsCancellationRequested && CurrentMomentumGauge > 0)
@@ -133,16 +135,6 @@ namespace Main.Runtime.Agents
             catch (Exception)
             {
                 // ignored
-            }
-        }
-
-        public void StopDecreaseMomentumGauge()
-        {
-            if (_autoDecreaseMomentumGaugeTokenSource != null &&
-                !_autoDecreaseMomentumGaugeTokenSource.IsCancellationRequested)
-            {
-                _autoDecreaseMomentumGaugeTokenSource.Cancel();
-                _autoDecreaseMomentumGaugeTokenSource.Dispose();
             }
         }
     }

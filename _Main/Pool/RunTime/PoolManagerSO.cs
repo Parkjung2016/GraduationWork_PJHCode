@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 #endif
 using UnityEngine;
-using Debug = Main.Core.Debug;
 
 [CreateAssetMenu(menuName = "SO/Pool/Manager")]
 public class PoolManagerSO : ScriptableObject

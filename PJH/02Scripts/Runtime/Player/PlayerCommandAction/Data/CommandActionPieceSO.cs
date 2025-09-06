@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
 using PJH.Runtime.PlayerPassive;
 using PJH.Shared;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using ZLinq;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -278,14 +277,13 @@ namespace PJH.Runtime.Players
             {
                 foreach (var passive in other._passives)
                 {
-                    if (!_passives.Contains(passive))
+                    if (!_passives.AsValueEnumerable().Any(x=>x.pieceDisplayName==passive.pieceDisplayName))
                     {
                         _passives.Add(passive);
                     }
                 }
             }
 
-            Destroy(other);
             Debug.Log("<color=green>병합 성공</color>");
             OnChangePassive?.Invoke();
             return true;

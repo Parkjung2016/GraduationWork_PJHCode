@@ -1,13 +1,12 @@
 using System.Collections.Generic;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
 using MoreMountains.Feedbacks;
+using PJH.Utility.Managers;
 using TrailsFX;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 
 namespace PJH.Runtime.Players

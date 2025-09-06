@@ -19,6 +19,7 @@ namespace PJH.Runtime.Core.PlayerCamera
         private void Awake()
         {
             _updateVisibleTargetsTokenSource = new();
+            _updateVisibleTargetsTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
             UpdateVisibleTargets();
         }
 
@@ -39,21 +40,11 @@ namespace PJH.Runtime.Core.PlayerCamera
                     }
 
                     await UniTask.WaitForSeconds(_detectRate,
-                        cancellationToken: _updateVisibleTargetsTokenSource.Token, ignoreTimeScale: true);
+                        cancellationToken: _updateVisibleTargetsTokenSource.Token);
                 }
             }
             catch (Exception e)
             {
-                
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (_updateVisibleTargetsTokenSource is { IsCancellationRequested: false })
-            {
-                _updateVisibleTargetsTokenSource.Cancel();
-                _updateVisibleTargetsTokenSource.Dispose();
             }
         }
 

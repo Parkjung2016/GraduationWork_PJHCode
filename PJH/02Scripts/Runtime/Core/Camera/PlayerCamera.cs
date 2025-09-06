@@ -1,7 +1,7 @@
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Shared;
+using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using Unity.Cinemachine;
 using UnityEngine;

@@ -5,7 +5,7 @@
         private void SubscribeEvents()
         {
             _player.OnStartStun += HandleEndCombo;
-            _player.OnGrabbed += HandleEndCombo;
+            _player.OnEndGrabbed += HandleEndCombo;
 
             _player.PlayerInput.AttackEvent += HandleAttack;
             _player.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
@@ -31,7 +31,7 @@
         private void UnSubscribeEvents()
         {
             _player.OnStartStun -= HandleEndCombo;
-            _player.OnGrabbed -= HandleEndCombo;
+            _player.OnEndGrabbed -= HandleEndCombo;
 
             _player.PlayerInput.AttackEvent -= HandleAttack;
             _player.HealthCompo.OnApplyDamaged -= HandleApplyDamaged;

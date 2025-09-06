@@ -1,15 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BIS.Data;
-using Main.Core;
 using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
-using Opsive.BehaviorDesigner.Runtime;
+using PJH.Utility.Extensions;
+using PJH.Utility.Managers;
 using UnityEngine;
 using YTH.Enemies;
 using Debug = UnityEngine.Debug;
-using Random = UnityEngine.Random;
 
 namespace PJH.Runtime.Core.EnemySpawnSystem
 {
@@ -73,7 +71,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
                 Debug.Log(spawnDataIndex);
                 if (spawnDataIndex >= spawnDatas.Count)
                 {
-                    spawnData = spawnDatas.GetRandom();
+                    spawnData = spawnDatas.Random();
                 }
                 else
                     spawnData = spawnDatas[spawnDataIndex++];

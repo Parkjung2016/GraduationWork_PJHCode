@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using Main.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Main.Runtime.Manager.VolumeTypes;
+using Main.Shared;
 using PJH.Runtime.Players;
+using PJH.Utility.Extensions;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
-using Debug = Main.Core.Debug;
 
 namespace PJH.Runtime.PlayerPassive.Passives
 {
@@ -47,6 +47,12 @@ namespace PJH.Runtime.PlayerPassive.Passives
 
         public void DeActivePassive()
         {
+            if (_targetSelectionTokenSource is { IsCancellationRequested: false })
+            {
+                _targetSelectionTokenSource.Cancel();
+                _targetSelectionTokenSource.Dispose();
+            }
+
             _player.GetCompo<PlayerAnimationTrigger>().OnTriggerPassiveAfterAttack -= HandleTriggerPassiveAfterAttack;
         }
 
@@ -62,6 +68,7 @@ namespace PJH.Runtime.PlayerPassive.Passives
                 }
 
                 _targetSelectionTokenSource = new();
+
                 var changeCameraFOVEvent = GameEvents.ChangeCameraFOV;
                 changeCameraFOVEvent.ignoreTimeScale = true;
                 changeCameraFOVEvent.resetFOV = false;
@@ -77,15 +84,14 @@ namespace PJH.Runtime.PlayerPassive.Passives
                 Managers.VolumeManager.GetVolumeType<RadialBlurVolumeType>().SetValue(.5f, .2f);
                 _player.HealthCompo.IsInvincibility = true;
                 await seq.ToUniTask();
-                
-                _player.GetCompo<PlayerWarpStrike>().EnableWarpStrike(_power, warpStrikeAttackInfos.GetRandom(),
+
+                _player.GetCompo<PlayerWarpStrike>().EnableWarpStrike(_power, warpStrikeAttackInfos.Random(),
                     () =>
                     {
                         EndTargetSelection(true);
                         if (_targetSelectionTokenSource is { IsCancellationRequested: false })
                         {
                             _targetSelectionTokenSource.Cancel();
-                            _targetSelectionTokenSource.Dispose();
                         }
                     });
                 float elapsed = 0f;

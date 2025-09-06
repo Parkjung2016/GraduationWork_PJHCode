@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using BIS.Data;
 using BIS.Events;
-using Main.Core;
+using Cysharp.Threading.Tasks;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using PJH.Runtime.Core;
 using PJH.Runtime.Players;
+using PJH.Utility.Managers;
 using TMPro;
 using UnityEngine;
 using CommandActionData = PJH.Runtime.Players.CommandActionData;
-using Debug = UnityEngine.Debug;
 
 namespace PJH.Runtime.UI
 {
@@ -19,8 +20,9 @@ namespace PJH.Runtime.UI
         [SerializeField] private Transform _comboPieceContentTrm;
 
         [SerializeField] private TextMeshProUGUI _totalPriceText;
-
         [SerializeField] private TextMeshProUGUI _currentGoldText;
+        [SerializeField] private TextMeshProUGUI _noticeText;
+
         [SerializeField] private CommandActionPiecePriceConfigSO _piecePriceData;
 
         private CurrencySO _moneySO;
@@ -30,7 +32,7 @@ namespace PJH.Runtime.UI
         private Dictionary<CommandActionPieceSO, int> _savedPieces = new();
 
         private GameEventChannelSO _gameEventChannel, _uiEventChannelSO;
-
+        private CancellationTokenSource _noticeCancellationTokenSource;
         private int _totalPrice;
 
         private int totalPrice
@@ -54,7 +56,7 @@ namespace PJH.Runtime.UI
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
             _playerInput.EnablePlayerInput(false);
             _playerInput.EnableUIInput(false);
-            CursorManager.EnableCursor(true);
+            CursorManager.SetCursorLockMode(CursorLockMode.None);
 
             _inventory = AddressableManager.Load<InventorySO>("InventorySO");
             Player player = PlayerManager.Instance.Player as Player;
@@ -75,6 +77,7 @@ namespace PJH.Runtime.UI
             int currentGold = _moneySO.CurrentAmmount;
             UpdateCurrentGoldText(currentGold);
             _moneySO.ValueChangeEvent += UpdateCurrentGoldText;
+            _noticeText.gameObject.SetActive(false);
         }
 
         private void OnDestroy()
@@ -132,13 +135,43 @@ namespace PJH.Runtime.UI
 
         public void SavePieceButton()
         {
-            _inventory.ResetList();
-            foreach (var pair in _savedPieces)
+            PurchaseData purchaseData = _moneySO.Purchase(totalPrice);
+            if (purchaseData.isPurchasable)
             {
-                _inventory.AddElement(pair.Key);
+                _inventory.ResetList();
+                foreach (var pair in _savedPieces)
+                {
+                    _inventory.AddElement(pair.Key);
+                }
+
+                _gameEventChannel.RaiseEvent(GameEvents.GoToLobby);
+            }
+            else
+            {
+                ShowNoticeText();
+            }
+        }
+
+        private async void ShowNoticeText()
+        {
+            if (_noticeCancellationTokenSource is { IsCancellationRequested: false })
+            {
+                _noticeCancellationTokenSource.Cancel();
+                _noticeCancellationTokenSource.Dispose();
             }
 
-            _gameEventChannel.RaiseEvent(GameEvents.GoToLobby);
+            try
+            {
+                _noticeCancellationTokenSource = new();
+                _noticeCancellationTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
+                Managers.FMODManager.PlayErrorSound();
+                _noticeText.gameObject.SetActive(true);
+                await UniTask.WaitForSeconds(1f, cancellationToken: _noticeCancellationTokenSource.Token);
+                _noticeText.gameObject.SetActive(false);
+            }
+            catch
+            {
+            }
         }
     }
 }

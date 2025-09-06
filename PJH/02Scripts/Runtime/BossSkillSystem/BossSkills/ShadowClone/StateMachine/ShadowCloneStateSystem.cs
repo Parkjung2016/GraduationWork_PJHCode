@@ -6,7 +6,6 @@ using Opsive.GraphDesigner.Runtime.Variables;
 using PJH.Runtime.BossSkill.BossSkills.ShadowClones;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Debug = Main.Core.Debug;
 
 namespace Main.Runtime.Characters.StateMachine
 {

@@ -13,10 +13,7 @@ namespace PJH.Runtime.Players
         public PlayerCombatDataSO CurrentCombatData
         {
             get => _playerCombatData;
-            private set
-            {
-                _playerCombatData = value;
-            }
+            private set { _playerCombatData = value; }
         }
 
         public event Action OnAttack;

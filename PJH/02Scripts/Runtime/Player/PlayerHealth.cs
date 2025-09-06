@@ -1,6 +1,5 @@
 using System;
 using Animancer;
-using Main.Core;
 using Main.Runtime.Combat;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.Events;
@@ -8,8 +7,8 @@ using Main.Runtime.Core.StatSystem;
 using Main.Runtime.Manager;
 using Main.Runtime.Manager.VolumeTypes;
 using Main.Shared;
+using PJH.Utility.Managers;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace PJH.Runtime.Players
 {
@@ -26,7 +25,6 @@ namespace PJH.Runtime.Players
         [SerializeField] private StatSO _increaseHealthStatOnFinisher;
 
         public bool IsBeforeDead { get; private set; }
-
         private Player _player;
         private GameEventChannelSO _gameEventChannel;
 
@@ -98,7 +96,7 @@ namespace PJH.Runtime.Players
                 return false;
             }
 
-            if (blockCompo.IsBlocking && !getDamagedInfo.isForceAttack)
+            if (blockCompo.IsBlocking && !getDamagedInfo.isForceAttack )
             {
                 if (blockCompo.CanParrying())
                 {

@@ -14,6 +14,7 @@ namespace Main.Runtime.Agents
         private readonly string freezeSound = "event:/SFX/Ailment/Freeze";
         private readonly string freezeEndSound = "event:/SFX/Ailment/FreezeEnd";
         private readonly string bleedingSound = "event:/KHJ/PassiveSFX/Bleeding";
+        private readonly string impactWallSound = "event:/SFX/ImpactWall2";
         private Agent _agent;
 
         public virtual void Initialize(Agent agent)
@@ -25,6 +26,7 @@ namespace Main.Runtime.Agents
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnPlayAttackWhooshSound += HandlePlayAttackWhooshSound;
+            animationTriggerCompo.OnPlayImpactWallSound += HandleOnPlayImpactWallSound;
             _agent.HealthCompo.OnAilmentChanged += HandleAilmentChanged;
             _agent.HealthCompo.ailmentStat.OnDotDamage += HandleDotDamageEvent;
         }
@@ -33,11 +35,17 @@ namespace Main.Runtime.Agents
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnPlayAttackWhooshSound -= HandlePlayAttackWhooshSound;
+            animationTriggerCompo.OnPlayImpactWallSound -= HandleOnPlayImpactWallSound;
             if (_agent && _agent.HealthCompo && _agent.HealthCompo.ailmentStat != null)
             {
                 _agent.HealthCompo.OnAilmentChanged -= HandleAilmentChanged;
                 _agent.HealthCompo.ailmentStat.OnDotDamage -= HandleDotDamageEvent;
             }
+        }
+
+        private void HandleOnPlayImpactWallSound()
+        {
+            RuntimeManager.PlayOneShot(bleedingSound, _agent.transform.position);
         }
 
         private void HandleAilmentChanged(Ailment oldAilment, Ailment newAilment)

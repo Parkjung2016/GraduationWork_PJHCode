@@ -33,7 +33,7 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             _player.OnStartStun += HandleEndCounterAttack;
-            _player.OnGrabbed += HandleEndCounterAttack;
+            _player.OnEndGrabbed += HandleEndCounterAttack;
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnHitCounterAttack += HandleHitCounterAttack;
             animationTriggerCompo.OnEndCounterAttack += HandleEndCounterAttack;
@@ -45,7 +45,7 @@ namespace PJH.Runtime.Players
         private void OnDestroy()
         {
             _player.OnStartStun -= HandleEndCounterAttack;
-            _player.OnGrabbed -= HandleEndCounterAttack;
+            _player.OnEndGrabbed -= HandleEndCounterAttack;
             
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnHitCounterAttack -= HandleHitCounterAttack;

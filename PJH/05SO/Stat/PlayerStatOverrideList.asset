@@ -18,7 +18,7 @@ MonoBehaviour:
     _overrideValue: 2.8
   - _stat: {fileID: 11400000, guid: 35f6c51f6927dbd4daab2668c44d5cf9, type: 2}
     _isUseOverride: 1
-    _overrideValue: 15
+    _overrideValue: 5.5
   - _stat: {fileID: 11400000, guid: fdd4e1ba359898b4d87136f145068560, type: 2}
     _isUseOverride: 1
     _overrideValue: 100
@@ -39,7 +39,7 @@ MonoBehaviour:
     _overrideValue: 3
   - _stat: {fileID: 11400000, guid: dc7d7debef329614194340451cfea602, type: 2}
     _isUseOverride: 1
-    _overrideValue: 7
+    _overrideValue: 8
   - _stat: {fileID: 11400000, guid: 8a370d30c923fd14097e9ed7df249932, type: 2}
     _isUseOverride: 1
     _overrideValue: 100
