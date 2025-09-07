@@ -15,7 +15,7 @@ using UnityEngine.UI;
 
 namespace PJH.Runtime.UI
 {
-    public class ComboPiecePreviewUI : MonoBehaviour
+    public class ComboPieceTooltipUI : MonoBehaviour
     {
         private GameEventChannelSO _uiEventChannel;
         private ComboColorInfoSO _comboColorInfo;
@@ -29,18 +29,18 @@ namespace PJH.Runtime.UI
             _rectTrm = transform as RectTransform;
             _comboIconImage = transform.Find("ComboIcon_Image").GetComponent<Image>();
             _comboPieceNameTMP = transform.Find("ComboName_Text").GetComponent<TextMeshProUGUI>();
-            _comboPieceNameTMP = transform.Find("ComboInfo_Text").GetComponent<TextMeshProUGUI>();
+            _comboPieceInfoTMP = transform.Find("ComboInfo_Text").GetComponent<TextMeshProUGUI>();
             _comboPassiveInfoTMP = transform.Find("ComboPassive_Text").GetComponent<TextMeshProUGUI>();
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _comboColorInfo = AddressableManager.Load<ComboColorInfoSO>("ComboColorInfo");
-            _uiEventChannel.AddListener<ShowComboPiecePreviewUI>(HandleShowComboPiecePreviewUI);
+            _uiEventChannel.AddListener<ShowComboPieceTooltipUI>(HandleShowComboPiecePreviewUI);
             gameObject.SetActive(false);
             _originPivot = _rectTrm.pivot;
         }
 
         private void OnDestroy()
         {
-            _uiEventChannel.RemoveListener<ShowComboPiecePreviewUI>(HandleShowComboPiecePreviewUI);
+            _uiEventChannel.RemoveListener<ShowComboPieceTooltipUI>(HandleShowComboPiecePreviewUI);
         }
 
         private void Update()
@@ -81,9 +81,9 @@ namespace PJH.Runtime.UI
             _rectTrm.anchoredPosition = localPoint;
         }
 
-        private async void HandleShowComboPiecePreviewUI(ShowComboPiecePreviewUI evt)
+        private async void HandleShowComboPiecePreviewUI(ShowComboPieceTooltipUI evt)
         {
-            if (!evt.show)
+            if (!evt.show || evt.comboPiece == null)
             {
                 gameObject.SetActive(false);
                 return;
@@ -93,7 +93,8 @@ namespace PJH.Runtime.UI
             await UniTask.Yield();
             gameObject.SetActive(true);
             _comboIconImage.sprite = evt.comboPiece.pieceIcon;
-            _comboPieceNameTMP.text = evt.comboPiece.pieceDescription;
+            _comboPieceNameTMP.text = evt.comboPiece.pieceDisplayName;
+            _comboPieceInfoTMP.text = evt.comboPiece.pieceDescription;
             _comboPassiveInfoTMP.text = string.Empty;
             IReadOnlyList<PassiveSO> passives = evt.comboPiece.Passives;
             using (var sb = ZString.CreateStringBuilder())

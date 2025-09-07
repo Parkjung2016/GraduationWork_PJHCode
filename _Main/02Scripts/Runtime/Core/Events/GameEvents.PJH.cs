@@ -30,6 +30,10 @@ namespace Main.Runtime.Core.Events
         public static readonly GoToLobby GoToLobby = new GoToLobby();
         public static readonly ActiveNextSession ActiveNextSession = new ActiveNextSession();
         public static readonly EnterNextLevel EnterNextLevel = new EnterNextLevel();
+        public static readonly ResetEquippedCombo ResetEquippedCombo = new ResetEquippedCombo();
+    }
+    public class ResetEquippedCombo : GameEvent
+    {
     }
     public class EnterNextLevel : GameEvent
     {

@@ -41,10 +41,12 @@ namespace Main.Scenes
                 _cheatSO.money = AddressableManager.Load<CurrencySO>("Money");
                 _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
                 _playerInput.preventChangePlayerInput = false;
+                _playerInput.preventChangeLockOnTargetEvent = false;
                 _playerInput.preventAttackInput = false;
                 _playerInput.preventBlockInput = false;
                 _playerInput.EnablePlayerInput(true);
                 _playerInput.EnableUIInput(true);
+                Managers.VolumeManager.FindVolumeComponent();
 
                 GameEventChannelSO gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
                 gameEventChannel.AddListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
@@ -134,6 +136,9 @@ namespace Main.Scenes
         {
             Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().SetValue(0f, .5f);
             Managers.VolumeManager.GetVolumeType<ChromaticAberrationVolumeType>().SetValue(0f, 0.5f);
+            FrameVolumeType frameVolumeType = Managers.VolumeManager.GetVolumeType<FrameVolumeType>();
+            frameVolumeType.ChangeToCinematicBands();
+            frameVolumeType.SetValue(.1f, 1f);
             Managers.FMODManager.PauseMainSound();
             _playerInput.EnablePlayerInput(false);
             _playerInput.EnableUIInput(false);
@@ -146,19 +151,6 @@ namespace Main.Scenes
             }
         }
 
-        public void VolumeForTimeline()
-        {
-            FrameVolumeType frameVolumeType = Managers.VolumeManager.GetVolumeType<FrameVolumeType>();
-            frameVolumeType.ChangeToCinematicBands();
-            frameVolumeType.SetValue(.1f, 1f);
-        }
-
-        public void VolumeForEndTimeline()
-        {
-            FrameVolumeType frameVolumeType = Managers.VolumeManager.GetVolumeType<FrameVolumeType>();
-            frameVolumeType.SetValue(0f, 1f).OnComplete(() => { frameVolumeType.ChangeToBorder(); });
-        }
-
         public void SettingForEndTimeline()
         {
             Managers.FMODManager.ResumeMainSound();
@@ -167,9 +159,11 @@ namespace Main.Scenes
 
             bool isBeforeDead = (PlayerManager.Instance.Player.HealthCompo as PlayerHealth).IsBeforeDead;
             FrameVolumeType frameVolumeType = Managers.VolumeManager.GetVolumeType<FrameVolumeType>();
+            frameVolumeType.ChangeToCinematicBands();
+            frameVolumeType.SetValue(.1f);
             frameVolumeType.SetValue(0f, 1f).OnComplete(() => { frameVolumeType.ChangeToBorder(); });
             Managers.VolumeManager.GetVolumeType<SepiaVolumeType>().SetValue(isBeforeDead ? .7f : 0f, .5f);
-            Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(1, .5f);
+            Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().ResetValue();
 
             for (int i = 0; i < _foundCanvases.Length; i++)
             {

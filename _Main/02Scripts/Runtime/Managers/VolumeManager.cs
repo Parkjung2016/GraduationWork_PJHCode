@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -22,19 +23,7 @@ namespace Main.Runtime.Manager
     public class VolumeManager
     {
         private Dictionary<Type, VolumeType> _volumeTypes;
-
-        public VolumeManager()
-        {
-            SceneManager.sceneLoaded += HandleSceneLoaded;
-            FindVolumeComponent();
-        }
-
-        private void HandleSceneLoaded(Scene arg0, LoadSceneMode arg1)
-        {
-            FindVolumeComponent();
-        }
-
-        private void FindVolumeComponent()
+        public void FindVolumeComponent()
         {
             _volumeTypes = new();
             Volume volume = Object.FindAnyObjectByType<Volume>();

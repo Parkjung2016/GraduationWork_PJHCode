@@ -38,7 +38,7 @@ namespace PJH.Runtime.Players
         public bool IsLockOn
         {
             get => _isLockOn;
-            private set
+            set
             {
                 _isLockOn = value;
                 OnLockOn?.Invoke(IsLockOn);

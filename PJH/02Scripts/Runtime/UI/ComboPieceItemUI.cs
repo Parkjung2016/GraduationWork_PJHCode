@@ -21,9 +21,11 @@ namespace PJH.Runtime.UI
         private CommandActionPieceSO _commandActionPiece;
 
         private ComboColorInfoSO _comboColorInfo;
+        private ComboPieceTooltipHandler _comboPieceTooltipHandler;
 
         private void Awake()
         {
+            _comboPieceTooltipHandler = GetComponentInChildren<ComboPieceTooltipHandler>();
             _comboColorInfo = AddressableManager.Load<ComboColorInfoSO>("ComboColorInfo");
             _iconImage = transform.Find("ComboIcon_Image").GetComponent<Image>();
             _outlineImage = transform.Find("ComboOutline_Image").GetComponent<Image>();
@@ -35,6 +37,7 @@ namespace PJH.Runtime.UI
         public void SetItem(CommandActionPieceSO commandActionPiece, Func<CommandActionPieceSO, bool> OnClickCallBack)
         {
             _commandActionPiece = commandActionPiece;
+            _comboPieceTooltipHandler.SetComboPieceSO(_commandActionPiece);
             _iconImage.sprite = commandActionPiece.pieceIcon;
             OnClickAction = OnClickCallBack;
             _equipSlotIndexText.SetText("");

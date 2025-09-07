@@ -177,6 +177,10 @@ namespace Main.Runtime.Agents
                         }
                     }, !getDamagedInfo.isKnockDown);
             }
+            else
+            {
+                OnEndHitAnimation?.Invoke();
+            }
         }
 
         public virtual void PlayGetUpAnimation()

@@ -126,7 +126,6 @@ namespace Main.Scenes
                 AddressableManager.Instantiate<BossUI>("BossUI");
 
                 SettingForEndTimeline();
-                VolumeForEndTimeline();
             });
         }
 
@@ -139,7 +138,7 @@ namespace Main.Scenes
             seq.AppendCallback(() =>
             {
                 Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(1, .5f);
-                VolumeForTimeline();
+                // VolumeForTimeline();
                 _playableDirector.Play(_appearBossSequence);
             });
         }
@@ -165,6 +164,8 @@ namespace Main.Scenes
         private void HandleBossDead(BossDead obj)
         {
             SettingForTimeline();
+            // VolumeForTimeline();
+
             _deathBoss = true;
             Managers.FMODManager.StopMusicSound();
             Sequence seq = DOTween.Sequence();
@@ -238,7 +239,6 @@ namespace Main.Scenes
                 await UniTask.Yield();
                 player.transform.DOLookAt(boss.transform.position, 0f, AxisConstraint.Y);
                 boss.transform.DOLookAt(centerPoint.position, 0f, AxisConstraint.Y);
-                VolumeForTimeline();
                 _playableDirector.Play();
             });
 

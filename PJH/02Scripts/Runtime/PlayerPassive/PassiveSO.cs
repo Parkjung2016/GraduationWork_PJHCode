@@ -112,7 +112,7 @@ namespace PJH.Runtime.PlayerPassive
                     var evt = UIEvents.ShowPassiveInfoUI;
                     evt.passive = this;
                     evt.passiveInfoType = PassiveInfoType.None;
-                     _uiEventChannel.RaiseEvent(evt);
+                    _uiEventChannel.RaiseEvent(evt);
                 }
             }
 
@@ -151,14 +151,16 @@ namespace PJH.Runtime.PlayerPassive
                 (_player as IPlayer).OnChangedCanApplyPassive -= HandleChangedCanApplyPassive;
                 if (this is IModifierStatPassive modifierStatPassive)
                 {
-                    modifierStatPassive.ModifierStatInfo.AddModifierEvent -= HandleAddModifierEvent;
-                    // modifierStatPassive.ModifierStatInfo.RemoveModifierEvent -= HandleRemoveModifierEvent;
+                    modifierStatPassive.ModifierStatInfo.isApplied = false;
+                    modifierStatPassive.ModifierStatInfo.AddModifierEvent = null;
+                    modifierStatPassive.ModifierStatInfo.RemoveModifierEvent = null;
                 }
             }
         }
 
-        private void HandleAddModifierEvent(ModifierStatInfo modifierStatInfo)
+        private bool HandleAddModifierEvent(ModifierStatInfo modifierStatInfo)
         {
+            if (modifierStatInfo.isApplied) return false;
             AgentStat statCompo = _player.ComponentManager.GetCompo<AgentStat>(true);
             foreach (ModifierStat mod in modifierStatInfo.ModifierStats)
             {
@@ -184,10 +186,15 @@ namespace PJH.Runtime.PlayerPassive
                     }
                 }
             }
+
+            modifierStatInfo.isApplied = true;
+
+            return true;
         }
 
-        private void HandleRemoveModifierEvent(ModifierStatInfo modifierStatInfo)
+        private bool HandleRemoveModifierEvent(ModifierStatInfo modifierStatInfo)
         {
+            if (!modifierStatInfo.isApplied) return false;
             AgentStat statCompo = _player.ComponentManager.GetCompo<AgentStat>(true);
 
             foreach (ModifierStat mod in modifierStatInfo.ModifierStats)
@@ -214,6 +221,9 @@ namespace PJH.Runtime.PlayerPassive
                     }
                 }
             }
+
+            modifierStatInfo.isApplied = false;
+            return true;
         }
 
 

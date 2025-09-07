@@ -18,7 +18,7 @@ namespace PJH.Runtime.Players
 
         public event ChangedTargetEnemyEvent OnChangedTargetEnemy;
         public event Action<Agent> OnChangedHitTargetEnemy;
-
+        public event Action OnChangedLockOnTarget;
         [SerializeField] private float _detectionRadius = 5f;
         [SerializeField] private float _detectInterval = 0.05f;
         [SerializeField] private int _maxDetectCount = 5;
@@ -47,7 +47,6 @@ namespace PJH.Runtime.Players
 
         private void OnDestroy()
         {
-
             _player.OnHitTarget -= HandleHitTarget;
             _player.GetCompo<PlayerAttack>().OnAttack -= HandleAttack;
             _player.GetCompo<PlayerAnimationTrigger>().OnComboPossible -= HandleComboPossible;
@@ -62,11 +61,10 @@ namespace PJH.Runtime.Players
         private void HandleChangeLockOnTarget()
         {
             if (!_target) return;
-
             var nearEnemy = GetNearestEnemy(exclude: _target.gameObject);
             if (!nearEnemy || nearEnemy.HealthCompo.IsDead || nearEnemy == _target)
                 return;
-
+            OnChangedLockOnTarget?.Invoke();
             ApplyNewTarget(nearEnemy);
         }
 

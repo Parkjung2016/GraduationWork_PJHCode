@@ -22,6 +22,7 @@ namespace Main.Runtime.Core.Events
 
         public static readonly ShowNoticeText ShowNoticeText = new ShowNoticeText();
         public static readonly ShowQuestPreviewUI ShowQuestPreviewUI = new ShowQuestPreviewUI();
+        public static readonly InteractDropItem InteractDropItem = new InteractDropItem();
     }
 
     public enum PassiveInfoType
@@ -29,7 +30,9 @@ namespace Main.Runtime.Core.Events
         None,
         Buff
     }
-
+    public class InteractDropItem : GameEvent
+    {
+    }
     public class ShowQuestPreviewUI : GameEvent
     {
         public bool show;

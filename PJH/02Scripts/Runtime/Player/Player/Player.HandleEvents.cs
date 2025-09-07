@@ -8,18 +8,6 @@ namespace PJH.Runtime.Players
 {
     public partial class Player
     {
-        private void HandleAdjustTimelineModelPosition(Transform targetTrm, float distanceFromEnemy)
-        {
-            Vector3 startPosition =
-                targetTrm.position + targetTrm.forward * distanceFromEnemy;
-            Vector3 lookAtDir = (targetTrm.position - startPosition).normalized;
-            lookAtDir.y = 0;
-            Quaternion lookAtRotation = Quaternion.LookRotation(lookAtDir);
-            ModelTrm.rotation = lookAtRotation;
-            transform.position = startPosition;
-        }
-
-
         private void HandleEndFullMount()
         {
             PlayerInput.EnablePlayerInput(true);

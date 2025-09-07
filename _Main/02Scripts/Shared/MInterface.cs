@@ -53,8 +53,6 @@ namespace Main.Shared
     {
         public void SettingForTimeline();
         public void SettingForEndTimeline();
-        public void VolumeForTimeline();
-        public void VolumeForEndTimeline();
     }
 
     public interface IBattleScene

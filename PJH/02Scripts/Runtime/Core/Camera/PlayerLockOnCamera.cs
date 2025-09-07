@@ -17,6 +17,7 @@ namespace PJH.Runtime.Core.PlayerCamera
         [SerializeField, Range(1, 10f)] private float _lookSpeed = 1f;
 
         private float _originTrackingTargetY;
+        private ResetImpulsePosition _resetImpulsePosition;
 
         private void Awake()
         {
@@ -26,6 +27,7 @@ namespace PJH.Runtime.Core.PlayerCamera
             _uiEventChannel.AddListener<ShowLockOnUI>(HandleShowLockOnUI);
             _originTrackingTargetY = _cinemachineCamera.Target.TrackingTarget.localPosition.y;
             _gameEventChannel.AddListener<LockOn>(HandleLockOn);
+            _resetImpulsePosition = _cinemachineCamera.Target.TrackingTarget.GetComponent<ResetImpulsePosition>();
         }
 
         private void OnDestroy()
@@ -42,9 +44,13 @@ namespace PJH.Runtime.Core.PlayerCamera
             if (visibleCamera)
             {
                 _cinemachineCamera.Target.TrackingTarget.localPosition = Vector3.up * .9f;
+                _resetImpulsePosition.UpdateOriginPosition();
             }
             else
+            {
                 _cinemachineCamera.Target.TrackingTarget.localPosition = Vector3.up * _originTrackingTargetY;
+                _resetImpulsePosition.UpdateOriginPosition();
+            }
         }
 
         private void HandleShowLockOnUI(ShowLockOnUI evt)
@@ -54,10 +60,12 @@ namespace PJH.Runtime.Core.PlayerCamera
             if (_lockOnTargetTrm)
             {
                 _cinemachineCamera.Target.TrackingTarget.localPosition = Vector3.up * .9f;
+                _resetImpulsePosition.UpdateOriginPosition();
             }
             else
             {
                 _cinemachineCamera.Target.TrackingTarget.localPosition = Vector3.up * _originTrackingTargetY;
+                _resetImpulsePosition.UpdateOriginPosition();
             }
 
             _cinemachineCamera.Priority = _lockOnTargetTrm ? 3 : -3;

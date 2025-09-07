@@ -422,7 +422,7 @@ Material:
     - _ShiftingBrightness: 1
     - _ShiftingContrast: 0.5
     - _ShiftingDensity: 1.5
-    - _ShiftingFade: 0
+    - _ShiftingFade: 1
     - _ShiftingRainbowToggle: 1
     - _ShiftingSaturation: 0.8
     - _ShiftingSpeed: 0.5

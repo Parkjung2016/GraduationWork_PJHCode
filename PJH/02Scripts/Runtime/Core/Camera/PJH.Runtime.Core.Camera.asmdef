@@ -12,7 +12,8 @@
         "UniTask",
         "PJH.Runtime.Player.FinisherSequence",
         "Unity.Splines",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "PJH.Runtime.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

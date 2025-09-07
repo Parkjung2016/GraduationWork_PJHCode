@@ -101,10 +101,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 
         private void OnDestroy()
         {
-            foreach (var pair in _deathHandlers)
-            {
-                pair.Key.HealthCompo.OnDeath -= pair.Value;
-            }
+            UnSubscribeEvent();
         }
 
         private void HandleDeathEnemy(BaseEnemy enemy)
@@ -125,11 +122,23 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
         {
             if (_enemies.Count <= 0)
             {
+                UnSubscribeEvent();
+
                 _money.AddAmmount(_earnGold);
                 var evt = GameEvents.FinishAllWave;
                 evt.battleZone = this;
                 _gameEventChannel.RaiseEvent(evt);
             }
+        }
+
+        private void UnSubscribeEvent()
+        {
+            foreach (var pair in _deathHandlers)
+            {
+                pair.Key.HealthCompo.OnDeath -= pair.Value;
+            }
+
+            _deathHandlers.Clear();
         }
     }
 }

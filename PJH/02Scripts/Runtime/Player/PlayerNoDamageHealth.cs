@@ -4,10 +4,13 @@ namespace PJH.Runtime.Players
 {
     public class PlayerNoDamageHealth : PlayerHealth
     {
+        public bool IsApplyDamage { get; set; }
+
         protected override bool CanApplyDamage(GetDamagedInfo getDamagedInfo)
         {
             if (!base.CanApplyDamage(getDamagedInfo)) return false;
-            getDamagedInfo.damage = 0;
+            if (!IsApplyDamage)
+                getDamagedInfo.damage = 0;
 
             return true;
         }
