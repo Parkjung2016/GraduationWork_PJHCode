@@ -20,7 +20,8 @@
             _player.GetCompo<PlayerEnemyDetection>().OnChangedTargetEnemy += HandleChangedTargetEnemy;
 
             _player.GetCompo<PlayerAnimator>().OnEndHitAnimation += HandleEndCombo;
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd += HandleEndCombo;
+            PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisherEnd += HandleEndCombo;
             PlayerMovement movementCompo = _player.GetCompo<PlayerMovement>();
             movementCompo.OnEvasion += HandleEndCombo;
             movementCompo.OnEvasionWhileHitting += HandleEndCombo;
@@ -47,7 +48,8 @@
             movementCompo.OnEvasionWhileHitting -= HandleEndCombo;
             _player.GetCompo<PlayerEnemyDetection>().OnChangedTargetEnemy -= HandleChangedTargetEnemy;
             _player.GetCompo<PlayerAnimator>().OnEndHitAnimation -= HandleEndCombo;
-            _player.GetCompo<PlayerEnemyFinisher>().OnFinisherEnd -= HandleEndCombo;
+            PlayerEnemyFinisher finisherCompo = _player.GetCompo<PlayerEnemyFinisher>();
+            finisherCompo.OnFinisherEnd -= HandleEndCombo;
 
             PlayerCommandActionManager commandActionManagerCompo = _player.GetCompo<PlayerCommandActionManager>();
             commandActionManagerCompo.OnUseCommandAction -= HandleUseCommandAction;

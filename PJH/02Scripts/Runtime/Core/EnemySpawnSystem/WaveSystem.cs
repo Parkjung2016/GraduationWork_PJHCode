@@ -68,7 +68,6 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             for (byte i = 0; i < _spawnPoints.Length;)
             {
                 SpawnData spawnData;
-                Debug.Log(spawnDataIndex);
                 if (spawnDataIndex >= spawnDatas.Count)
                 {
                     spawnData = spawnDatas.Random();

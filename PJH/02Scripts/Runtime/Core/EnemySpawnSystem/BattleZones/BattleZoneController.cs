@@ -40,11 +40,11 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             _battleZones = transform.GetComponentsInChildren<BattleZone>().ToList();
             _battleZones.ForEach(zone =>
             {
-                zone.OnEntered += SetCurrentBattleZone(zone);
+                zone.OnEntered += SetCurrentBattleZone;
                 if (zone is EnemyBattleZone enemyBattleZone)
                 {
-                    enemyBattleZone.OnEnemyRemoved += HandleEnemyRemoved();
-                    enemyBattleZone.OnEnemyAdded += HandleEnemyAdded();
+                    enemyBattleZone.OnEnemyRemoved += HandleEnemyRemoved;
+                    enemyBattleZone.OnEnemyAdded += HandleEnemyAdded;
                 }
             });
         }
@@ -64,7 +64,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             await UniTask.WaitUntil(() => _isInitialized,
                 cancellationToken: gameObject.GetCancellationTokenOnDestroy());
             await UniTask.WaitForSeconds(.15f,
-     cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                cancellationToken: gameObject.GetCancellationTokenOnDestroy());
             (SceneManagerEx.Instance.CurrentScene as IBattleScene).CurrentBattleZoneController = this;
             CheckActiveNextSession();
         }
@@ -74,19 +74,19 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
             UnSubscribeEvents();
         }
 
-        private Action SetCurrentBattleZone(BattleZone battleZone)
+        private void SetCurrentBattleZone(BattleZone battleZone)
         {
-            return () => { CurrentBattleZone = battleZone; };
+            CurrentBattleZone = battleZone;
         }
 
-        private Action HandleEnemyAdded()
+        private void HandleEnemyAdded()
         {
-            return () => { RemainingEnemy++; };
+            RemainingEnemy++;
         }
 
-        private Action HandleEnemyRemoved()
+        private void HandleEnemyRemoved()
         {
-            return () => { RemainingEnemy--; };
+            RemainingEnemy--;
         }
 
         protected bool TryGetGameEventChannel()
@@ -147,9 +147,9 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 
             EnemyBattleZone enemyBattleZone = evt.battleZone as EnemyBattleZone;
             CurrentBattleZone = null;
-            enemyBattleZone.OnEntered -= SetCurrentBattleZone(enemyBattleZone);
-            enemyBattleZone.OnEnemyRemoved -= HandleEnemyRemoved();
-            enemyBattleZone.OnEnemyAdded -= HandleEnemyAdded();
+            enemyBattleZone.OnEntered -= SetCurrentBattleZone;
+            enemyBattleZone.OnEnemyRemoved -= HandleEnemyRemoved;
+            enemyBattleZone.OnEnemyAdded -= HandleEnemyAdded;
 
 
             CheckActiveNextSession();

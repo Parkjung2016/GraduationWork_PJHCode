@@ -12,8 +12,10 @@ namespace PJH.Runtime.Core
         private Dictionary<PassiveRankType, Color> _passiveRankColors = new Dictionary<PassiveRankType, Color>();
 
         [SerializeField] private Color[] _comboSlotColors;
+        [SerializeField] private Color[] _comboSynthesisSlotColors;
 
         public Color GetPassiveRankColor(PassiveRankType rankType) => _passiveRankColors[rankType];
         public Color GetComboSlotColor(int index) => _comboSlotColors[index];
+        public Color GetComboSynthesisSlotColor(int index) => _comboSynthesisSlotColors[index];
     }
 }

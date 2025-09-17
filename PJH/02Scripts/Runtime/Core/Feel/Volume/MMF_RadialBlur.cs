@@ -1,4 +1,6 @@
 using DG.Tweening;
+using Main.Runtime.Manager;
+using Main.Runtime.Manager.VolumeTypes;
 using MoreMountains.Feedbacks;
 using OccaSoftware.RadialBlur.Runtime;
 using UnityEngine;
@@ -52,14 +54,7 @@ namespace MoreMountains.FeedbacksForThirdParty
         public AnimationCurve Intensity =
             new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
 
-        private RadialBlurPostProcess _radialBlur;
         private Tween _tween;
-
-        public override void PreInitialization(MMF_Player owner, int index)
-        {
-            Object.FindAnyObjectByType<Volume>().profile.TryGet(out _radialBlur);
-            base.PreInitialization(owner, index);
-        }
 
         protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
         {
@@ -67,11 +62,11 @@ namespace MoreMountains.FeedbacksForThirdParty
             {
                 return;
             }
-            if (_tween != null && _tween.IsActive()) _tween.Kill();
 
-            _radialBlur.intensity.value = 0;
-            _tween=  DOTween.To(() => _radialBlur.intensity.value, x => _radialBlur.intensity.Override(x), blurValue, Duration)
-                .SetEase(Intensity);
+            if (_tween != null && _tween.IsActive()) _tween.Kill();
+            RadialBlurVolumeType radialBlurVolumeType = Managers.VolumeManager.GetVolumeType<RadialBlurVolumeType>();
+            radialBlurVolumeType.ResetValue();
+            radialBlurVolumeType.SetValue(blurValue, Duration).SetEase(Intensity);
         }
     }
 }

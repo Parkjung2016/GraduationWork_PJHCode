@@ -41,9 +41,33 @@ namespace PJH.Runtime.Players
 
         private void HandleAnimatorMove(Vector3 deltaPosition, Quaternion deltaRotation)
         {
-            if (!CanMove || !CC.enabled || _player.WarpingComponent.IsActive()) return;
+            if (!CanMove || !CC.enabled || _player.WarpingComponent.IsActive() ||
+                _counterAttackCompo.IsCounterAttacking || _player.IsStunned) return;
             _player.ModelTrm.rotation = deltaRotation;
             if (_animatorCompo.IsEnabledInputWhileRootMotion) return;
+
+            if (_attackCompo.IsAttacking)
+            {
+                Vector3 origin = transform.position + Vector3.up * 1f;
+                Vector3 direction = transform.forward;
+
+                RaycastHit hit;
+                if (Physics.BoxCast(origin, _boxCastHalfExtentsWhenAttacking, direction, out hit, transform.rotation,
+                        _castDistanceWhenAttacking))
+                {
+                    if (hit.collider.CompareTag("Enemy"))
+                    {
+                        ApplyRootMotion(Vector3.zero);
+                        return;
+                    }
+                }
+            }
+
+            ApplyRootMotion(deltaPosition);
+        }
+
+        void ApplyRootMotion(Vector3 deltaPosition)
+        {
             _velocity = deltaPosition * _rootMotionMultiplierCurve.Value;
             _velocity.y = _yVelocity;
             CC.Move(_velocity);

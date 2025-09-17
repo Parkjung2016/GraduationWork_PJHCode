@@ -10,8 +10,6 @@ public class PoolManagerMono : MonoBehaviour
 
     private IEnumerator Start()
     {
-        yield return new WaitUntil(() => AddressableManager.isLoaded);
-        _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
         PoolManagerMono[] objs = FindObjectsByType<PoolManagerMono>(FindObjectsSortMode.None);
         if (objs.Length > 1)
         {
@@ -20,11 +18,14 @@ public class PoolManagerMono : MonoBehaviour
         else
         {
             _isSpawned = true;
-            yield return _poolManager.InitializePool(transform);
-            DontDestroyOnLoad(gameObject);
+            yield return new WaitUntil(() => AddressableManager.isLoaded);
+            _poolManager = AddressableManager.Load<PoolManagerSO>("PoolManager");
+            if (_poolManager != null)
+            {
+                yield return _poolManager.InitializePool(transform);
+                DontDestroyOnLoad(gameObject);
+            }
         }
-
-        Debug.Log("Ǯ�� �Ϸ�");
     }
 
 

@@ -60,18 +60,16 @@ namespace PJH.Runtime.PlayerPassive.Passives
         private void HitTarget()
         {
             GetDamagedAnimationClipInfo getDamagedAnimationClip = _combatData.getDamagedAnimationClips[0];
-            GetDamagedInfo getDamagedInfo = new()
-            {
-                attacker = this,
-                damage = 2,
-                getDamagedAnimationClip = getDamagedAnimationClip,
-                hitPoint = transform.position,
-                increaseMomentumGauge = 2,
-                getUpAnimationClip = _combatData.getUpAnimationClip,
-                isForceAttack = _combatData.isForceAttack,
-                isKnockDown = _combatData.isKnockDown,
-                knockDownTime = _combatData.knockDownTime
-            };
+            GetDamagedInfo getDamagedInfo = new GetDamagedInfo()
+                .SetAttacker(this)
+                .SetDamage(2)
+                .SetGetDamagedAnimationClip(getDamagedAnimationClip)
+                .SetHitPoint(transform.position)
+                .SetIncreaseMomentumGauge(2)
+                .SetGetUpAnimationClip(_combatData.getUpAnimationClip)
+                .SetIsForceAttack(_combatData.isForceAttack)
+                .SetIsKnockDown(_combatData.isKnockDown)
+                .SetKnockDownTime(_combatData.knockDownTime);
             _hitFeedback?.PlayFeedbacks();
             _hitTarget.HealthCompo.ApplyDamage(getDamagedInfo);
         }

@@ -1018,8 +1018,8 @@ MonoBehaviour:
       - {fileID: 11400000, guid: cb54e2fc3100e1546915037367bad3cb, type: 2}
     _Clip: {fileID: 8993902097722301239, guid: c18716b148ba7284986bc75b2dd24e9d, type: 3}
     _NormalizedStartTime: NaN
-  damageMultiplier: 1
-  increaseMomentumGaugeMultiplier: 1
+  damageMultiplier: 0.8
+  increaseMomentumGaugeMultiplier: 0.85
   currentGetDamagedAnimationClipIndex: 0
   isKnockDown: 0
   isForceAttack: 0
@@ -1034,6 +1034,8 @@ MonoBehaviour:
       _Names: []
     _Clip: {fileID: 0}
     _NormalizedStartTime: NaN
+  boxCastHalfExtentsWhenAttacking: {x: 0.6, y: 1, z: 0.5}
+  castDistanceWhenAttacking: 0.2
   combatFeedbackData:
     impulsePower: 0.5
     freezeFrameDuration: 0.06

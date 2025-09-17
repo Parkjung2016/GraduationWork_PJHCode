@@ -44,7 +44,7 @@ MonoBehaviour:
       _Names: []
     _Clip: {fileID: 8993902097722301239, guid: 86970009b7019874a9b6141ac047e244, type: 3}
     _NormalizedStartTime: 0.3
-  damageMultiplier: 1
+  damageMultiplier: 1.5
   references:
     version: 2
     RefIds: []

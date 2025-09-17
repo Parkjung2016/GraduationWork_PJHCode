@@ -1,0 +1,20 @@
+{
+    "name": "PJH.Runtime.Core.Cheat",
+    "rootNamespace": "PJH.Runtime.Core.Cheat",
+    "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:ca5b8601c5ebe64409c1d85140356a0c",
+        "GUID:a88e20ec90497d6429de4f692695fe43",
+        "GUID:d1af6e3b10ea998489ff83ea4c4dfb0a",
+        "GUID:9e76ffd1f3f77a246968f93aa898a174"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

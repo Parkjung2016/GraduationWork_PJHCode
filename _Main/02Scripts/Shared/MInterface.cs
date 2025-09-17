@@ -57,6 +57,7 @@ namespace Main.Shared
 
     public interface IBattleScene
     {
+        public bool IsInBattle { get; }
         public delegate void ChangedBattleZoneControllerEvent(IBattleZoneController prevBattleZoneController,
             IBattleZoneController currentBattleZoneController);
 

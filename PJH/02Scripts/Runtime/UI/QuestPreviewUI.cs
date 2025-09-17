@@ -1,9 +1,7 @@
-﻿using System;
-using DG.Tweening;
+﻿using DG.Tweening;
 using Main.Runtime.Core.Events;
 using PJH.Utility.Managers;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Video;
 
 namespace PJH.Runtime.UI

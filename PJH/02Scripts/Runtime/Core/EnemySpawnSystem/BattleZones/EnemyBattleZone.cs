@@ -127,6 +127,9 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
                 _money.AddAmmount(_earnGold);
                 var evt = GameEvents.FinishAllWave;
                 evt.battleZone = this;
+                var changeCurrentEnemyEvt = GameEvents.ChangeCurrentEnemy;
+                changeCurrentEnemyEvt.enemyCount = 99;
+                _gameEventChannel.RaiseEvent(changeCurrentEnemyEvt);
                 _gameEventChannel.RaiseEvent(evt);
             }
         }

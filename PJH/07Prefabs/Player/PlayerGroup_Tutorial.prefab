@@ -32504,7 +32504,7 @@ MonoBehaviour:
   _Editor_EnsureCount: 0
   _Editor_OnValidateTrigger: 1
   _EditorAllowAutoUpdateFeetParams: 1
-  _EditorCategory: 2
+  _EditorCategory: 0
   _EditorSetupCategory: 2
   _EditorMotionCategory: 3
   _EditorExtraCategory: 0
@@ -87443,7 +87443,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ailmentStat:
-    getDamagedAnimationClip: {fileID: 0}
     currentAilment: 0
   _currentShield: 0
   _currentHealth: 0

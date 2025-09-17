@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using BIS.Events;
 using Cysharp.Threading.Tasks;
 using Main.Runtime.Core.Events;
@@ -21,19 +20,23 @@ namespace PJH.Runtime.UI
         private void Awake()
         {
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
-            _uiEventChannel.AddListener<ShowComboPieceTooltipUI>(HandleShowComboPieceTooltipUI);
-            
+            _uiEventChannel.AddListener<ShowComboPieceTooltipUIEvent>(HandleShowComboPieceTooltipUI);
         }
 
         private void OnDestroy()
         {
             DisposeHoverCancellationTokenSource();
-            _uiEventChannel.RemoveListener<ShowComboPieceTooltipUI>(HandleShowComboPieceTooltipUI);
+            _uiEventChannel.RemoveListener<ShowComboPieceTooltipUIEvent>(HandleShowComboPieceTooltipUI);
         }
 
         public void SetComboPieceSO(CommandActionPieceSO comboSO)
         {
+            CommandActionPieceSO prevCombo = _comboSO;
             _comboSO = comboSO;
+            if (_comboSO == null)
+            {
+                HideTooltip(prevCombo);
+            }
         }
 
         private void DisposeHoverCancellationTokenSource()
@@ -45,7 +48,7 @@ namespace PJH.Runtime.UI
             }
         }
 
-        private void HandleShowComboPieceTooltipUI(ShowComboPieceTooltipUI evt)
+        private void HandleShowComboPieceTooltipUI(ShowComboPieceTooltipUIEvent evt)
         {
             if (evt.show)
             {
@@ -60,7 +63,7 @@ namespace PJH.Runtime.UI
             {
                 await UniTask.WaitForSeconds(hoverTime, ignoreTimeScale: true, cancellationToken: token);
 
-                var showComboPiecePreviewUIEvt = UIEvent.ShowComboPieceTooltipUI;
+                var showComboPiecePreviewUIEvt = UIEvent.ShowComboPieceTooltipUIEvent;
                 showComboPiecePreviewUIEvt.show = true;
                 showComboPiecePreviewUIEvt.comboPiece = _comboSO;
                 _uiEventChannel.RaiseEvent(showComboPiecePreviewUIEvt);
@@ -76,7 +79,7 @@ namespace PJH.Runtime.UI
             {
                 await UniTask.WaitForSeconds(0.1f, ignoreTimeScale: true, cancellationToken: token);
 
-                var showComboPieceTooltipUIEvt = UIEvent.ShowComboPieceTooltipUI;
+                var showComboPieceTooltipUIEvt = UIEvent.ShowComboPieceTooltipUIEvent;
                 if (showComboPieceTooltipUIEvt.show && showComboPieceTooltipUIEvt.comboPiece == _comboSO)
                 {
                     showComboPieceTooltipUIEvt.show = false;
@@ -90,7 +93,7 @@ namespace PJH.Runtime.UI
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            var currentPreviewEvt = UIEvent.ShowComboPieceTooltipUI;
+            var currentPreviewEvt = UIEvent.ShowComboPieceTooltipUIEvent;
 
             if (currentPreviewEvt.show)
             {
@@ -103,6 +106,17 @@ namespace PJH.Runtime.UI
 
                 _hoverCancellationTokenSource = new CancellationTokenSource();
                 CheckHover(_hoverCancellationTokenSource.Token).Forget();
+            }
+        }
+
+        private void HideTooltip(CommandActionPieceSO prevCombo)
+        {
+            DisposeHoverCancellationTokenSource();
+            var showComboPieceTooltipUIEvt = UIEvent.ShowComboPieceTooltipUIEvent;
+            if (showComboPieceTooltipUIEvt.show && showComboPieceTooltipUIEvt.comboPiece == prevCombo)
+            {
+                showComboPieceTooltipUIEvt.show = false;
+                _uiEventChannel.RaiseEvent(showComboPieceTooltipUIEvt);
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.SqlTypes;
 using Animancer;
 using Main.Runtime.Combat.Core;
 using Main.Runtime.Core.StatSystem;
@@ -143,16 +142,13 @@ namespace Main.Runtime.Combat
 
         public virtual bool ApplyOnlyDamage(float damage)
         {
-            GetDamagedInfo getDamagedInfo = new()
-            {
-                damage = damage,
-                attacker = _getDamagedInfo.attacker,
-                hitPoint = _getDamagedInfo.hitPoint,
-                normal = _getDamagedInfo.normal,
-                getUpAnimationClip = _getDamagedInfo.getUpAnimationClip,
-                increaseMomentumGauge = _getDamagedInfo.increaseMomentumGauge,
-            };
-            _getDamagedInfo = getDamagedInfo;
+            _getDamagedInfo = new GetDamagedInfo()
+                .SetDamage(damage)
+                .SetAttacker(_getDamagedInfo.attacker)
+                .SetHitPoint(_getDamagedInfo.hitPoint)
+                .SetNormal(_getDamagedInfo.normal)
+                .SetGetUpAnimationClip(_getDamagedInfo.getUpAnimationClip)
+                .SetIncreaseMomentumGauge(_getDamagedInfo.increaseMomentumGauge);
 
             if (!CanApplyDamage(_getDamagedInfo)) return false;
             if (CurrentShield > 0)
@@ -180,18 +176,15 @@ namespace Main.Runtime.Combat
             return true;
         }
 
-        private void HandleDotDamageEvent(Ailment ailmentType, float damage, ITransition getDamagedAnimation)
+        private void HandleDotDamageEvent(Ailment ailmentType, float damage)
         {
-            GetDamagedInfo getDamagedInfo = new GetDamagedInfo
+            if (IsDead)
             {
-                damage = damage,
-                isForceAttack = true,
-                ignoreDirection = true,
-                getDamagedAnimationClipOnIgnoreDirection = getDamagedAnimation,
-                attacker = _agent as MonoBehaviour,
-                hitPoint = transform.position
-            };
-            ApplyDamage(getDamagedInfo);
+                ailmentStat.ClearAilment();
+                return;
+            }
+
+            ApplyOnlyDamage(damage);
         }
 
         private void HandAilmentChangeEvent(Ailment oldAilment, Ailment newAilment)

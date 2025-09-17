@@ -62,8 +62,21 @@ namespace Main.Runtime.Combat
                 Vector3 hitPoint = other.ClosestPoint(transform.position);
                 Vector3 normal = (transform.position - hitPoint).normalized;
 
-                GetDamagedInfo getDamagedInfo = _combatData.MakeGetDamagedInfo(_increaseMomentumGaugeStat, _powerStat,
-                    _owner as MonoBehaviour, hitPoint, normal);
+                float increaseMomentumGauge = _combatData.GetIncreaseMomentumGauge(_increaseMomentumGaugeStat);
+                float power = _combatData.GetPower(_powerStat);
+                GetDamagedAnimationClipInfo getDamagedAnimationClipInfo = _combatData.GetDamagedAnimationClip();
+                MonoBehaviour attacker = _owner as MonoBehaviour;
+                GetDamagedInfo getDamagedInfo = new GetDamagedInfo()
+                    .SetIncreaseMomentumGauge(increaseMomentumGauge)
+                    .SetDamage(power)
+                    .SetAttacker(attacker)
+                    .SetHitPoint(hitPoint)
+                    .SetNormal(normal)
+                    .SetGetDamagedAnimationClip(getDamagedAnimationClipInfo)
+                    .SetIsForceAttack(_combatData.isForceAttack)
+                    .SetIsKnockDown(_combatData.isKnockDown)
+                    .SetKnockDownTime(_combatData.knockDownTime)
+                    .SetGetUpAnimationClip(_combatData.getUpAnimationClip);
                 IAgent hitTarget = other.GetComponent<IAgent>();
                 HitInfo hitInfo = new()
                 {

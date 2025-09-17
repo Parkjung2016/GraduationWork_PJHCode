@@ -35,6 +35,11 @@ namespace PJH.Shared
             OnEquipped?.Invoke();
         }
 
+        public virtual void Reset()
+        {
+            _inited = false;
+        }
+
         public virtual void Init(IPlayer player)
         {
         }

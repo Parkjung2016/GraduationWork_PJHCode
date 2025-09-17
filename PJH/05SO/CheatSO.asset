@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39bf6ba504df4a799b71a2ed9373796f, type: 3}
   m_Name: CheatSO
   m_EditorClassIdentifier: 
+  enableCheat: 1
   earnGold: 5000
+  powerStat: {fileID: 11400000, guid: 5b03a8897c7231d41990c8cbc8365e31, type: 2}
   money: {fileID: 0}

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Main.Runtime.Core.Events;
 using Main.Shared;
@@ -38,8 +38,7 @@ namespace PJH.Runtime.Players
         public override void EquipPiece(IPlayer player)
         {
             base.EquipPiece(player);
-            OnChangePassive += HandleChangedPassive;
-
+            if (!_player.CanApplyPassive) return;
             for (int i = 0; i < _passives.Count; i++)
             {
                 PassiveSO passive = _passives[i] = _passives[i].Clone<PassiveSO>();
@@ -66,7 +65,7 @@ namespace PJH.Runtime.Players
                 if (passive is IBuffPassive buffPassive)
                 {
                     BuffPassiveInfo buffPassiveInfo = buffPassive.BuffPassiveInfo;
-                    buffPassive.BuffPassiveInfo.ApplyBuffEvent += () =>
+                    buffPassive.BuffPassiveInfo.ApplyBuffEvent = () =>
                     {
                         if (!_player.CanApplyPassive) return;
                         if (buffPassive is ICooldownPassive cooldownPassive)
@@ -80,6 +79,7 @@ namespace PJH.Runtime.Players
                         }
 
                         buffPassiveInfo.remainingBuffTime = buffPassiveInfo.buffDuration;
+                        buffPassiveInfo.isBuffing = true;
                         buffPassive.StartBuff();
                         var evt = UIEvents.ShowPassiveInfoUI;
                         evt.passive = passive;
@@ -91,10 +91,10 @@ namespace PJH.Runtime.Players
                 if (passive is ICooldownPassive cooldownPassive)
                 {
                     CooldownPassiveInfo cooldownPassiveInfo = cooldownPassive.CooldownPassiveInfo;
-                    cooldownPassiveInfo.StartCooldownEvent += () =>
+                    cooldownPassiveInfo.StartCooldownEvent = () =>
                     {
                         if (!_player.CanApplyPassive) return;
-
+                        cooldownPassiveInfo.isCooldowning = true;
                         cooldownPassiveInfo.remainingCooldownTime = cooldownPassiveInfo.cooldownTime;
                         cooldownPassiveInfo.OnUpdateCooldownTime?.Invoke(cooldownPassiveInfo.remainingCooldownTime,
                             cooldownPassiveInfo.cooldownTime);
@@ -109,7 +109,6 @@ namespace PJH.Runtime.Players
         {
             if (!_inited) return;
             base.UnEquipPiece();
-            OnChangePassive -= HandleChangedPassive;
             _passives.ForEach(passive =>
             {
                 if (passive is IDependSlotPassive dependSlotPassive)
@@ -132,21 +131,6 @@ namespace PJH.Runtime.Players
 
 
                 passive.UnEquipPiece();
-            });
-        }
-
-        private void HandleChangedPassive()
-        {
-            _passives.ForEach(passive =>
-            {
-                if (passive is IDependSlotPassive dependSlotPassive)
-                {
-                    if (dependSlotPassive is not IDependSlotWeightModifier)
-                        if (equipSlotIndex != dependSlotPassive.DependSlotPassiveInfo.dependSlotIndex)
-                            return;
-                }
-
-                passive.EquipPiece(_player);
             });
         }
 
@@ -217,6 +201,7 @@ namespace PJH.Runtime.Players
                 if (buffPassiveInfo.remainingBuffTime < 0)
                 {
                     buffPassiveInfo.remainingBuffTime = 0;
+                    buffPassiveInfo.isBuffing = false;
 
                     buffPassive.EndBuff();
                 }
@@ -246,7 +231,7 @@ namespace PJH.Runtime.Players
                 if (cooldownPassiveInfo.remainingCooldownTime < 0)
                 {
                     cooldownPassiveInfo.remainingCooldownTime = 0;
-
+                    cooldownPassiveInfo.isCooldowning = false;
                     if (cooldownPassive is ICooldownPassiveEndable cooldownPassiveEndable)
                     {
                         cooldownPassiveEndable.EndCooldown();
@@ -261,30 +246,18 @@ namespace PJH.Runtime.Players
         public bool TryCombineCommandActionPiece(CommandActionPieceSO other)
         {
             if (!other) return false;
-            if (other.pieceDisplayName != pieceDisplayName)
-            {
-                Debug.LogError("다른 타입의 CommandActionPiece를 합칠 수 없습니다.");
-                return false;
-            }
-
-            if (_passives.Count + other._passives.Count > 3)
-            {
-                Debug.LogError("패시브의 최대 개수는 3개입니다.");
-                return false;
-            }
 
             if (other._passives.Count > 0)
             {
                 foreach (var passive in other._passives)
                 {
-                    if (!_passives.AsValueEnumerable().Any(x=>x.pieceDisplayName==passive.pieceDisplayName))
+                    if (!_passives.AsValueEnumerable().Any(x => x.pieceDisplayName == passive.pieceDisplayName))
                     {
                         _passives.Add(passive);
                     }
                 }
             }
 
-            Debug.Log("<color=green>병합 성공</color>");
             OnChangePassive?.Invoke();
             return true;
         }
@@ -315,6 +288,31 @@ namespace PJH.Runtime.Players
             }
 
             return false;
+        }
+
+        public void EndAllCooldownPassive()
+        {
+            _passives.AsValueEnumerable().OfType<ICooldownPassive>().ToList()
+                .ForEach(cooldownPassive =>
+                {
+                    cooldownPassive.CooldownPassiveInfo.remainingCooldownTime = 0;
+                    cooldownPassive.CooldownPassiveInfo.isCooldowning = false;
+                    if (cooldownPassive is ICooldownPassiveEndable cooldownPassiveEndable)
+                    {
+                        cooldownPassiveEndable.EndCooldown();
+                    }
+                });
+        }
+
+        public void EndAllBuffPassive()
+        {
+            _passives.AsValueEnumerable().OfType<IBuffPassive>().ToList()
+                .ForEach(buffPassive =>
+                {
+                    buffPassive.BuffPassiveInfo.remainingBuffTime = 0;
+                    buffPassive.BuffPassiveInfo.isBuffing = false;
+                    buffPassive.EndBuff();
+                });
         }
 #if UNITY_EDITOR
         private void OnValidate()

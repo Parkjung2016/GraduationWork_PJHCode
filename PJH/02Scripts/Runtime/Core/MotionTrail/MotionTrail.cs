@@ -9,7 +9,8 @@ namespace PJH.Runtime.Core
 {
     public class MotionTrail : MonoBehaviour, IPoolable
     {
-        private readonly int meshVFXHash = Shader.PropertyToID("Mesh");
+        private readonly int meshVFXHash = Shader.PropertyToID("Mesh")
+;
         private readonly int dissolveAmountVFXHash = Shader.PropertyToID("Dissolve Amount");
         private readonly int dissolveAmountShaderHash = Shader.PropertyToID("_DissolveAmount");
         [field: SerializeField] public PoolTypeSO PoolType { get; private set; }

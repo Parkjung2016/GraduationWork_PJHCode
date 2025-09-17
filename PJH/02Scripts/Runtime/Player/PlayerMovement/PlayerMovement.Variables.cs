@@ -41,6 +41,8 @@ namespace PJH.Runtime.Players
         [SerializeField] private float _deceleration = 8f;
         [SerializeField] private float _evasionDelay = 1f;
         [SerializeField] private float _evasionWhileHittingDelay = 1f;
+        [SerializeField] private Vector3 _boxCastHalfExtentsWhenAttacking = new Vector3(0.5f, 1f, 0.5f);
+        [SerializeField] private float _castDistanceWhenAttacking = 1.5f;
 
         [BoxGroup("Animancer Clips")] [FoldoutGroup("Animancer Clips/Evasion"), SerializeField]
         private Dictionary<string, ClipTransition> _evasionAnimations = new();
@@ -56,6 +58,7 @@ namespace PJH.Runtime.Players
         private PlayerEnemyDetection _enemyDetectionCompo;
         private PlayerWarpStrike _warpStrikeCompo;
         private PlayerAttack _attackCompo;
+        private PlayerCounterAttack _counterAttackCompo;
         private AnimatedFloat _rootMotionMultiplierCurve;
         private GameEventChannelSO _uiEventChannel;
         private Vector3 _velocity;

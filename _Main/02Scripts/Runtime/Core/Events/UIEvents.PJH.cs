@@ -23,12 +23,16 @@ namespace Main.Runtime.Core.Events
         public static readonly ShowNoticeText ShowNoticeText = new ShowNoticeText();
         public static readonly ShowQuestPreviewUI ShowQuestPreviewUI = new ShowQuestPreviewUI();
         public static readonly InteractDropItem InteractDropItem = new InteractDropItem();
+        public static readonly ExitDropItemPickUpPopup ExitDropItemPickUpPopup = new ExitDropItemPickUpPopup();
     }
 
     public enum PassiveInfoType
     {
         None,
         Buff
+    }
+    public class ExitDropItemPickUpPopup : GameEvent
+    {
     }
     public class InteractDropItem : GameEvent
     {

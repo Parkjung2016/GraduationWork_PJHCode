@@ -9,7 +9,7 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 {
     public abstract class BattleZone : MonoBehaviour,IBattleZone
     {
-        public event Action OnEntered;
+        public event Action<BattleZone> OnEntered;
         protected GameEventChannelSO _gameEventChannel;
         protected PoolManagerSO _poolManager;
         protected Collider _colliderCompo;
@@ -74,9 +74,10 @@ namespace PJH.Runtime.Core.EnemySpawnSystem
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!other.CompareTag("Player")) return;
             if (_isEntered) return;
             _isEntered = true;
-            OnEntered?.Invoke();
+            OnEntered?.Invoke(this);
             EnterZone();
         }
 

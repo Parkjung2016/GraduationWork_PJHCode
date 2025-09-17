@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using BIS.Data;
@@ -23,7 +22,7 @@ namespace PJH.Runtime.UI
         [SerializeField] private TextMeshProUGUI _currentGoldText;
         [SerializeField] private TextMeshProUGUI _noticeText;
 
-        [SerializeField] private CommandActionPiecePriceConfigSO _piecePriceData;
+        private CommandActionPiecePriceConfigSO _piecePriceData;
 
         private CurrencySO _moneySO;
         private InventorySO _inventory;
@@ -54,6 +53,7 @@ namespace PJH.Runtime.UI
             _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
             _uiEventChannelSO = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
+            _piecePriceData = AddressableManager.Load<CommandActionPiecePriceConfigSO>("CommandActionPiecePriceConfig");
             _playerInput.EnablePlayerInput(false);
             _playerInput.EnableUIInput(false);
             CursorManager.SetCursorLockMode(CursorLockMode.None);
@@ -78,6 +78,7 @@ namespace PJH.Runtime.UI
             UpdateCurrentGoldText(currentGold);
             _moneySO.ValueChangeEvent += UpdateCurrentGoldText;
             _noticeText.gameObject.SetActive(false);
+            UIEvent.ShowComboPieceTooltipUIEvent.showPrice = true;
         }
 
         private void OnDestroy()
@@ -144,12 +145,22 @@ namespace PJH.Runtime.UI
                     _inventory.AddElement(pair.Key);
                 }
 
+                UIEvent.ShowComboPieceTooltipUIEvent.showPrice = false;
+
                 _gameEventChannel.RaiseEvent(GameEvents.GoToLobby);
             }
             else
             {
                 ShowNoticeText();
             }
+        }
+
+        public void ClearPieceButton()
+        {
+            _inventory.ResetList();
+            UIEvent.ShowComboPieceTooltipUIEvent.showPrice = false;
+
+            _gameEventChannel.RaiseEvent(GameEvents.GoToLobby);
         }
 
         private async void ShowNoticeText()
@@ -166,7 +177,8 @@ namespace PJH.Runtime.UI
                 _noticeCancellationTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
                 Managers.FMODManager.PlayErrorSound();
                 _noticeText.gameObject.SetActive(true);
-                await UniTask.WaitForSeconds(1f, cancellationToken: _noticeCancellationTokenSource.Token);
+                await UniTask.WaitForSeconds(1f, cancellationToken: _noticeCancellationTokenSource.Token,
+                    ignoreTimeScale: true);
                 _noticeText.gameObject.SetActive(false);
             }
             catch

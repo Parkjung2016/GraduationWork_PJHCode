@@ -28,6 +28,7 @@ namespace PJH.Runtime.BossSkill.BossSkills
 
         public override void ActivateSkill()
         {
+            
             _animationFinished = false;
             Player player = GetPlayer();
             AgentAnimator animatorCompo = _boss.GetCompo<AgentAnimator>(true);
@@ -60,10 +61,10 @@ namespace PJH.Runtime.BossSkill.BossSkills
             player.IsGrabbed = true;
             RuntimeManager.PlayOneShot(grabSound, _boss.transform.position);
 
-            PlayerAnimator animatorCompo = player.GetCompo<PlayerAnimator>();
-            animatorCompo.EnableRootMotion(true);
-            _boss.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
-            player.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
+            PlayerAnimator playerAnimatorCompo = player.GetCompo<PlayerAnimator>();
+            AgentAnimator bossAnimatorCompo = _boss.GetCompo<AgentAnimator>(true);
+            playerAnimatorCompo.EnableRootMotion(true);
+            
             player.ModelTrm.DOLookAt(_boss.transform.position, .2f, AxisConstraint.Y).OnComplete(() =>
             {
                 AlignComponent alignComponent = player.GetComponent<AlignComponent>();
@@ -71,13 +72,15 @@ namespace PJH.Runtime.BossSkill.BossSkills
                 alignComponent.motionWarpingAsset = attackerMotionWarpingAsset;
                 MotionWarping motionWarpingCompo = _boss.WarpingComponent;
                 motionWarpingCompo.Interact(alignComponent);
+                bossAnimatorCompo.lockedTransitionAnimation = true;
+                playerAnimatorCompo.lockedTransitionAnimation = true;
                 motionWarpingCompo.OnAnimationFinished = () =>
                 {
-                    animatorCompo.EnableRootMotion(false);
+                    playerAnimatorCompo.EnableRootMotion(false);
                     _animationFinished = true;
                     player.IsGrabbed = false;
-                    _boss.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
-                    player.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
+                    bossAnimatorCompo.lockedTransitionAnimation = false;
+                    playerAnimatorCompo.lockedTransitionAnimation = false;
                 };
             });
         }

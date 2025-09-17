@@ -1,6 +1,6 @@
-﻿using System;
-using BIS.Data;
+﻿using BIS.Data;
 using DamageNumbersPro;
+using Main.Runtime.Manager;
 using PJH.Utility.Managers;
 using UnityEngine;
 
@@ -28,6 +28,7 @@ namespace PJH.Runtime.UI
 
         private void HandleAddAmount(int amount)
         {
+            Managers.FMODManager.PlaySound("event:/UI/EarnMoney");
             _earnMoneyText.SpawnGUI(_earnMoneyTextPoint, Vector2.zero, amount);
         }
     }

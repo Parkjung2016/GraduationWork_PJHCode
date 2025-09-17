@@ -6,22 +6,16 @@ using DG.Tweening;
 using LJS.Map;
 using LJS.Utils;
 using Main.Runtime.Agents;
-using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using Main.Runtime.Manager;
 using Main.Runtime.Manager.VolumeTypes;
 using Main.Shared;
 using PJH.Runtime.Core;
-using PJH.Runtime.Core.EnemySpawnSystem;
 using PJH.Runtime.Players;
 using PJH.Runtime.UI;
 using PJH.Utility.Managers;
-using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
-using YTH.Boss;
-using YTH.Enemies;
 using ZLinq;
 using Managers = Main.Runtime.Manager.Managers;
 using Random = UnityEngine.Random;
@@ -31,11 +25,10 @@ namespace Main.Scenes
 {
     public class BattleScene : BaseScene, IBattleScene
     {
+        public bool IsInBattle { get; private set; }
         public event IBattleScene.ChangedBattleZoneControllerEvent OnChangedBattleZoneController;
         [SerializeField] private GameObject _gameSceneUI;
         [SerializeField] private PlayableAsset _appearBossSequence, _bossDeadSequence;
-        [SerializeField] private CinemachineCamera _bossDeathTimelineBossCamera;
-        [SerializeField] private Vector3 _timelineOffsetFromCenter = new Vector3(0, 0, 0.55f);
         private IBattleZoneController _currentBattleZoneController;
 
         private bool _deathBoss;
@@ -137,8 +130,11 @@ namespace Main.Scenes
             seq.AppendInterval(1f);
             seq.AppendCallback(() =>
             {
+                PlayerCommandActionManager commandActionManagerCompo =
+                    PlayerManager.Instance.Player.GetCompo<PlayerCommandActionManager>();
+                commandActionManagerCompo.ClearAllBuffStat();
+                commandActionManagerCompo.ClearAllCooldown();
                 Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(1, .5f);
-                // VolumeForTimeline();
                 _playableDirector.Play(_appearBossSequence);
             });
         }
@@ -158,87 +154,31 @@ namespace Main.Scenes
                         Managers.FMODManager.MusicEventInstance.setParameterByNameWithLabel("MusicType", "InShop");
                         break;
                 }
+
+                switch (room.SpecialRoomType)
+                {
+                    case SpecialRoomType.Choice:
+                        Managers.FMODManager.MusicEventInstance.setParameterByNameWithLabel("MusicType", "InHealing");
+                        break;
+                }
             }
         }
 
         private void HandleBossDead(BossDead obj)
         {
             SettingForTimeline();
-            // VolumeForTimeline();
 
             _deathBoss = true;
             Managers.FMODManager.StopMusicSound();
             Sequence seq = DOTween.Sequence();
             seq.Append(Managers.VolumeManager.GetVolumeType<BrightnessVolumeType>().SetValue(0, 1f));
             seq.AppendInterval(1f);
-            seq.AppendCallback(async () =>
+            seq.AppendCallback(() =>
             {
                 var destroyDeadEnemyEvt = GameEvents.DestroyDeadEnemy;
                 destroyDeadEnemyEvt.isPlayingBossDeathTimeline = true;
                 _gameEventChannel.RaiseEvent(destroyDeadEnemyEvt);
-                BossRoomComponent bossRoomComponent = (RoomManager.Instance.CurrentRoom as BossRoomComponent);
-                BossBattleZone bossBattleZone = (SceneManagerEx.Instance.CurrentScene as IBattleScene)
-                    .CurrentBattleZoneController?.CurrentBattleZone as BossBattleZone;
-                Player player = PlayerManager.Instance.Player as Player;
-                player.GetComponentInChildren<DistanceFade>().Locked = true;
-                player.WarpingComponent.enabled = false;
-                PlayerAnimator playerAnimatorCompo = player.GetCompo<PlayerAnimator>();
-                playerAnimatorCompo.Animancer.enabled = false;
-                PlayerIK playerIKCompo = player.GetCompo<PlayerIK>();
-                playerIKCompo.LegsAnimator.enabled = false;
-                playerIKCompo.LeaningAnimator.enabled = false;
-                playerIKCompo.LookAnimator.enabled = false;
-                player.ComponentManager.EnableComponents(false);
-                Boss boss = null;
-                if (bossRoomComponent)
-                {
-                    boss = bossRoomComponent.BossObject;
-                }
-                else
-                {
-                    boss = bossBattleZone.GetBoss();
-                }
-
-                _bossDeathTimelineBossCamera.Target.TrackingTarget = boss.transform.Find("Visual");
-
-                boss.GetComponentInChildren<DistanceFade>().Locked = true;
-
-                boss.WarpingComponent.enabled = false;
-                AgentAnimator bossAnimatorCompo = boss.GetCompo<AgentAnimator>(true);
-                bossAnimatorCompo.Animancer.enabled = false;
-                Animator bossAnimator = bossAnimatorCompo.Animator;
-                bossAnimator.enabled = true;
-                boss.GetCompo<EnemyMovement>().AIPath.enabled = false;
-                boss.BehaviorTreeCompo.enabled = false;
-                AgentIK bossIK = boss.GetCompo<AgentIK>();
-                if (bossIK.LegsAnimator) bossIK.LegsAnimator.enabled = false;
-                if (bossIK.RagdollAnimator) bossIK.RagdollAnimator.enabled = false;
                 _playableDirector.playableAsset = _bossDeadSequence;
-                var timeline = _playableDirector.playableAsset as TimelineAsset;
-                foreach (var track in timeline.GetOutputTracks())
-                {
-                    if (track.name == "Boss Animation Track")
-                    {
-                        _playableDirector.SetGenericBinding(track, bossAnimator);
-                    }
-                }
-
-                boss.ComponentManager.EnableComponents(false);
-                Transform centerPoint;
-                if (bossRoomComponent)
-                {
-                    centerPoint = bossRoomComponent.BossDeathTimelinePoint;
-                }
-                else
-                {
-                    centerPoint = bossBattleZone.GetBossDeathTimelinePoint();
-                }
-
-                player.transform.position = centerPoint.position + _timelineOffsetFromCenter;
-                boss.transform.position = centerPoint.position - _timelineOffsetFromCenter;
-                await UniTask.Yield();
-                player.transform.DOLookAt(boss.transform.position, 0f, AxisConstraint.Y);
-                boss.transform.DOLookAt(centerPoint.position, 0f, AxisConstraint.Y);
                 _playableDirector.Play();
             });
 
@@ -247,6 +187,7 @@ namespace Main.Scenes
 
         private void HandleStartWave(StartWave obj)
         {
+            IsInBattle = true;
             if (RoomManager.Instance.CurrentRoom is not BossRoomComponent)
             {
                 Managers.FMODManager.MusicEventInstance.setParameterByName("InBattleMusicNumber", Random.Range(0, 2));
@@ -256,6 +197,7 @@ namespace Main.Scenes
 
         private void HandleEndBattle(FinishAllWave evt)
         {
+            IsInBattle = false;
             Managers.FMODManager.MusicEventInstance.setParameterByNameWithLabel("MusicType", "Default");
         }
 
@@ -283,15 +225,18 @@ namespace Main.Scenes
             destroyDeadEnemyEvt.isPlayingBossDeathTimeline = false;
             _gameEventChannel.RaiseEvent(destroyDeadEnemyEvt);
             string themeName = UIEvent.ThemePopupChoiceEvent.themeSO.ThemeName;
+            ThemeSettingSO themeSetting = AddressableManager.Load<ThemeSettingSO>("ThemeSetting");
+
             if (_deathBoss)
-                Managers.clearedTheme[themeName] = true;
-            if (Managers.clearedTheme.Count >= Managers.maxThemeCount &&
-                Managers.clearedTheme.Values.AsValueEnumerable().All(x => x == true))
+                themeSetting.clearedTheme[themeName] = true;
+            if (!themeSetting.isShowedEnding && themeSetting.clearedTheme.Count >= themeSetting.maxThemeCount &&
+                themeSetting.clearedTheme.Values.AsValueEnumerable().All(x => x == true))
             {
                 SceneControlManager.FadeOut(async () =>
                 {
                     await UniTask.WaitForSeconds(1f, cancellationToken: gameObject.GetCancellationTokenOnDestroy(),
                         ignoreTimeScale: true);
+                    themeSetting.isShowedEnding = true;
                     AddressableManager.Instantiate("EndingCanvas");
                 });
             }

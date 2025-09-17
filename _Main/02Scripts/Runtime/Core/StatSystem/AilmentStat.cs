@@ -17,7 +17,7 @@ public enum Ailment : int
 
 public delegate void AilmentChangedEvent(Ailment oldAilment, Ailment newAilment);
 
-public delegate void AilmentDotDamageEvent(Ailment ailmentType, float damage, ITransition getDamagedAnimation);
+public delegate void AilmentDotDamageEvent(Ailment ailmentType, float damage);
 
 [Serializable]
 public class AilmentStat
@@ -25,7 +25,6 @@ public class AilmentStat
     private Dictionary<Ailment, float> _ailmentTimerDictionary;
     private Dictionary<Ailment, float> _ailmentValueDictionary;
 
-    public DotDamagedAnimationListSO getDamagedAnimationClip;
     public Ailment currentAilment;
 
     public event AilmentDotDamageEvent OnDotDamage;
@@ -53,7 +52,6 @@ public class AilmentStat
 
     public void Init()
     {
-        getDamagedAnimationClip = AddressableManager.Load<DotDamagedAnimationListSO>("DotDamageAnimList");
     }
 
     public void UpdateAilment()
@@ -91,8 +89,7 @@ public class AilmentStat
                 if (_ailmentTimerDictionary[type] > 0 && _dotTimers[type] > _dotDamageCooldown)
                 {
                     _dotTimers[type] = 0;
-                    OnDotDamage?.Invoke(Ailment.Dot, _ailmentValueDictionary[type],
-                        getDamagedAnimationClip.getDamagedAnimations.Random());
+                    OnDotDamage?.Invoke(Ailment.Dot, _ailmentValueDictionary[type]);
                 }
             }
         }

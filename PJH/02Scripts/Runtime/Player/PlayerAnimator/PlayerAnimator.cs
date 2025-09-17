@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Main.Runtime.Agents;
 using UnityEngine;
 
@@ -29,9 +30,16 @@ namespace PJH.Runtime.Players
         }
 
 
-        private void DisableRootMotion()
+        private async void DisableRootMotion()
         {
-            EnableRootMotion(false);
+            try
+            {
+                await UniTask.Yield(cancellationToken: gameObject.GetCancellationTokenOnDestroy());
+                EnableRootMotion(false);
+            }
+            catch
+            {
+            }
         }
 
 

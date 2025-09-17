@@ -57,10 +57,14 @@ namespace PJH.Runtime.UI
             {
                 cooldownPassive.CooldownPassiveInfo.OnUpdateCooldownTime = null;
             }
+
+            _currentPassive.OnUnEquipped -= HandleUnEquipped;
         }
 
         public void AddPassiveInfoType(PassiveInfoType infoType)
         {
+            _currentPassive.OnUnEquipped += HandleUnEquipped;
+
             _infoTypes.Add(infoType);
             switch (infoType)
             {
@@ -77,11 +81,6 @@ namespace PJH.Runtime.UI
                             });
                     }
 
-                    break;
-                }
-                case PassiveInfoType.None:
-                {
-                    _currentPassive.OnUnEquipped += HandleUnEquipped;
                     break;
                 }
             }

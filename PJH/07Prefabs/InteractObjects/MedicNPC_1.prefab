@@ -454,7 +454,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ailmentStat:
-    getDamagedAnimationClip: {fileID: 0}
     currentAilment: 0
   _currentShield: 0
   _currentHealth: 0

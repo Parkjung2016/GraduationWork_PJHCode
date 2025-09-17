@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Core;
 using PJH.Runtime.PlayerPassive;
-using PJH.Utility.Extensions;
+using PJH.Runtime.Players;
 using PJH.Utility.Managers;
 using TMPro;
 using UnityEngine;
@@ -19,7 +19,8 @@ namespace PJH.Runtime.UI
     {
         private GameEventChannelSO _uiEventChannel;
         private ComboColorInfoSO _comboColorInfo;
-        private TextMeshProUGUI _comboPieceNameTMP, _comboPieceInfoTMP, _comboPassiveInfoTMP;
+        private CommandActionPiecePriceConfigSO _commandActionPiecePriceConfig;
+        private TextMeshProUGUI _comboPieceNameTMP, _comboPieceInfoTMP, _comboPassiveInfoTMP, _comboPriceTMP;
         private Image _comboIconImage;
         private RectTransform _rectTrm;
         private Vector2 _originPivot;
@@ -27,20 +28,24 @@ namespace PJH.Runtime.UI
         private void Awake()
         {
             _rectTrm = transform as RectTransform;
-            _comboIconImage = transform.Find("ComboIcon_Image").GetComponent<Image>();
-            _comboPieceNameTMP = transform.Find("ComboName_Text").GetComponent<TextMeshProUGUI>();
-            _comboPieceInfoTMP = transform.Find("ComboInfo_Text").GetComponent<TextMeshProUGUI>();
-            _comboPassiveInfoTMP = transform.Find("ComboPassive_Text").GetComponent<TextMeshProUGUI>();
+            Transform popupTrm = transform.Find("Max/Popup");
+            _comboIconImage = popupTrm.Find("ComboIcon_Image").GetComponent<Image>();
+            _comboPieceNameTMP = popupTrm.Find("ComboName_Text").GetComponent<TextMeshProUGUI>();
+            _comboPieceInfoTMP = popupTrm.Find("ComboInfo_Text").GetComponent<TextMeshProUGUI>();
+            _comboPassiveInfoTMP = popupTrm.Find("ComboPassive_Text").GetComponent<TextMeshProUGUI>();
+            _comboPriceTMP = popupTrm.Find("Price_Text").GetComponent<TextMeshProUGUI>();
             _uiEventChannel = AddressableManager.Load<GameEventChannelSO>("UIEventChannelSO");
             _comboColorInfo = AddressableManager.Load<ComboColorInfoSO>("ComboColorInfo");
-            _uiEventChannel.AddListener<ShowComboPieceTooltipUI>(HandleShowComboPiecePreviewUI);
+            _commandActionPiecePriceConfig =
+                AddressableManager.Load<CommandActionPiecePriceConfigSO>("CommandActionPiecePriceConfig");
+            _uiEventChannel.AddListener<ShowComboPieceTooltipUIEvent>(HandleShowComboPiecePreviewUI);
             gameObject.SetActive(false);
             _originPivot = _rectTrm.pivot;
         }
 
         private void OnDestroy()
         {
-            _uiEventChannel.RemoveListener<ShowComboPieceTooltipUI>(HandleShowComboPiecePreviewUI);
+            _uiEventChannel.RemoveListener<ShowComboPieceTooltipUIEvent>(HandleShowComboPiecePreviewUI);
         }
 
         private void Update()
@@ -81,7 +86,7 @@ namespace PJH.Runtime.UI
             _rectTrm.anchoredPosition = localPoint;
         }
 
-        private async void HandleShowComboPiecePreviewUI(ShowComboPieceTooltipUI evt)
+        private async void HandleShowComboPiecePreviewUI(ShowComboPieceTooltipUIEvent evt)
         {
             if (!evt.show || evt.comboPiece == null)
             {
@@ -90,28 +95,43 @@ namespace PJH.Runtime.UI
             }
 
             UpdatePosition();
-            await UniTask.Yield();
-            gameObject.SetActive(true);
-            _comboIconImage.sprite = evt.comboPiece.pieceIcon;
-            _comboPieceNameTMP.text = evt.comboPiece.pieceDisplayName;
-            _comboPieceInfoTMP.text = evt.comboPiece.pieceDescription;
-            _comboPassiveInfoTMP.text = string.Empty;
-            IReadOnlyList<PassiveSO> passives = evt.comboPiece.Passives;
-            using (var sb = ZString.CreateStringBuilder())
+            try
             {
-                for (int i = 0; i < passives.Count; i++)
+                await UniTask.Yield(gameObject.GetCancellationTokenOnDestroy());
+                gameObject.SetActive(true);
+                CommandActionPieceSO comboPiece = evt.comboPiece;
+                _comboIconImage.sprite = comboPiece.pieceIcon;
+                _comboPieceNameTMP.text = comboPiece.pieceDisplayName;
+                _comboPieceInfoTMP.text = comboPiece.pieceDescription;
+                _comboPassiveInfoTMP.text = string.Empty;
+                IReadOnlyList<PassiveSO> passives = comboPiece.Passives;
+                using (var sb = ZString.CreateStringBuilder())
                 {
-                    PassiveSO passive = passives[i];
-                    Color rankColor = _comboColorInfo.GetPassiveRankColor(passive.RankType);
-                    string rankColorHex = "#" + ColorUtility.ToHtmlStringRGBA(rankColor);
+                    for (int i = 0; i < passives.Count; i++)
+                    {
+                        PassiveSO passive = passives[i];
+                        Color rankColor = _comboColorInfo.GetPassiveRankColor(passive.RankType);
+                        string rankColorHex = "#" + ColorUtility.ToHtmlStringRGBA(rankColor);
 
-                    sb.Append($"<color={rankColorHex}>{passive.pieceDisplayName}</color>");
-                    sb.AppendLine(" : ");
-                    sb.Append(passive.pieceDescription);
-                    sb.Append("\n\n");
+                        sb.Append($"<color={rankColorHex}>{passive.pieceDisplayName}</color>");
+                        sb.AppendLine(" : ");
+                        sb.Append(passive.pieceDescription);
+                        sb.Append("\n\n");
+                    }
+
+                    _comboPassiveInfoTMP.SetText(sb.ToString());
                 }
 
-                _comboPassiveInfoTMP.SetText(sb.ToString());
+
+                if (UIEvent.ShowComboPieceTooltipUIEvent.showPrice)
+                {
+                    _comboPriceTMP.SetText($"{_commandActionPiecePriceConfig.GetPrice(comboPiece)}G");
+                }
+                else
+                    _comboPriceTMP.gameObject.SetActive(false);
+            }
+            catch (Exception e)
+            {
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using FIMSpace.FProceduralAnimation;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using PJH.Utility.Managers;
@@ -38,14 +39,19 @@ namespace Main.Runtime.Agents
         public virtual bool CanFinisher()
         {
             return _momentumGaugeCompo.CurrentMomentumGauge >= _momentumGaugeCompo.MaxMomentumGauge.Value &&
-                   !_fullMountableCompo.IsFullMounted && !_agent.IsKnockDown;
+                   !_fullMountableCompo.IsFullMounted && !_agent.IsKnockDown && !_agent.HealthCompo.IsDead;
         }
 
         public void SetToFinisherTarget()
         {
+            _agent.HealthCompo.ailmentStat.ClearAilment();
             _deadFinisherTargetEventChannel.AddListener<DeadFinisherTarget>(HandleDeadFinisherTarget);
-            _agent.GetCompo<AgentIK>(true).LegsAnimator?.User_FadeToDisabled(0f);
-            _agent.GetCompo<AgentAnimator>(true).Animator.applyRootMotion = true;
+            AgentIK ikCompo = _agent.GetCompo<AgentIK>(true);
+            ikCompo.LegsAnimator?.User_FadeToDisabled(0f);
+            ikCompo.RagdollAnimator.User_SwitchFallState(RagdollHandler.EAnimatingMode.Off);
+            AgentAnimator animatorCompo = _agent.GetCompo<AgentAnimator>(true);
+            animatorCompo.Animator.enabled = true;
+            animatorCompo.Animator.applyRootMotion = true;
             OnSetToFinisherTarget?.Invoke();
         }
 

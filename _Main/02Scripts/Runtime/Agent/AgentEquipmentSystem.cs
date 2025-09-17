@@ -19,7 +19,7 @@ namespace Main.Runtime.Agents
 {
     public class AgentEquipmentSystem : SerializedMonoBehaviour, IAgentComponent, IAfterInitable
     {
-        [SerializeField] public StatSO _powerStat, _increaseMomentumGaugeStat;
+        [SerializeField] private StatSO _powerStat, _increaseMomentumGaugeStat;
         [SerializeField] private EquipmentDatabaseSO equipmentDatabase;
         [SerializeField] private bool _startWithEquipment;
 

@@ -87,16 +87,12 @@ namespace PJH.Runtime.Players
                 _player.GetCompo<PlayerMovement>().CC.enabled = true;
                 _player.EnableMeshRenderers(true);
 
-                GetDamagedInfo info = new()
-                {
-                    attacker = _player,
-                    damage = _power,
-                    getDamagedAnimationClip = _currentWarpStrikeAttackInfo.getDamagedAnimationClipInfo,
-                    hitPoint = warpPoint,
-                    increaseMomentumGauge = 0,
-                    isForceAttack = false,
-                    isKnockDown = false,
-                };
+                GetDamagedInfo info = new GetDamagedInfo()
+                    .SetAttacker(_player)
+                    .SetDamage(_power)
+                    .SetGetDamagedAnimationClip(_currentWarpStrikeAttackInfo.getDamagedAnimationClipInfo)
+                    .SetHitPoint(warpPoint)
+                    .SetIncreaseMomentumGauge(0);
                 OnHitWarpStrikeTarget?.Invoke();
                 _warpStrikeTarget.HealthCompo.ApplyDamage(info);
                 Activating = false;

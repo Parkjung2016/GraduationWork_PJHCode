@@ -2,8 +2,6 @@ using DG.Tweening;
 using Main.Runtime.Agents;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
-using Main.Runtime.Equipments.Scripts;
-using Main.Shared;
 using PJH.Utility.Managers;
 using Sirenix.OdinInspector;
 using UnityEngine;

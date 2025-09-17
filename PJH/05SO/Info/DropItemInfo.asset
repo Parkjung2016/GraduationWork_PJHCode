@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   passiveChancePercent: 80
   dropItemChancePercent: 70
-  lowPassiveChancePercent: 50
+  lowPassiveChancePercent: 40
   middlePassiveChancePercent: 30

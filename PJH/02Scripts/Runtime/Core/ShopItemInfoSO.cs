@@ -32,6 +32,7 @@ namespace PJH.Runtime.Core
         public int defaultItemPriceMin = 3000, defaultItemPriceMax = 5000;
         public int knockDownExtraPrice = 1000;
         public int rerollPrice = 500;
+        [Range(0, 100)] public float increaseRerollPricePercent = 25;
         [ReadOnly] public bool opened;
 
         [ReadOnly] public List<CommandActionPieceSO> shopItems = new();
@@ -47,9 +48,12 @@ namespace PJH.Runtime.Core
                 { PassiveRankType.High, new PassiveRankExtraPrice(2100, 2600) }
             };
 
+        private int _rerollLevel;
+
         public void ResetInfo()
         {
             opened = false;
+            _rerollLevel = 1;
             ClearList();
         }
 
@@ -73,6 +77,18 @@ namespace PJH.Runtime.Core
             }
 
             return price;
+        }
+
+        public int GetRerollPrice()
+        {
+            float priceFloat = rerollPrice * (1 + (_rerollLevel * increaseRerollPricePercent) * 0.01f);
+            int price = Mathf.FloorToInt(priceFloat);
+            return price;
+        }
+
+        public void IncreaseRerollLevel()
+        {
+            _rerollLevel++;
         }
 
         public bool CanHavePassive()

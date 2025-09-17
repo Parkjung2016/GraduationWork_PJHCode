@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using Main.Runtime.Manager;
+using Main.Runtime.Manager.VolumeTypes;
 using UnityEngine;
 using MoreMountains.Feedbacks;
 using UnityEngine.Rendering;
@@ -56,14 +58,7 @@ namespace MoreMountains.FeedbacksForThirdParty
         public AnimationCurve Intensity =
             new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
 
-        private Beautify.Universal.Beautify _beautify;
         private Tween _tween;
-
-        public override void PreInitialization(MMF_Player owner, int index)
-        {
-            Object.FindAnyObjectByType<Volume>().profile.TryGet(out _beautify);
-            base.PreInitialization(owner, index);
-        }
 
         protected override void CustomPlayFeedback(Vector3 position, float feedbacksIntensity = 1.0f)
         {
@@ -71,11 +66,13 @@ namespace MoreMountains.FeedbacksForThirdParty
             {
                 return;
             }
+
             if (_tween != null && _tween.IsActive()) _tween.Kill();
 
-            _beautify.chromaticAberrationIntensity.value = 0;
-            _tween=    DOTween.To(() => _beautify.chromaticAberrationIntensity.value,
-                x => _beautify.chromaticAberrationIntensity.Override(x), intensityValue, Duration).SetEase(Intensity);
+            ChromaticAberrationVolumeType chromaticAberrationVolumeType =
+                Managers.VolumeManager.GetVolumeType<ChromaticAberrationVolumeType>();
+            chromaticAberrationVolumeType.ResetValue();
+            chromaticAberrationVolumeType.SetValue(intensityValue, Duration).SetEase(Intensity);
         }
     }
 }

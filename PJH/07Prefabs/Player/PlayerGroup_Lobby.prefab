@@ -46,19 +46,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2766997750540767908, guid: 37caec7d7053d284998289b0d3f4b4b4, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[0].Rotation.value.w
-      value: -0.18623717
+      value: -0.18623714
       objectReference: {fileID: 0}
     - target: {fileID: 2766997750540767908, guid: 37caec7d7053d284998289b0d3f4b4b4, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[0].Rotation.value.x
-      value: -0.17893778
+      value: -0.1789378
       objectReference: {fileID: 0}
     - target: {fileID: 2766997750540767908, guid: 37caec7d7053d284998289b0d3f4b4b4, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[0].Rotation.value.y
-      value: 0.034517318
+      value: 0.03451732
       objectReference: {fileID: 0}
     - target: {fileID: 2766997750540767908, guid: 37caec7d7053d284998289b0d3f4b4b4, type: 3}
       propertyPath: m_Splines.Array.data[0].m_Knots.Array.data[0].Rotation.value.z
-      value: 0.9654562
+      value: 0.9654561
       objectReference: {fileID: 0}
     - target: {fileID: 3075302854651142986, guid: 37caec7d7053d284998289b0d3f4b4b4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2530,7 +2530,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   ailmentStat:
-    getDamagedAnimationClip: {fileID: 0}
     currentAilment: 0
   _currentShield: 0
   _currentHealth: 0

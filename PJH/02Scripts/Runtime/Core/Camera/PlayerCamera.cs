@@ -52,6 +52,7 @@ namespace PJH.Runtime.Core.PlayerCamera
         private Camera _uiCamera;
 
         public Vector2 CameraVelocity { get; private set; }
+        public Transform TrackingTrm => _cinemachineCamera.Target.TrackingTarget;
 
 
         private void Awake()

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Main.Runtime.Manager;
 using MoreMountains.Feedbacks;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -49,15 +50,7 @@ namespace MoreMountains.FeedbacksForThirdParty
         public AnimationCurve alphaAnimationCurve =
             new AnimationCurve(new Keyframe(0, 0), new Keyframe(0.5f, 1), new Keyframe(1, 0));
 
-        private Beautify.Universal.Beautify _beautify;
         private Tween _tween;
-
-        public override void PreInitialization(MMF_Player owner, int index)
-        {
-            Object.FindAnyObjectByType<Volume>().profile.TryGet(out _beautify);
-            base.PreInitialization(owner, index);
-        }
-
 
         protected override void CustomPlayFeedback(Vector3 position, float attenuation = 1.0f)
         {
@@ -65,17 +58,18 @@ namespace MoreMountains.FeedbacksForThirdParty
             {
                 return;
             }
-            if (_tween != null && _tween.IsActive()) _tween.Kill();
 
-            Color color = _beautify.frameColor.value;
+            if (_tween != null && _tween.IsActive()) _tween.Kill();
+            Beautify.Universal.Beautify beautify = Managers.VolumeManager.beautify;
+            Color color = beautify.frameColor.value;
             color.a = 0;
-            _beautify.frameColor.value = color;
+            beautify.frameColor.value = color;
             color.a = alphaValue;
-            _tween=  DOTween.To(() => _beautify.frameColor.value, x =>
+            _tween = DOTween.To(() => beautify.frameColor.value, x =>
                 {
-                    Color color = _beautify.frameColor.value;
+                    Color color = beautify.frameColor.value;
                     color.a = x.a;
-                    _beautify.frameColor.Override(color);
+                    beautify.frameColor.Override(color);
                 }, color, ShakeDuration)
                 .SetEase(alphaAnimationCurve);
         }

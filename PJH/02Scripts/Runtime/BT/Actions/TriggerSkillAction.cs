@@ -2,6 +2,7 @@
 using Opsive.BehaviorDesigner.Runtime.Tasks.Actions;
 using Opsive.GraphDesigner.Runtime.Variables;
 using PJH.Runtime.BossSkill;
+using YTH;
 using YTH.Enemies;
 
 namespace PJH.Runtime.BT.Actions
@@ -18,11 +19,26 @@ namespace PJH.Runtime.BT.Actions
             if (_activeBossSkill == null)
                 _activeBossSkill = enemy.Value.GetCompo<BossSkillManager>().GetSKill(bossSkill);
             _activeBossSkill?.ActivateSkill();
+            if (enemy.Value.TryGetCompo(out EnemyCounterCompo counterCompo))
+            {
+                counterCompo.CanCounter = false;
+            }
         }
 
         public override TaskStatus OnUpdate()
         {
-            return _activeBossSkill.IsSkillFinished() ? TaskStatus.Success : TaskStatus.Running;
+            bool isSkillFinished = _activeBossSkill.IsSkillFinished();
+            if (isSkillFinished)
+            {
+                if (enemy.Value.TryGetCompo(out EnemyCounterCompo counterCompo))
+                {
+                    counterCompo.CanCounter = true;
+                }
+
+                return TaskStatus.Success;
+            }
+
+            return TaskStatus.Running;
         }
     }
 }

@@ -49,12 +49,14 @@ namespace PJH.Runtime.PlayerPassive.Passives
         public override void EquipPiece(IPlayer player)
         {
             base.EquipPiece(player);
+            Debug.Log("Locked");
             (_player.HealthCompo as PlayerHealth).SetGetDamagedInfoBeforeApplyDamagedEvent +=
                 HandleSetGetDamagedInfoBeforeApplyDamagedEvent;
         }
 
         private GetDamagedInfo? HandleSetGetDamagedInfoBeforeApplyDamagedEvent(GetDamagedInfo getDamagedInfo)
         {
+            Debug.Log(_canApplyBuff);
             if (_canApplyBuff)
             {
                 BuffPassiveInfo.ApplyBuffEvent?.Invoke();

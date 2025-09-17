@@ -30,15 +30,12 @@ namespace PJH.Runtime.BossSkill.BossSkills
             float distance = Vector3.Distance(_boss.transform.position, player.transform.position);
             if (distance <= castRadius)
             {
-                GetDamagedInfo getDamagedInfo = new()
-                {
-                    attacker = _boss,
-                    damage = damage,
-                    getDamagedAnimationClipOnIgnoreDirection = getDamagedAnimationClip,
-                    ignoreDirection = true,
-                    hitPoint = _boss.transform.position,
-                    increaseMomentumGauge = 0
-                };
+                GetDamagedInfo getDamagedInfo = new GetDamagedInfo()
+                    .SetAttacker(_boss)
+                    .SetDamage(damage)
+                    .SetGetDamagedAnimationClipOnIgnoreDirection(getDamagedAnimationClip)
+                    .SetIgnoreDirection(true)
+                    .SetHitPoint(_boss.transform.position);
                 RuntimeManager.PlayOneShot(hitSound, _boss.transform.position);
 
                 player.HealthCompo.ApplyDamage(getDamagedInfo);

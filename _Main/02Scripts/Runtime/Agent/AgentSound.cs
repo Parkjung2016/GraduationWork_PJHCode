@@ -4,6 +4,7 @@ using FIMSpace.FProceduralAnimation;
 using FMODUnity;
 using Main.Runtime.Core;
 using Main.Runtime.Equipments.Datas;
+using Main.Runtime.Equipments.Scripts;
 using UnityEngine;
 
 namespace Main.Runtime.Agents
@@ -26,7 +27,7 @@ namespace Main.Runtime.Agents
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnPlayAttackWhooshSound += HandlePlayAttackWhooshSound;
-            animationTriggerCompo.OnPlayImpactWallSound += HandleOnPlayImpactWallSound;
+            animationTriggerCompo.OnPlayImpactWallSound += HandlePlayImpactWallSound;
             _agent.HealthCompo.OnAilmentChanged += HandleAilmentChanged;
             _agent.HealthCompo.ailmentStat.OnDotDamage += HandleDotDamageEvent;
         }
@@ -35,7 +36,7 @@ namespace Main.Runtime.Agents
         {
             AgentAnimationTrigger animationTriggerCompo = _agent.GetCompo<AgentAnimationTrigger>(true);
             animationTriggerCompo.OnPlayAttackWhooshSound -= HandlePlayAttackWhooshSound;
-            animationTriggerCompo.OnPlayImpactWallSound -= HandleOnPlayImpactWallSound;
+            animationTriggerCompo.OnPlayImpactWallSound -= HandlePlayImpactWallSound;
             if (_agent && _agent.HealthCompo && _agent.HealthCompo.ailmentStat != null)
             {
                 _agent.HealthCompo.OnAilmentChanged -= HandleAilmentChanged;
@@ -43,7 +44,7 @@ namespace Main.Runtime.Agents
             }
         }
 
-        private void HandleOnPlayImpactWallSound()
+        private void HandlePlayImpactWallSound()
         {
             RuntimeManager.PlayOneShot(bleedingSound, _agent.transform.position);
         }
@@ -66,8 +67,13 @@ namespace Main.Runtime.Agents
             }
         }
 
-        private void HandleDotDamageEvent(Ailment ailmentType, float damage, ITransition getDamagedAnimation)
+        private void HandleDotDamageEvent(Ailment ailmentType, float damage)
         {
+            if (_agent.HealthCompo.IsDead)
+            {
+                return;
+            }
+
             if ((ailmentType & Ailment.Dot) != 0)
             {
                 RuntimeManager.PlayOneShot(bleedingSound, _agent.transform.position);
@@ -81,8 +87,9 @@ namespace Main.Runtime.Agents
 
         private void HandlePlayAttackWhooshSound()
         {
-            WeaponDataSO weaponData = _agent.GetCompo<AgentWeaponManager>().CurrentWeapon.WeaponData;
-            RuntimeManager.PlayOneShot(weaponData.attackWhooshSound, Camera.main.transform.position);
+            Weapon currentWeapon = _agent.GetCompo<AgentWeaponManager>().CurrentWeapon;
+            WeaponDataSO weaponData = currentWeapon.WeaponData;
+            RuntimeManager.PlayOneShot(weaponData.attackWhooshSound, currentWeapon.transform.position);
         }
 
         public void LegAnimatorStepEvent(LegsAnimator.Leg leg, float power, bool isRight, Vector3 position,

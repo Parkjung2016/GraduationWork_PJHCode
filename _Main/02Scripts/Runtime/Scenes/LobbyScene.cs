@@ -13,7 +13,6 @@ namespace Main.Scenes
     {
         private GameEventChannelSO _gameEventChannel;
         private InventorySO _inventory;
-
         protected override void Start()
         {
             base.Start();

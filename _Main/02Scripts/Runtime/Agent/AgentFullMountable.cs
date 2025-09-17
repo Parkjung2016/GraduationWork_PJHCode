@@ -31,8 +31,11 @@ namespace Main.Runtime.Agents
 
         private void HandleApplyDamaged(float value)
         {
-            OnEndFullMounted?.Invoke();
-            IsFullMounted = false;
+            if (IsFullMounted)
+            {
+                OnEndFullMounted?.Invoke();
+                IsFullMounted = false;
+            }
         }
 
         private void HandleGetUp()

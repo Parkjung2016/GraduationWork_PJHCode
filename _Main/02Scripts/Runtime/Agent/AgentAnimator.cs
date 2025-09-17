@@ -33,14 +33,17 @@ namespace Main.Runtime.Agents
             _agent = agent;
         }
 
+        public void ResetEffectiveAnimationSpeed()
+        {
+            _effectiveAnimationSpeed = 1.0f;
+            Animancer.Speed = 1;
+        }
+
         public virtual void AfterInitialize()
         {
             _agent.HealthCompo.OnApplyDamaged += HandleApplyDamaged;
             _agent.HealthCompo.OnDeath += HandleDeath;
             _agent.HealthCompo.ailmentStat.OnAilmentChanged += HandleAilmentChanged;
-
-            if (_agent.TryGetCompo(out AgentAnimationTrigger agentAnimationTriggerCompo, true))
-                agentAnimationTriggerCompo.OnTriggerRagdoll += HandleTriggerRagdoll;
         }
 
         protected virtual void OnDestroy()
@@ -49,8 +52,6 @@ namespace Main.Runtime.Agents
             _agent.HealthCompo.OnDeath -= HandleDeath;
             if (_agent.HealthCompo.ailmentStat != null)
                 _agent.HealthCompo.ailmentStat.OnAilmentChanged -= HandleAilmentChanged;
-            if (_agent.TryGetCompo(out AgentAnimationTrigger agentAnimationTriggerCompo, true))
-                agentAnimationTriggerCompo.OnTriggerRagdoll -= HandleTriggerRagdoll;
         }
 
         private void HandleAilmentChanged(Ailment oldAilment, Ailment newAilment)
@@ -78,15 +79,8 @@ namespace Main.Runtime.Agents
             }
         }
 
-        private void HandleTriggerRagdoll()
-        {
-            _effectiveAnimationSpeed = 1.0f;
-        }
-
         protected virtual void HandleDeath()
         {
-            if (lockedTransitionAnimation) return;
-
             if (!_useRagdollOnDeath)
             {
                 _hybridAnimancer.Play(_deathAnimationClip);
@@ -101,6 +95,8 @@ namespace Main.Runtime.Agents
         protected virtual void HandleApplyDamaged(float damage)
         {
             if (lockedTransitionAnimation) return;
+            GetDamagedInfo getDamagedInfo = _agent.HealthCompo.GetDamagedInfo;
+            if (getDamagedInfo.isDotDamage && _agent.IsKnockDown) return;
             if (_knockDownToken is { IsCancellationRequested: false })
             {
                 _knockDownToken.Cancel();
@@ -109,7 +105,6 @@ namespace Main.Runtime.Agents
 
             _knockDownToken = new CancellationTokenSource();
             _knockDownToken.RegisterRaiseCancelOnDestroy(gameObject);
-            GetDamagedInfo getDamagedInfo = _agent.HealthCompo.GetDamagedInfo;
             ITransition getDamagedAnimationClip = null;
             if (getDamagedInfo.ignoreDirection)
             {

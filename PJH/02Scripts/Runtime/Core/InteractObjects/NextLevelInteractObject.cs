@@ -25,17 +25,12 @@ namespace PJH.Runtime.Core.InteractObjects
         private void Awake()
         {
             _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
+            SubscribeEvents();
+
             gameObject.SetActive(false);
-            SubscribeEvents();
         }
 
-        private void OnEnable()
-        {
-            UnSubscribeEvents();
-            SubscribeEvents();
-        }
-
-        private void OnDisable()
+        private void OnDestroy()
         {
             UnSubscribeEvents();
         }
@@ -61,15 +56,13 @@ namespace PJH.Runtime.Core.InteractObjects
 
         private void HandleActiveNextSession(ActiveNextSession evt)
         {
+            UnSubscribeEvents();
             gameObject.SetActive(true);
         }
 
         public void Interact(Transform Interactor)
         {
-            if (TryGetGameEventChannel())
-            {
-                _gameEventChannel.RemoveListener<ActiveNextSession>(HandleActiveNextSession);
-            }
+            UnSubscribeEvents();
 
             _nextPointIndicatorParticle?.Stop();
             Player player = PlayerManager.Instance.Player as Player;

@@ -148,7 +148,8 @@ namespace PJH.Runtime.PlayerPassive
             base.UnEquipPiece();
             if (!_lock)
             {
-                (_player as IPlayer).OnChangedCanApplyPassive -= HandleChangedCanApplyPassive;
+                IPlayer player = (_player as IPlayer);
+                if (player != null) player.OnChangedCanApplyPassive -= HandleChangedCanApplyPassive;
                 if (this is IModifierStatPassive modifierStatPassive)
                 {
                     modifierStatPassive.ModifierStatInfo.isApplied = false;

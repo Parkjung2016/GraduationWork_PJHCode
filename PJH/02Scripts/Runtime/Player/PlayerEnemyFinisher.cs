@@ -35,21 +35,13 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             _player.PlayerInput.FinisherEvent += HandleFinisher;
-
-            _gameEventChannel.AddListener<FinishEnemyFinisher>(HandleFinishEnemyFinisher);
         }
 
         private void OnDestroy()
         {
             _player.PlayerInput.FinisherEvent -= HandleFinisher;
-            _gameEventChannel.RemoveListener<FinishEnemyFinisher>(HandleFinishEnemyFinisher);
         }
 
-        private void HandleFinishEnemyFinisher(FinishEnemyFinisher evt)
-        {
-            IsFinishering = false;
-            OnFinisherEnd?.Invoke();
-        }
 
         private void HandleFinisher()
         {
@@ -59,12 +51,14 @@ namespace PJH.Runtime.Players
             if (_player.IsStunned || _player.IsHitting || !finisherTargetDetectionCompo.GetFinisherTarget(
                     out AgentFinisherable target) ||
                 movementCompo.IsEvading) return;
+            target.Agent.HealthCompo.IsInvincibility = true;
             FinisherDataSO finisherData = GetFinisherSequenceData(_finisherSequence);
             AlignComponent alignComponent = target.Agent.GetComponent<AlignComponent>();
             alignComponent.targetAnim = finisherData.executedClip;
             alignComponent.motionWarpingAsset = finisherData.executionAsset;
+            _player.GetCompo<PlayerAnimationTrigger>().OnDisableDamageCollider?.Invoke();
             target.SetToFinisherTarget();
-
+            target.Agent.transform.DOMoveY(_player.transform.position.y, .1f);
             target.Agent.transform.DOLookAt(_player.transform.position, .1f);
             _player.ModelTrm.DOLookAt(target.Agent.transform.position, .2f, AxisConstraint.Y).OnComplete(() =>
             {
@@ -89,8 +83,13 @@ namespace PJH.Runtime.Players
 
         private void HandleAnimationFinished()
         {
-            _player.WarpingComponent.OnAnimationFinished -= HandleAnimationFinished;
-            _player.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
+            if (IsFinishering)
+            {
+                _player.WarpingComponent.OnAnimationFinished -= HandleAnimationFinished;
+                _player.GetCompo<AgentAnimator>(true).lockedTransitionAnimation = false;
+                IsFinishering = false;
+                OnFinisherEnd?.Invoke();
+            }
         }
 
         private FinisherDataSO GetFinisherSequenceData(FinisherSequenceSO finisherSequence)

@@ -103,7 +103,6 @@ namespace PJH.Runtime.Players
                     _applySilencePassiveTokenSource.Dispose();
                 }
 
-                Debug.Log("4");
                 _applySilencePassiveTokenSource = new();
                 _applySilencePassiveTokenSource.RegisterRaiseCancelOnDestroy(gameObject);
                 CanApplyPassive = false;

@@ -3688,12 +3688,12 @@ MonoBehaviour:
     y: 0
     z: 0
   useAnimation:
-    x: 1
-    y: 1
-    z: 1
+    x: 0
+    y: 0
+    z: 0
   useWarping:
     x: 1
-    y: 1
+    y: 0
     z: 1
   useCollision: 1
   playRateBasis: 1

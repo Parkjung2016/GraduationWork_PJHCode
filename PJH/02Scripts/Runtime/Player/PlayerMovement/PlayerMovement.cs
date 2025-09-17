@@ -3,6 +3,7 @@ using Animancer;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Main.Runtime.Agents;
+using Main.Runtime.Combat;
 using Main.Runtime.Core;
 using Main.Runtime.Core.Events;
 using PJH.Runtime.Core;
@@ -24,6 +25,7 @@ namespace PJH.Runtime.Players
                 _animatorCompo = _player.GetCompo<PlayerAnimator>();
                 _warpStrikeCompo = _player.GetCompo<PlayerWarpStrike>();
                 _enemyDetectionCompo = _player.GetCompo<PlayerEnemyDetection>();
+                _counterAttackCompo = _player.GetCompo<PlayerCounterAttack>();
                 _attackCompo = _player.GetCompo<PlayerAttack>();
                 CC = _player.GetComponent<CharacterController>();
                 await UniTask.WaitUntil(() => _animatorCompo.Animancer);
@@ -52,16 +54,19 @@ namespace PJH.Runtime.Players
 
         private void HandleAttack()
         {
+            PlayerCombatDataSO combatData = _attackCompo.CurrentCombatData;
+            _boxCastHalfExtentsWhenAttacking = combatData.boxCastHalfExtentsWhenAttacking;
+            _castDistanceWhenAttacking = combatData.castDistanceWhenAttacking;
+            
             _isRotatingTargetWhileAttack = true;
-            if (!_attackCompo.CurrentCombatData.isManualMove) return;
-            _manualMoveSpeed = _attackCompo.CurrentCombatData.manualMoveSpeed;
+            if (!combatData.isManualMove) return;
+            _manualMoveSpeed = combatData.manualMoveSpeed;
             IsManualMove = true;
         }
 
         private void Evasion()
         {
-            PlayerCounterAttack counterAttackComp = _player.GetCompo<PlayerCounterAttack>();
-            if (counterAttackComp.IsCounterAttacking) return;
+            if (_counterAttackCompo.IsCounterAttacking) return;
             if ((_canEvading && _currentEvasionDelayTime + _evasionDelay > Time.time) || _player.IsStunned ||
                 IsKnockBack ||
                 IsEvading || _player.IsGrabbed) return;
@@ -95,10 +100,16 @@ namespace PJH.Runtime.Players
             OnEvasion?.Invoke();
         }
 
+        private void Update()
+        {
+            if (_player.IsHitting)
+                _animatorCompo.EnableRootMotion(true);
+        }
+
         private void FixedUpdate()
         {
             CheckCooldownEvasionWhileHitting();
-            if (!CC || _player.WarpingComponent.IsActive() || _player.IsStunned) return;
+            if (!CC || _player.WarpingComponent.IsActive() || _player.IsGrabbed || _player.IsStunned) return;
             ApplyRotation();
             CalculateMove();
             ApplyGravity();
@@ -138,7 +149,7 @@ namespace PJH.Runtime.Players
         {
             if (IsManualMove || IsKnockBack ||
                 (_animatorCompo.IsRootMotion && !_animatorCompo.IsEnabledInputWhileRootMotion)) return;
-            if (!CanMove)
+            if (!CanMove || _counterAttackCompo.IsCounterAttacking || _player.IsStunned)
             {
                 _desiredVelocity = Vector3.zero;
                 return;
@@ -239,6 +250,5 @@ namespace PJH.Runtime.Players
             CC.Move(movement);
             OnMovement?.Invoke(CC.velocity.sqrMagnitude);
         }
-        
     }
 }

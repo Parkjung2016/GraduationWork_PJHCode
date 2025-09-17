@@ -23,10 +23,14 @@ namespace Main.Runtime.Manager
     public class VolumeManager
     {
         private Dictionary<Type, VolumeType> _volumeTypes;
+
+        public Beautify.Universal.Beautify beautify;
+
         public void FindVolumeComponent()
         {
             _volumeTypes = new();
             Volume volume = Object.FindAnyObjectByType<Volume>();
+            volume.profile.TryGet(out beautify);
             if (volume)
             {
                 foreach (VolumeEffectType effectType in Enum.GetValues(typeof(VolumeEffectType)))

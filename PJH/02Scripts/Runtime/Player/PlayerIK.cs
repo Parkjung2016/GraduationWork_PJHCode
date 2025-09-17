@@ -125,12 +125,18 @@ namespace PJH.Runtime.Players
 
         private void HandleEndCombo()
         {
+            LegsAnimator.enabled = true;
+            LookAnimator.enabled = true;
+            LeaningAnimator.enabled = true;
             LegsAnimator.User_SetIsMoving(false);
             LookAnimator.SwitchLooking(true);
         }
 
         private void HandleAttack()
         {
+            LegsAnimator.enabled = false;
+            LookAnimator.enabled = false;
+            LeaningAnimator.enabled = false;
             LegsAnimator.User_SetIsMoving(true);
             LookAnimator.SwitchLooking(false);
         }

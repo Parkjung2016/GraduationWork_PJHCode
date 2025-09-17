@@ -41,6 +41,7 @@ namespace PJH.Runtime.Core.InteractObjects
         public void Interact(Transform interactor)
         {
             _playerInput.EnablePlayerInput(false);
+            _playerInput.preventChangePlayerInput = true;
             transform.DOLookAt(interactor.position, .2f, AxisConstraint.Y).OnComplete(() =>
             {
                 _interactorMotionWarping = interactor.GetComponent<MotionWarping>();
@@ -54,6 +55,7 @@ namespace PJH.Runtime.Core.InteractObjects
         private void HandleAnimationFinished()
         {
             _interactorMotionWarping.OnAnimationFinished -= HandleAnimationFinished;
+            _playerInput.preventChangePlayerInput = false;
             _playerInput.EnablePlayerInput(true);
         }
     }

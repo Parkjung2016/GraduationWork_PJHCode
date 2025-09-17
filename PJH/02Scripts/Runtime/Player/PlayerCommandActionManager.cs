@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BIS.Data;
 using Main.Runtime.Agents;
@@ -7,12 +7,12 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using PJH.Runtime.PlayerPassive;
 using PJH.Utility.Managers;
+using EnumerableExtensions = PJH.Utility.Extensions.EnumerableExtensions;
 
 namespace PJH.Runtime.Players
 {
     public class PlayerCommandActionManager : MonoBehaviour, IAgentComponent, IAfterInitable
     {
-        public bool IsUsingCommandAction { get; private set; }
         public event Action<CommandActionData> OnUseCommandAction;
         public event Action<int> OnUseCommandActionIndex;
 
@@ -58,12 +58,29 @@ namespace PJH.Runtime.Players
         public void AfterInitialize()
         {
             _player.PlayerInput.CommandActionEvent += HandleCommandAction;
+            _player.HealthCompo.OnDeath += HandleDeath;
             _currentUsingCommandActionDataIndex = 0;
         }
 
         private void OnDestroy()
         {
             _player.PlayerInput.CommandActionEvent -= HandleCommandAction;
+            _player.HealthCompo.OnDeath -= HandleDeath;
+        }
+
+        private void HandleDeath()
+        {
+            for (int i = 0; i < _commandActions.Count; i++)
+            {
+                for (int j = 0; j < _commandActions[i].ExecuteCommandActionPieces.Count; j++)
+                {
+                    CommandActionPieceSO commandActionPiece = _commandActions[i].ExecuteCommandActionPieces[j];
+                    if (commandActionPiece == null) continue;
+                    commandActionPiece.EndAllBuffPassive();
+                    commandActionPiece.UnEquipPiece();
+                    commandActionPiece.Reset();
+                }
+            }
         }
 
         private void Update()
@@ -84,13 +101,24 @@ namespace PJH.Runtime.Players
             CommandActionData commandActionData = _commandActions[index];
             if (commandActionData == null) return;
             if (commandActionData.ExecuteCommandActionPieces.Count == 0) return;
-            IsUsingCommandAction = true;
             _currentUsingCommandActionDataIndex = index;
 
             OnUseCommandAction?.Invoke(commandActionData);
             OnUseCommandActionIndex?.Invoke(index);
 
             DelayChangeCommand();
+        }
+        private void ForceChangeCommandAction(int index)
+        {
+            if (_currentUsingCommandActionDataIndex == index) return;
+            if (_commandActions.Count < index + 1) return;
+            CommandActionData commandActionData = _commandActions[index];
+            if (commandActionData == null) return;
+            if (commandActionData.ExecuteCommandActionPieces.Count == 0) return;
+            _currentUsingCommandActionDataIndex = index;
+
+            OnUseCommandAction?.Invoke(commandActionData);
+            OnUseCommandActionIndex?.Invoke(index);
         }
 
         private async void DelayChangeCommand()
@@ -103,6 +131,7 @@ namespace PJH.Runtime.Players
         public void ChangeCommandAction(int index, CommandActionData commandActionData)
         {
             CommandActionData copyCommandActionData = new CommandActionData();
+
             foreach (var commandActionPiece in commandActionData.ExecuteCommandActionPieces)
             {
                 CommandActionPieceSO copyCommandActionPiece = commandActionPiece;
@@ -116,22 +145,45 @@ namespace PJH.Runtime.Players
             {
                 CommandActionPieceSO commandActionPiece = _commandActions[index].ExecuteCommandActionPieces[i];
                 if (commandActionPiece == null) continue;
-                foreach (PassiveSO passive in commandActionPiece.Passives)
-                {
-                    if (passive is IBuffPassive buffPassive)
-                        buffPassive.EndBuff();
-                }
-
+                commandActionPiece.EndAllBuffPassive();
                 _commandActions[index].ExecuteCommandActionPieces[i]?.UnEquipPiece();
             }
 
             _commandActions[index] = copyCommandActionData;
 
-            if (copyCommandActionData.ExecuteCommandActionPieces.Count > 0 &&
-                _currentUsingCommandActionDataIndex == index)
+            if (_currentUsingCommandActionDataIndex == index)
             {
-                OnUseCommandAction?.Invoke(copyCommandActionData);
-                OnUseCommandActionIndex?.Invoke(index);
+                if (copyCommandActionData.ExecuteCommandActionPieces.Count > 0)
+                {
+                    OnUseCommandAction?.Invoke(copyCommandActionData);
+                    OnUseCommandActionIndex?.Invoke(index);
+                }
+                else
+                {
+                    int otherIndex = _commandActions.FindIndex(x => x.ExecuteCommandActionPieces.Count > 0);
+                    ForceChangeCommandAction(otherIndex);
+                }
+            }
+            else if (_commandActions[_currentUsingCommandActionDataIndex].ExecuteCommandActionPieces.Count == 0)
+            {
+                int otherIndex = _commandActions.FindIndex(x => x.ExecuteCommandActionPieces.Count > 0);
+                HandleCommandAction(otherIndex);
+            }
+        }
+
+        public void ClearAllBuffStat()
+        {
+            foreach (var commandActionData in _commandActions)
+            {
+                commandActionData.ExecuteCommandActionPieces.ForEach(piece => { piece.EndAllBuffPassive(); });
+            }
+        }
+
+        public void ClearAllCooldown()
+        {
+            foreach (var commandActionData in _commandActions)
+            {
+                commandActionData.ExecuteCommandActionPieces.ForEach(piece => { piece.EndAllCooldownPassive(); });
             }
         }
     }

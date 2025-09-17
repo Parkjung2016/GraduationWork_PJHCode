@@ -19,6 +19,7 @@ public class PoolManagerSO : ScriptableObject
     private Dictionary<string, Pool> _pools;
     private Transform _rootTrm;
 
+    public bool isLoaded;
     public IEnumerator InitializePool(Transform root)
     {
         _rootTrm = root;
@@ -33,8 +34,6 @@ public class PoolManagerSO : ScriptableObject
                 yield return handle;
             }
 
-            Debug.Log(item);
-
             IPoolable poolable = handle.Result.GetComponent<IPoolable>();
             UnityEngine.Debug.Assert(poolable != null, $"PoolItem does not have IPoolable {handle.Result.name}");
 
@@ -43,7 +42,7 @@ public class PoolManagerSO : ScriptableObject
             count++;
             ProcessingEvent?.Invoke(count, poolingItemList.Count);
         }
-
+        isLoaded = true;
         CompletedInitEvent?.Invoke();
     }
 

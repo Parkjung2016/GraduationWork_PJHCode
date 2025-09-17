@@ -1,5 +1,6 @@
-﻿using Main.Runtime.Agents;
+using Main.Runtime.Agents;
 using Main.Runtime.Core.Events;
+using PJH.Runtime.PlayerPassive;
 
 [assembly: ZLinq.ZLinqDropInAttribute("PJH.Runtime.Players", ZLinq.DropInGenerateTypes.Everything)]
 
@@ -82,7 +83,17 @@ namespace PJH.Runtime.Players
 
         private void HandleUseCommandAction(CommandActionData commandActionData)
         {
-            _currentCommandActionData?.UnEquip();
+            if (_currentCommandActionData != null)
+            {
+                for (int i = 0; i < _currentCommandActionData.ExecuteCommandActionPieces.Count; i++)
+                {
+                    CommandActionPieceSO commandActionPiece = _currentCommandActionData.ExecuteCommandActionPieces[i];
+                    if (commandActionPiece == null) continue;
+                    commandActionPiece.EndAllBuffPassive();
+                }
+
+                _currentCommandActionData.UnEquip();
+            }
 
             _currentCommandActionData = commandActionData;
             _currentCommandActionData.Equip(_player);

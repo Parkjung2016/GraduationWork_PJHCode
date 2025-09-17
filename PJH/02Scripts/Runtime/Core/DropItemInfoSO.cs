@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PJH.Runtime.PlayerPassive;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace PJH.Runtime.Core
 {
+
     [CreateAssetMenu(menuName = "SO/DropItemInfo")]
     public class DropItemInfoSO : ScriptableObject
     {
         [Range(0, 100)] public float passiveChancePercent, dropItemChancePercent;
 
         public float lowPassiveChancePercent = 10f, middlePassiveChancePercent = 50f;
+
 
         public bool CanHavePassive()
         {

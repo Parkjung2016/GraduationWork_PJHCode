@@ -15,7 +15,6 @@ namespace PJH.Runtime.UI
 
         private void Start()
         {
-            _videoPlayer.Play();
             _videoPlayer.loopPointReached += HandleVideoEnd;
         }
 

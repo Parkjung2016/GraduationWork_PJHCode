@@ -8,6 +8,7 @@ using Main.Runtime.Manager;
 using Main.Runtime.Manager.VolumeTypes;
 using Main.Shared;
 using PJH.Runtime.Core;
+using PJH.Runtime.Core.Cheat;
 using PJH.Runtime.Players;
 using PJH.Utility.Managers;
 using UnityEngine;
@@ -40,14 +41,11 @@ namespace Main.Scenes
                 _cheatSO = AddressableManager.Load<CheatSO>("CheatSO");
                 _cheatSO.money = AddressableManager.Load<CurrencySO>("Money");
                 _playerInput = AddressableManager.Load<PlayerInputSO>("PlayerInputSO");
-                _playerInput.preventChangePlayerInput = false;
-                _playerInput.preventChangeLockOnTargetEvent = false;
-                _playerInput.preventAttackInput = false;
-                _playerInput.preventBlockInput = false;
+                _playerInput.ResetPreventVariable();
                 _playerInput.EnablePlayerInput(true);
                 _playerInput.EnableUIInput(true);
                 Managers.VolumeManager.FindVolumeComponent();
-
+                GameEvents.ChangeCurrentEnemy.enemyCount = 99;
                 GameEventChannelSO gameEventChannel = AddressableManager.Load<GameEventChannelSO>("GameEventChannel");
                 gameEventChannel.AddListener<TimeSlowByPlayer>(HandlePlayerAvoidingAttack);
                 gameEventChannel.AddListener<PlayerStunned>(HandlePlayerStunned);

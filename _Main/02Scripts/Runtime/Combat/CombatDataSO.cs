@@ -57,6 +57,9 @@ namespace Main.Runtime.Combat
         [ShowIf("isKnockDown")] [LabelText("일어날 때 애니메이션")]
         public ClipTransition getUpAnimationClip;
 
+        public Vector3 boxCastHalfExtentsWhenAttacking = new Vector3(0.6f, 1f, 0.5f);
+        public float castDistanceWhenAttacking = 0.2f;
+
         [Space(10)] [Title("Feedback Data")] [InlineProperty, HideLabel]
         public CombatFeedbackData combatFeedbackData;
 
@@ -67,33 +70,13 @@ namespace Main.Runtime.Combat
             attackAnimationClip.Speed = _originAttackSpeed * speed;
         }
 
-        public GetDamagedInfo MakeGetDamagedInfo(StatSO _increaseMomentumGaugeStat,
-            StatSO powerStat
-            , MonoBehaviour attacker, Vector3 hitPoint, Vector3 normal = default, bool ignoreHitDirection = false,
-            ITransition getDamagedAnimationClipOnIgnoreDirection = null)
-        {
-            float increaseMomentumGauge =
-                _increaseMomentumGaugeStat.Value * increaseMomentumGaugeMultiplier;
-            GetDamagedAnimationClipInfo getDamagedAnimationClip =
-                getDamagedAnimationClips[currentGetDamagedAnimationClipIndex];
-            float damage = powerStat.Value * damageMultiplier;
-            GetDamagedInfo getDamagedInfo = new()
-            {
-                hitPoint = hitPoint,
-                normal = normal,
-                damage = damage,
-                increaseMomentumGauge = increaseMomentumGauge,
-                attacker = attacker,
-                isForceAttack = isForceAttack,
-                ignoreDirection = ignoreHitDirection,
-                getDamagedAnimationClipOnIgnoreDirection = getDamagedAnimationClipOnIgnoreDirection,
-                isKnockDown = isKnockDown,
-                knockDownTime = knockDownTime,
-                getUpAnimationClip = getUpAnimationClip,
-                getDamagedAnimationClip = getDamagedAnimationClip
-            };
-            return getDamagedInfo;
-        }
+        public float GetIncreaseMomentumGauge(StatSO increaseMomentumGaugeStat) =>
+            increaseMomentumGaugeStat.Value * increaseMomentumGaugeMultiplier;
+
+        public float GetPower(StatSO powerStat) => powerStat.Value * damageMultiplier;
+
+        public GetDamagedAnimationClipInfo GetDamagedAnimationClip() =>
+            getDamagedAnimationClips[currentGetDamagedAnimationClipIndex];
 
         private void OnEnable()
         {

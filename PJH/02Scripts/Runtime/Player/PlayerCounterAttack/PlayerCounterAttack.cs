@@ -46,7 +46,7 @@ namespace PJH.Runtime.Players
         {
             _player.OnStartStun -= HandleEndCounterAttack;
             _player.OnEndGrabbed -= HandleEndCounterAttack;
-            
+
             PlayerAnimationTrigger animationTriggerCompo = _player.GetCompo<PlayerAnimationTrigger>();
             animationTriggerCompo.OnHitCounterAttack -= HandleHitCounterAttack;
             animationTriggerCompo.OnEndCounterAttack -= HandleEndCounterAttack;
@@ -63,14 +63,13 @@ namespace PJH.Runtime.Players
             Agent target = _player.HealthCompo.GetDamagedInfo.attacker as Agent;
             _player.GetCompo<PlayerEnemyDetection>().SetForceTargetEnemy(target);
             float damage = _powerStat.Value * _currentCounterAttackCombatData.damageMultiplier;
-            GetDamagedInfo info = new GetDamagedInfo
-            {
-                attacker = _player,
-                damage = damage,
-                ignoreDirection = true,
-                getDamagedAnimationClipOnIgnoreDirection = _currentCounterAttackCombatData.getDamagedAnimationClip,
-                hitPoint = _player.transform.position
-            };
+            GetDamagedInfo info = new GetDamagedInfo()
+                .SetAttacker(_player)
+                .SetDamage(damage)
+                .SetIgnoreDirection(true)
+                .SetGetDamagedAnimationClipOnIgnoreDirection(
+                    _currentCounterAttackCombatData.getDamagedAnimationClip)
+                .SetHitPoint(_player.transform.position);
             RuntimeManager.PlayOneShot(_targetHitSound, transform.position);
             OnHitCounterAttackTarget?.Invoke();
             target.HealthCompo.ApplyDamage(info);

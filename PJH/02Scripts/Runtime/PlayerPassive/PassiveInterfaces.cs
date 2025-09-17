@@ -20,6 +20,7 @@ namespace PJH.Runtime.PlayerPassive
         public float cooldownTime;
 
         [ReadOnly] public float remainingCooldownTime;
+        [ReadOnly] public bool isCooldowning;
 
         [HideInInspector] public UpdatePassiveTimeEventHandler OnUpdateCooldownTime;
         [HideInInspector] public Action StartCooldownEvent;
@@ -41,6 +42,8 @@ namespace PJH.Runtime.PlayerPassive
         public float buffDuration;
 
         [ReadOnly] public float remainingBuffTime;
+        [ReadOnly] public bool isBuffing;
+        
         [HideInInspector] public UpdatePassiveTimeEventHandler OnUpdateBuffTime;
         [HideInInspector] public Action ApplyBuffEvent;
     }
